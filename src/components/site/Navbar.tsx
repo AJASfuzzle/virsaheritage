@@ -29,51 +29,55 @@ export function Navbar() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-        scrolled ? "py-3" : "py-5"
+        scrolled ? "py-2.5" : "py-4"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-5">
-        <a href="#top" className="flex items-center gap-2.5 group">
-          <span className="grid h-9 w-9 place-items-center rounded-xl gradient-ember text-primary-foreground shadow-[0_8px_24px_-8px_oklch(0.72_0.18_55/0.6)]">
-            <Compass className="h-4.5 w-4.5" strokeWidth={2.4} />
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5">
+        <a href="#top" className="flex items-center gap-2.5 group shrink-0">
+          <span className="grid h-9 w-9 place-items-center rounded-xl gradient-ember text-primary-foreground shadow-[0_8px_24px_-8px_oklch(0.72_0.18_55/0.6)] transition-transform duration-500 group-hover:scale-105">
+            <Compass className="h-4 w-4" strokeWidth={2.4} />
           </span>
-          <span className="font-display text-xl tracking-tight">
-            KAAL<span className="text-muted-foreground font-sans text-[10px] uppercase tracking-[0.28em] ml-2 align-middle">Heritage Atlas</span>
+          <span className="flex items-baseline gap-2 whitespace-nowrap leading-none">
+            <span className="font-display text-xl tracking-tight">KAAL</span>
+            <span className="text-muted-foreground font-sans text-[10px] uppercase tracking-[0.28em]">
+              Heritage Atlas
+            </span>
           </span>
         </a>
 
         <nav
-          className={`hidden md:flex items-center gap-1 rounded-full px-2 py-1.5 transition-all ${
-            scrolled ? "glass" : "bg-transparent"
+          className={`hidden md:flex items-center gap-0.5 rounded-full border border-white/5 px-1.5 py-1 transition-all duration-500 ${
+            scrolled ? "glass shadow-[0_10px_40px_-20px_rgba(0,0,0,0.6)]" : "bg-white/[0.03] backdrop-blur-md"
           }`}
         >
           {links.map((l) => (
             <a
               key={l.href}
               href={l.href}
-              className="rounded-full px-3.5 py-1.5 text-sm text-foreground/75 hover:text-foreground hover:bg-white/5 transition-colors"
+              className="btn-glossy rounded-full px-3.5 py-1.5 text-[13px] font-medium text-foreground/75 hover:text-foreground"
             >
               {l.label}
             </a>
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => setLight((v) => !v)}
             aria-label="Toggle theme"
-            className="grid h-9 w-9 place-items-center rounded-full glass hover:bg-white/10 transition"
+            className="btn-glossy relative grid h-9 w-9 place-items-center overflow-hidden rounded-full border border-white/15 bg-gradient-to-br from-white/15 to-white/[0.04] text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_4px_14px_-4px_rgba(0,0,0,0.4)] hover:border-white/25"
           >
-            {light ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+            <Sun className={`absolute h-4 w-4 transition-all duration-500 ${light ? "rotate-90 scale-0 opacity-0" : "rotate-0 scale-100 opacity-100"}`} />
+            <Moon className={`absolute h-4 w-4 transition-all duration-500 ${light ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-0 opacity-0"}`} />
           </button>
           <a
             href="#contribute"
-            className="hidden sm:inline-flex items-center rounded-full gradient-ember px-4 py-2 text-sm font-medium text-primary-foreground shadow-[0_10px_30px_-10px_oklch(0.72_0.18_55/0.7)] hover:brightness-110 transition"
+            className="btn-glossy hidden sm:inline-flex items-center rounded-full gradient-ember px-4 py-2 text-sm font-medium text-primary-foreground shadow-[0_10px_30px_-10px_oklch(0.72_0.18_55/0.7)]"
           >
             Contribute
           </a>
           <button
-            className="md:hidden grid h-9 w-9 place-items-center rounded-full glass"
+            className="btn-glossy md:hidden grid h-9 w-9 place-items-center rounded-full glass"
             onClick={() => setOpen((v) => !v)}
             aria-label="Menu"
           >
