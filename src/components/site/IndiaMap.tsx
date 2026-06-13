@@ -75,7 +75,7 @@ const eras: Era[] = [
       { id: "1900-hyderabad", lat: 17.4, lon: 78.5, region: "Hyderabad State", craft: "Bidriware", note: "Silver-inlaid hookahs and pandans crafted by Bidar artisans." },
       { id: "1900-mysore", lat: 13.6, lon: 75.0, x: 37.6, y: 79.2, region: "Mysore State", craft: "Mysore silk", note: "Wodeyars set up state silk farms; the zari-bordered sari becomes iconic." },
       { id: "1900-madras", lat: 12.97, lon: 77.6, x: 43.2, y: 79.8, region: "Madras Presidency", craft: "Tanjore painting", note: "Gold-leaf devotional panels patronised by the Maratha Bhonsles of Thanjavur." },
-      { id: "1900-goa", lat: 15.5, lon: 73.8, region: "Portuguese Goa", craft: "Azulejo tiles & Kunbi weave", note: "Indo-Portuguese tilework on church facades and old Goan homes." },
+      { id: "1900-goa", lat: 15.5, lon: 73.8, x: 33.3, y: 71.0, region: "Portuguese Goa", craft: "Azulejo tiles & Kunbi weave", note: "Indo-Portuguese tilework on church facades and old Goan homes." },
     ],
   },
   {
