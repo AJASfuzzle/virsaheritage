@@ -16,7 +16,7 @@ const features = [
 
 export function Features() {
   return (
-    <section id="library" className="relative py-24 sm:py-32">
+    <section id="library" className="section-blend relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5">
         <div className="mb-14 max-w-3xl">
           <p className="text-xs uppercase tracking-[0.28em] text-primary/90">An AI-powered atlas</p>

@@ -22,7 +22,7 @@ const categories = ["Food", "Languages", "Festivals", "Music", "Dance", "Archite
 
 export function IndiaMap() {
   return (
-    <section id="explore" className="relative py-24 sm:py-32">
+    <section id="explore" className="section-blend relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5">
         <div className="mb-10 flex items-end justify-between gap-6 flex-wrap">
           <div>
