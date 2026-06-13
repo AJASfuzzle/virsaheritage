@@ -1,11 +1,11 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Clock, History, MapPin, Search, Sparkles, Trash2, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import map1800 from "@/assets/map-1800-v2.png.asset.json";
-import map1900 from "@/assets/map-1900-v2.png.asset.json";
-import map1947 from "@/assets/map-1947-v2.png.asset.json";
-import map1984 from "@/assets/map-1984-v2.png.asset.json";
-import map2026 from "@/assets/map-2026-v2.png.asset.json";
+import map1800 from "@/assets/map-1800-v3.png.asset.json";
+import map1900 from "@/assets/map-1900-v3.png.asset.json";
+import map1947 from "@/assets/map-1947-v3.png.asset.json";
+import map1984 from "@/assets/map-1984-v3.png.asset.json";
+import map2026 from "@/assets/map-2026-v3.png.asset.json";
 
 type Pin = {
   id: string;
@@ -38,7 +38,7 @@ const eras: Era[] = [
     title: "A subcontinent of sovereigns",
     body: "Sikh misls, Maratha confederacies, Rajput houses and southern princely states each guard their own court arts, looms and kilns.",
     mapUrl: map1800.url,
-    aspect: 0.6937,
+    aspect: 0.6925,
     // Subcontinent including Sindh & East Bengal (no Afghanistan, no Ceylon)
     bounds: { lonMin: 67.0, lonMax: 93.5, latMin: 6.0, latMax: 44.2 },
     pins: [
@@ -60,9 +60,9 @@ const eras: Era[] = [
     title: "Crown rule over a patchwork of courts",
     body: "British presidencies stretch from Punjab to Madras while princely states keep their darbars alive. Railways carry crafts to world fairs.",
     mapUrl: map1900.url,
-    aspect: 1.2193,
+    aspect: 1.2628,
     // British India + Burma tail (wide aspect)
-    bounds: { lonMin: 66.0, lonMax: 102.0, latMin: 8.0, latMax: 37.5 },
+    bounds: { lonMin: 66.0, lonMax: 102.5, latMin: 8.0, latMax: 36.9 },
     pins: [
       { id: "1900-punjab", lat: 31.6, lon: 74.9, region: "Punjab Province", craft: "Phulkari & Pashmina trade", note: "Amritsar becomes a hub for Kashmiri shawls bound for Europe." },
       { id: "1900-up", lat: 26.8, lon: 80.9, region: "United Provinces (Oudh)", craft: "Chikankari & Banarasi silk", note: "Lucknow shadow-work and Varanasi brocades dominate festive wardrobes." },
@@ -82,9 +82,9 @@ const eras: Era[] = [
     title: "A new union of states",
     body: "Princely states accede, lines are redrawn, refugees carry recipes and looms across new borders. Crafts become quiet markers of identity.",
     mapUrl: map1947.url,
-    aspect: 0.9745,
-    // Independent India (no Pakistan, no East Pakistan, no Ceylon)
-    bounds: { lonMin: 68.0, lonMax: 97.5, latMin: 7.0, latMax: 37.3 },
+    aspect: 0.9780,
+    // Independent India only (no Pakistan, no East Pakistan, no Ceylon)
+    bounds: { lonMin: 68.1, lonMax: 97.5, latMin: 7.5, latMax: 37.5 },
     pins: [
       { id: "1947-punjab", lat: 30.7, lon: 76.8, region: "East Punjab", craft: "Phulkari", note: "Bagh shawls carried by Partition refugees from Lyallpur into Patiala and Delhi." },
       { id: "1947-up", lat: 26.8, lon: 80.9, region: "United Provinces", craft: "Chikankari & Banarasi brocade", note: "Lucknow and Varanasi remain the workshops of the Indo-Gangetic plain." },
@@ -107,7 +107,7 @@ const eras: Era[] = [
     title: "Linguistic states, living looms",
     body: "After the States Reorganisation Act and the formation of the North-East, India is a federation of language-defined states.",
     mapUrl: map1984.url,
-    aspect: 0.9111,
+    aspect: 0.9120,
     bounds: { lonMin: 68.0, lonMax: 97.5, latMin: 6.5, latMax: 38.9 },
     pins: [
       { id: "1984-jk", lat: 34.1, lon: 74.8, region: "Jammu & Kashmir", craft: "Pashmina & Sozni", note: "Srinagar's Kanihama weavers continue Mughal-era jamawars." },
@@ -139,8 +139,8 @@ const eras: Era[] = [
     title: "Twenty-eight states, a thousand crafts",
     body: "GI tags, e-commerce and KAAL itself help artisans reach the world. Memory becomes a map you can search.",
     mapUrl: map2026.url,
-    aspect: 0.8552,
-    bounds: { lonMin: 68.0, lonMax: 97.5, latMin: 6.5, latMax: 37.0 },
+    aspect: 0.9086,
+    bounds: { lonMin: 68.0, lonMax: 97.5, latMin: 6.5, latMax: 39.7 },
     pins: [
       { id: "2026-ladakh", lat: 34.2, lon: 77.6, region: "Ladakh (UT)", craft: "Thangka & Pashmina", note: "Changpa nomads herd the goats whose wool becomes the world's finest shawl." },
       { id: "2026-jk", lat: 34.1, lon: 74.8, region: "Jammu & Kashmir (UT)", craft: "Pashmina, Sozni, Papier-mâché", note: "Srinagar's craft economy among the densest in the world." },
@@ -232,10 +232,10 @@ export function IndiaMap() {
     add(p.id);
   };
 
-  // Uniform color treatment for every era's map — normalises AI-edited
-  // colour differences into a single saffron/ember silhouette tone.
-  const mapFilter =
-    "grayscale(1) brightness(0.55) sepia(0.85) hue-rotate(-12deg) saturate(2.4) contrast(1.05)";
+  // Silhouette PNGs are already pre-filled with a single saffron tone, so
+  // no CSS colour treatment is needed.
+
+
 
   return (
     <section id="explore" className="relative py-24 sm:py-32 scroll-mt-24">
@@ -300,7 +300,6 @@ export function IndiaMap() {
                     alt={`Map of India in ${era.year}`}
                     draggable={false}
                     className="absolute inset-0 h-full w-full object-contain drop-shadow-[0_18px_40px_oklch(0.20_0.06_270/0.45)]"
-                    style={{ filter: mapFilter }}
                   />
 
                   {/* Pins are positioned inside the same box as the image,
