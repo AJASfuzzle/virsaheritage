@@ -147,6 +147,26 @@ const eras: Era[] = [
   },
 ];
 
+// India silhouettes per era (viewBox 0 0 100 100).
+// Hand-tuned polylines approximating the country's borders in each period.
+// 1800: Mughal-era subcontinent (incl. today's Pakistan & Bangladesh, no Afghanistan, no Ceylon)
+// 1900: British India (subcontinent + Burma tail)
+// 1947: Independent India (no Pakistan, no East Pakistan, no Ceylon; no Sikkim yet)
+// 1984: Reorganised India (modern silhouette incl. Sikkim & NE seven sisters)
+// 2026: Present-day India (with Ladakh UT carved at the top)
+const eraPaths: Record<number, string> = {
+  1800:
+    "M40 4 L52 6 L60 10 L66 14 L62 20 L58 26 L66 26 L72 30 L78 38 L80 44 L74 46 L70 44 L64 48 L60 52 L58 62 L56 72 L52 82 L48 92 L44 88 L42 80 L40 72 L36 64 L30 58 L24 54 L16 50 L10 42 L8 34 L12 28 L16 22 L24 18 L30 14 L34 8 Z",
+  1900:
+    "M40 4 L52 6 L60 10 L66 14 L62 20 L58 26 L66 26 L72 30 L78 36 L84 38 L88 42 L90 50 L88 58 L84 60 L82 54 L80 48 L74 46 L70 44 L64 48 L60 52 L58 62 L56 72 L52 82 L48 92 L44 88 L42 80 L40 72 L36 64 L30 58 L24 54 L16 50 L10 42 L8 34 L12 28 L16 22 L24 18 L30 14 L34 8 Z",
+  1947:
+    "M38 8 L46 8 L54 10 L60 14 L66 18 L62 24 L60 28 L66 30 L72 32 L70 36 L66 40 L64 44 L62 48 L60 54 L58 64 L56 74 L52 84 L48 94 L44 88 L42 80 L40 72 L36 64 L30 58 L24 54 L20 50 L18 44 L20 38 L24 34 L28 30 L30 24 L32 18 L34 12 Z",
+  1984:
+    "M38 6 L46 6 L54 8 L62 12 L68 18 L74 22 L80 24 L86 26 L84 32 L78 34 L72 32 L66 36 L70 40 L74 42 L78 46 L76 52 L72 50 L68 48 L64 46 L60 50 L58 56 L58 64 L56 72 L52 82 L48 94 L44 90 L42 82 L40 74 L36 66 L30 60 L24 56 L20 52 L18 46 L20 40 L24 36 L28 32 L30 26 L32 20 L34 14 L36 10 Z",
+  2026:
+    "M42 4 L50 4 L56 8 L54 12 L48 14 L54 16 L62 14 L68 18 L74 22 L80 24 L86 26 L84 32 L78 34 L72 32 L66 36 L70 40 L74 42 L78 46 L76 52 L72 50 L68 48 L64 46 L60 50 L58 56 L58 64 L56 72 L52 82 L48 94 L44 90 L42 82 L40 74 L36 66 L30 60 L24 56 L20 52 L18 46 L20 40 L24 36 L28 32 L30 26 L32 20 L34 14 L38 8 Z",
+};
+
 const HISTORY_KEY = "kaal:explored:v2";
 
 function useExplored() {
