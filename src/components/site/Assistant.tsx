@@ -10,7 +10,7 @@ const examples = [
 
 export function Assistant() {
   return (
-    <section id="assistant" className="section-blend relative py-24 sm:py-32">
+    <section id="assistant" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5">
         <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] items-center">
           <div>

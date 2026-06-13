@@ -17,7 +17,7 @@ export function Timeline() {
   const s = stories[active];
 
   return (
-    <section id="timeline" className="section-blend relative py-24 sm:py-32">
+    <section id="timeline" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5">
         <div className="mb-12">
           <p className="text-xs uppercase tracking-[0.28em] text-primary/90">Timeline Explorer</p>
