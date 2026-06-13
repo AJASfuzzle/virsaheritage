@@ -39,8 +39,8 @@ const eras: Era[] = [
     body: "Sikh misls, Maratha confederacies, Rajput houses and southern princely states each guard their own court arts, looms and kilns.",
     mapUrl: map1800.url,
     aspect: 0.812,
-    // A.K. Johnston 1799–1806 map (grid 65–95°E, 5–46°N)
-    bounds: { lonMin: 66, lonMax: 95, latMin: 5, latMax: 37 },
+    // A.K. Johnston 1799–1806 map — image extends from ~3°N (south of Ceylon) to ~37°N
+    bounds: { lonMin: 67, lonMax: 95, latMin: 3, latMax: 37 },
     pins: [
       { id: "1800-kashmir", lat: 34.1, lon: 74.8, region: "Kashmir", craft: "Pashmina & Kani shawls", note: "Changthangi wool hand-woven on twill-tapestry looms for Mughal and Persian courts." },
       { id: "1800-punjab", lat: 31.6, lon: 74.9, region: "Punjab (Sikh Misls)", craft: "Phulkari embroidery", note: "Flower-work shawls stitched by women for weddings and harvest." },
@@ -61,8 +61,8 @@ const eras: Era[] = [
     body: "British presidencies stretch from Punjab to Madras while princely states keep their darbars alive. Railways carry crafts to world fairs.",
     mapUrl: map1900.url,
     aspect: 1.117,
-    // 1900 reference map (Persia/Afghanistan → Siam)
-    bounds: { lonMin: 58, lonMax: 103, latMin: 4, latMax: 41 },
+    // 1900 reference map (Persia → Siam, calibrated against Delhi/Calcutta/Bombay)
+    bounds: { lonMin: 57, lonMax: 104, latMin: 2, latMax: 44 },
     pins: [
       { id: "1900-punjab", lat: 31.6, lon: 74.9, region: "Punjab Province", craft: "Phulkari & Pashmina trade", note: "Amritsar becomes a hub for Kashmiri shawls bound for Europe." },
       { id: "1900-up", lat: 26.8, lon: 80.9, region: "United Provinces (Oudh)", craft: "Chikankari & Banarasi silk", note: "Lucknow shadow-work and Varanasi brocades dominate festive wardrobes." },
@@ -83,8 +83,8 @@ const eras: Era[] = [
     body: "Princely states accede, lines are redrawn, refugees carry recipes and looms across new borders. Crafts become quiet markers of identity.",
     mapUrl: map1947.url,
     aspect: 0.798,
-    // 1947 India reference (West Pakistan to East Pakistan)
-    bounds: { lonMin: 67, lonMax: 97, latMin: 5, latMax: 37 },
+    // 1947 India reference (calibrated against Delhi/Calcutta/Andaman)
+    bounds: { lonMin: 67, lonMax: 95, latMin: 4, latMax: 39 },
     pins: [
       { id: "1947-punjab", lat: 30.7, lon: 76.8, region: "East Punjab", craft: "Phulkari", note: "Bagh shawls carried by Partition refugees from Lyallpur into Patiala and Delhi." },
       { id: "1947-up", lat: 26.8, lon: 80.9, region: "United Provinces", craft: "Chikankari & Banarasi brocade", note: "Lucknow and Varanasi remain the workshops of the Indo-Gangetic plain." },
@@ -108,7 +108,7 @@ const eras: Era[] = [
     body: "After the States Reorganisation Act and the formation of the North-East, India is a federation of language-defined states.",
     mapUrl: map1984.url,
     aspect: 1.113,
-    bounds: { lonMin: 60, lonMax: 99, latMin: 4, latMax: 39 },
+    bounds: { lonMin: 61, lonMax: 100, latMin: 4, latMax: 39 },
     pins: [
       { id: "1984-jk", lat: 34.1, lon: 74.8, region: "Jammu & Kashmir", craft: "Pashmina & Sozni", note: "Srinagar's Kanihama weavers continue Mughal-era jamawars." },
       { id: "1984-hp", lat: 31.1, lon: 77.2, region: "Himachal Pradesh", craft: "Kullu & Kinnauri shawls", note: "Geometric border shawls woven across the upper Beas valley." },
