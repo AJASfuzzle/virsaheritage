@@ -1,4 +1,5 @@
 import { Compass } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 export function Footer() {
   return (
@@ -25,20 +26,19 @@ export function Footer() {
           <div>
             <div className="text-xs uppercase tracking-[0.22em] text-muted-foreground">Explore</div>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><a href="#explore" className="hover:text-foreground text-foreground/75">Heritage Map</a></li>
-              <li><a href="#timeline" className="hover:text-foreground text-foreground/75">Timeline</a></li>
-              <li><a href="#shruti" className="hover:text-foreground text-foreground/75">the kitab · Languages</a></li>
-              <li><a href="#trails" className="hover:text-foreground text-foreground/75">Heritage Trails</a></li>
+              <li><Link to="/atlas" className="hover:text-foreground text-foreground/75">Heritage Atlas</Link></li>
+              <li><Link to="/library" className="hover:text-foreground text-foreground/75">Living Library</Link></li>
+              <li><Link to="/kitab" className="hover:text-foreground text-foreground/75">kitab · Languages</Link></li>
+              <li><Link to="/trails" className="hover:text-foreground text-foreground/75">Heritage Trails</Link></li>
             </ul>
           </div>
 
           <div>
             <div className="text-xs uppercase tracking-[0.22em] text-muted-foreground">Participate</div>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><a href="#contribute" className="hover:text-foreground text-foreground/75">Contribute a Memory</a></li>
-              <li><a href="#assistant" className="hover:text-foreground text-foreground/75">Ask the Assistant</a></li>
-              <li><a href="#library" className="hover:text-foreground text-foreground/75">Living Library</a></li>
-              <li><a href="#" className="hover:text-foreground text-foreground/75">For Educators</a></li>
+              <li><Link to="/contribute" className="hover:text-foreground text-foreground/75">Contribute a Memory</Link></li>
+              <li><Link to="/assistant" className="hover:text-foreground text-foreground/75">Ask the Assistant</Link></li>
+              <li><Link to="/library" className="hover:text-foreground text-foreground/75">Living Library</Link></li>
             </ul>
           </div>
         </div>

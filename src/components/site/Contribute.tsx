@@ -74,7 +74,7 @@ export function Contribute() {
                 >
                   <Upload className="h-4 w-4" /> Start contributing
                 </button>
-                <a href="#assistant" className="inline-flex items-center gap-2 rounded-full glass px-6 py-3.5 text-sm hover:bg-white/10 transition">
+                <a href="/assistant" className="inline-flex items-center gap-2 rounded-full glass px-6 py-3.5 text-sm hover:bg-white/10 transition">
                   Ask the AI Assistant
                 </a>
               </div>
