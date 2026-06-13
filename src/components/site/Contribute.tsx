@@ -10,7 +10,7 @@ const formats = [
 
 export function Contribute() {
   return (
-    <section id="contribute" className="relative py-24 sm:py-32">
+    <section id="contribute" className="section-blend relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5">
         <div className="relative overflow-hidden rounded-[2.5rem] glass grain p-10 sm:p-16">
           <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-primary/25 blur-[100px]" />

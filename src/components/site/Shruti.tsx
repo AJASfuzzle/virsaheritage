@@ -18,7 +18,7 @@ const status: Record<string, string> = {
 
 export function Shruti() {
   return (
-    <section id="shruti" className="relative py-24 sm:py-32">
+    <section id="shruti" className="section-blend relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5">
         <div className="mb-12 flex items-end justify-between gap-6 flex-wrap">
           <div className="max-w-2xl">
