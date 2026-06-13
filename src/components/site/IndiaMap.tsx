@@ -75,7 +75,7 @@ const eras: Era[] = [
       { id: "1900-hyderabad", lat: 17.4, lon: 78.5, region: "Hyderabad State", craft: "Bidriware", note: "Silver-inlaid hookahs and pandans crafted by Bidar artisans." },
       { id: "1900-mysore", lat: 13.6, lon: 75.0, x: 37.6, y: 79.2, region: "Mysore State", craft: "Mysore silk", note: "Wodeyars set up state silk farms; the zari-bordered sari becomes iconic." },
       { id: "1900-madras", lat: 12.97, lon: 77.6, x: 43.2, y: 79.8, region: "Madras Presidency", craft: "Tanjore painting", note: "Gold-leaf devotional panels patronised by the Maratha Bhonsles of Thanjavur." },
-      { id: "1900-goa", lat: 15.5, lon: 73.8, region: "Portuguese Goa", craft: "Azulejo tiles & Kunbi weave", note: "Indo-Portuguese tilework on church facades and old Goan homes." },
+      { id: "1900-goa", lat: 15.5, lon: 73.8, x: 33.3, y: 71.0, region: "Portuguese Goa", craft: "Azulejo tiles & Kunbi weave", note: "Indo-Portuguese tilework on church facades and old Goan homes." },
     ],
   },
   {
@@ -302,20 +302,6 @@ export function IndiaMap() {
               </motion.div>
             </AnimatePresence>
 
-            <div className="absolute left-1/2 top-6 w-[min(90%,460px)] -translate-x-1/2">
-              <div className="flex items-center gap-2 rounded-full glass px-4 py-2.5">
-                <Search className="h-4 w-4 text-muted-foreground" />
-                <input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder={`Search ${era.year} — region, craft, tradition…`}
-                  className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-                />
-                <span className="rounded-full bg-primary/90 px-3 py-1 text-xs font-medium text-primary-foreground">
-                  {era.year}
-                </span>
-              </div>
-            </div>
 
             <div className="absolute bottom-5 right-5 rounded-full glass px-3 py-2 text-xs text-foreground/70">
               {filtered.length} of {era.pins.length} regions
