@@ -256,29 +256,38 @@ export function IndiaMap() {
           <div className="relative h-[62vh] min-h-[520px] w-full">
             <div className="absolute inset-0 [background:radial-gradient(ellipse_at_50%_30%,oklch(0.74_0.13_75/0.18),transparent_60%),radial-gradient(ellipse_at_70%_80%,oklch(0.20_0.06_270/0.25),transparent_60%)]" />
 
-            <svg viewBox="0 0 100 100" className="absolute inset-0 m-auto h-[92%] w-auto" preserveAspectRatio="xMidYMid meet">
+            <svg viewBox="0 0 100 100" className="absolute inset-0 m-auto h-[94%] w-auto" preserveAspectRatio="xMidYMid meet">
               <defs>
                 <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="oklch(0.74 0.13 75 / 0.35)" />
-                  <stop offset="100%" stopColor="oklch(0.20 0.06 270 / 0.25)" />
+                  <stop offset="0%" stopColor="oklch(0.74 0.13 75 / 0.38)" />
+                  <stop offset="100%" stopColor="oklch(0.20 0.06 270 / 0.28)" />
                 </linearGradient>
-                <filter id="glow"><feGaussianBlur stdDeviation="0.6" /></filter>
+                <filter id="glow"><feGaussianBlur stdDeviation="0.5" /></filter>
               </defs>
+              <AnimatePresence mode="wait">
+                <motion.path
+                  key={era.year}
+                  initial={{ opacity: 0, scale: 0.985 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 1.015 }}
+                  transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+                  d={eraPaths[era.year]}
+                  fill="url(#g1)"
+                  stroke="oklch(0.92 0.035 80 / 0.55)"
+                  strokeWidth="0.45"
+                  strokeLinejoin="round"
+                  style={{ transformOrigin: "50% 50%" }}
+                />
+              </AnimatePresence>
               <motion.path
-                key={era.year}
+                key={`glow-${era.year}`}
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.7 }}
-                d="M30 12 Q42 8 50 14 Q60 10 70 18 Q80 22 78 32 Q86 38 78 48 Q82 58 70 64 Q68 74 60 82 Q54 92 48 90 Q44 80 40 76 Q34 70 38 60 Q28 56 30 48 Q22 42 28 34 Q24 24 30 12 Z"
-                fill="url(#g1)"
-                stroke="oklch(0.92 0.035 80 / 0.35)"
-                strokeWidth="0.4"
-              />
-              <path
-                d="M30 12 Q42 8 50 14 Q60 10 70 18 Q80 22 78 32 Q86 38 78 48 Q82 58 70 64 Q68 74 60 82 Q54 92 48 90"
+                animate={{ opacity: 0.7 }}
+                transition={{ duration: 0.9 }}
+                d={eraPaths[era.year]}
                 fill="none"
-                stroke="oklch(0.92 0.035 80 / 0.5)"
-                strokeWidth="0.3"
+                stroke="oklch(0.92 0.035 80 / 0.45)"
+                strokeWidth="0.25"
                 filter="url(#glow)"
               />
             </svg>
