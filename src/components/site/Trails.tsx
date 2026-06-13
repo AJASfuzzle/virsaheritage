@@ -1,12 +1,7 @@
 import { motion } from "framer-motion";
 import { Clock, MapPin, Sparkles } from "lucide-react";
-
-const trails = [
-  { title: "Chettinad Spice Trail", days: "5 days", stops: 9, region: "Tamil Nadu", kind: "Food" },
-  { title: "Brihadeeswarar to Hampi", days: "7 days", stops: 12, region: "Tamil Nadu · Karnataka", kind: "Temples" },
-  { title: "Bhuj Craft Villages", days: "4 days", stops: 8, region: "Kachchh, Gujarat", kind: "Crafts" },
-  { title: "Kumaoni Festival Loop", days: "6 days", stops: 10, region: "Uttarakhand", kind: "Festivals" },
-];
+import { Link } from "@tanstack/react-router";
+import { trails } from "@/lib/trails-data";
 
 export function Trails() {
   return (
@@ -27,7 +22,7 @@ export function Trails() {
         <div className="grid gap-5 md:grid-cols-2">
           {trails.map((t, i) => (
             <motion.article
-              key={t.title}
+              key={t.slug}
               initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
@@ -44,22 +39,25 @@ export function Trails() {
               </div>
               <h3 className="mt-5 font-display text-3xl text-balance">{t.title}</h3>
               <div className="mt-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground">
-                <MapPin className="h-4 w-4" /> {t.region} · {t.stops} stops
+                <MapPin className="h-4 w-4" /> {t.region} · {t.stops.length} stops
               </div>
 
-              {/* mini route */}
               <div className="mt-6 flex items-center gap-1.5">
-                {Array.from({ length: t.stops }).map((_, j) => (
+                {t.stops.map((_, j) => (
                   <span key={j} className="flex items-center gap-1.5">
                     <span className={`h-2 w-2 rounded-full ${j === 0 ? "bg-primary" : "bg-foreground/25"}`} />
-                    {j < t.stops - 1 && <span className="h-px w-5 bg-foreground/20" />}
+                    {j < t.stops.length - 1 && <span className="h-px w-5 bg-foreground/20" />}
                   </span>
                 ))}
               </div>
 
-              <button className="mt-7 inline-flex items-center gap-2 rounded-full bg-white/5 hover:bg-white/10 transition px-4 py-2 text-sm">
+              <Link
+                to="/trails/$slug"
+                params={{ slug: t.slug }}
+                className="mt-7 inline-flex items-center gap-2 rounded-full bg-white/5 hover:bg-white/10 transition px-4 py-2 text-sm"
+              >
                 View trail →
-              </button>
+              </Link>
             </motion.article>
           ))}
         </div>
