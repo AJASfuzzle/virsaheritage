@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { Compass, Menu, Moon, Sun, X } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 const links = [
-  { href: "#explore", label: "Explore Map" },
-  { href: "#timeline", label: "Timeline" },
-  { href: "#shruti", label: "the kitab" },
-  { href: "#library", label: "Library" },
-  { href: "#trails", label: "Trails" },
-  { href: "#contribute", label: "Contribute" },
-];
+  { to: "/atlas", label: "Heritage Atlas" },
+  { to: "/library", label: "Library" },
+  { to: "/kitab", label: "kitab" },
+  { to: "/assistant", label: "Assistant" },
+  { to: "/trails", label: "Trails" },
+  { to: "/contribute", label: "Contribute" },
+] as const;
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -33,14 +34,9 @@ export function Navbar() {
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5">
-        <a
-          href="#explore"
-          onClick={(e) => {
-            e.preventDefault();
-            document.getElementById("explore")?.scrollIntoView({ behavior: "smooth", block: "start" });
-          }}
-          aria-label="Open the heritage map"
-          title="Open the heritage map"
+        <Link
+          to="/"
+          aria-label="KAAL home"
           className="flex items-center gap-2.5 group shrink-0"
         >
           <span className="grid h-9 w-9 place-items-center rounded-xl gradient-ember text-primary-foreground shadow-[0_8px_24px_-8px_oklch(0.72_0.18_55/0.6)] transition-transform duration-500 group-hover:scale-105">
@@ -52,7 +48,7 @@ export function Navbar() {
               Heritage Atlas
             </span>
           </span>
-        </a>
+        </Link>
 
         <nav
           className={`hidden md:flex items-center gap-0.5 rounded-full border border-white/5 px-1.5 py-1 transition-all duration-500 ${
@@ -60,13 +56,14 @@ export function Navbar() {
           }`}
         >
           {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
+            <Link
+              key={l.to}
+              to={l.to}
+              activeProps={{ className: "bg-white/10 text-foreground" }}
               className="btn-glossy whitespace-nowrap rounded-full px-3 py-1.5 text-[13px] font-medium text-foreground/75 hover:text-foreground"
             >
               {l.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -79,12 +76,12 @@ export function Navbar() {
             <Sun className={`absolute h-4 w-4 transition-all duration-500 ${light ? "rotate-90 scale-0 opacity-0" : "rotate-0 scale-100 opacity-100"}`} />
             <Moon className={`absolute h-4 w-4 transition-all duration-500 ${light ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-0 opacity-0"}`} />
           </button>
-          <a
-            href="#contribute"
+          <Link
+            to="/contribute"
             className="btn-glossy hidden sm:inline-flex items-center rounded-full gradient-ember px-4 py-2 text-sm font-medium text-primary-foreground shadow-[0_10px_30px_-10px_oklch(0.72_0.18_55/0.7)]"
           >
             Contribute
-          </a>
+          </Link>
           <button
             className="btn-glossy md:hidden grid h-9 w-9 place-items-center rounded-full glass"
             onClick={() => setOpen((v) => !v)}
@@ -98,14 +95,14 @@ export function Navbar() {
       {open && (
         <div className="md:hidden mx-5 mt-3 rounded-2xl glass p-3 animate-fade-in">
           {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
+            <Link
+              key={l.to}
+              to={l.to}
               onClick={() => setOpen(false)}
               className="block rounded-xl px-4 py-2.5 text-sm hover:bg-white/5"
             >
               {l.label}
-            </a>
+            </Link>
           ))}
         </div>
       )}

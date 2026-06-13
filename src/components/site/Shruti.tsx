@@ -70,13 +70,13 @@ export function Shruti() {
       <div className="mx-auto max-w-7xl px-5">
         <div className="mb-12 flex items-end justify-between gap-6 flex-wrap">
           <div className="max-w-2xl">
-            <p className="text-xs uppercase tracking-[0.28em] text-primary/90">the kitab · Language Archive</p>
+            <p className="text-xs uppercase tracking-[0.28em] text-primary/90">kitab · Language Archive</p>
             <h2 className="mt-3 font-display text-4xl sm:text-5xl text-balance">
               Voices that <span className="italic text-gradient-ember">refuse to fade</span>
             </h2>
             <p className="mt-4 text-muted-foreground text-pretty">
               India speaks in over a thousand tongues. Many will be silent within
-              a generation. <span className="italic">the kitab</span> records them —
+              a generation. <span className="italic">kitab</span> records them —
               pronunciation, proverb, song and script — for the centuries to come.
               Tap any phrase to hear an AI reconstruction.
             </p>
