@@ -1,6 +1,19 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Clock, History, MapPin, Search, Sparkles, Trash2, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import map1800 from "@/assets/map-1800.png.asset.json";
+import map1900 from "@/assets/map-1900.png.asset.json";
+import map1947 from "@/assets/map-1947.png.asset.json";
+import map1984 from "@/assets/map-1984.png.asset.json";
+import map2026 from "@/assets/map-2026.png.asset.json";
+
+const eraMaps: Record<number, string> = {
+  1800: map1800.url,
+  1900: map1900.url,
+  1947: map1947.url,
+  1984: map1984.url,
+  2026: map2026.url,
+};
 
 type Pin = {
   id: string;
@@ -256,41 +269,19 @@ export function IndiaMap() {
           <div className="relative h-[62vh] min-h-[520px] w-full">
             <div className="absolute inset-0 [background:radial-gradient(ellipse_at_50%_30%,oklch(0.74_0.13_75/0.18),transparent_60%),radial-gradient(ellipse_at_70%_80%,oklch(0.20_0.06_270/0.25),transparent_60%)]" />
 
-            <svg viewBox="0 0 100 100" className="absolute inset-0 m-auto h-[94%] w-auto" preserveAspectRatio="xMidYMid meet">
-              <defs>
-                <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="oklch(0.74 0.13 75 / 0.38)" />
-                  <stop offset="100%" stopColor="oklch(0.20 0.06 270 / 0.28)" />
-                </linearGradient>
-                <filter id="glow"><feGaussianBlur stdDeviation="0.5" /></filter>
-              </defs>
-              <AnimatePresence mode="wait">
-                <motion.path
-                  key={era.year}
-                  initial={{ opacity: 0, scale: 0.985 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.015 }}
-                  transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-                  d={eraPaths[era.year]}
-                  fill="url(#g1)"
-                  stroke="oklch(0.92 0.035 80 / 0.55)"
-                  strokeWidth="0.45"
-                  strokeLinejoin="round"
-                  style={{ transformOrigin: "50% 50%" }}
-                />
-              </AnimatePresence>
-              <motion.path
-                key={`glow-${era.year}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.7 }}
-                transition={{ duration: 0.9 }}
-                d={eraPaths[era.year]}
-                fill="none"
-                stroke="oklch(0.92 0.035 80 / 0.45)"
-                strokeWidth="0.25"
-                filter="url(#glow)"
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={era.year}
+                src={eraMaps[era.year]}
+                alt={`Map of India in ${era.year}`}
+                initial={{ opacity: 0, scale: 0.985 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.015 }}
+                transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute inset-0 m-auto h-[94%] w-auto object-contain drop-shadow-[0_18px_40px_oklch(0.20_0.06_270/0.45)]"
+                draggable={false}
               />
-            </svg>
+            </AnimatePresence>
 
             <AnimatePresence mode="popLayout">
               {filtered.map((p, i) => {
