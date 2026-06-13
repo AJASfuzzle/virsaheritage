@@ -108,7 +108,7 @@ const eras: Era[] = [
     body: "After the States Reorganisation Act and the formation of the North-East, India is a federation of language-defined states.",
     mapUrl: map1984.url,
     aspect: 1.113,
-    bounds: { lonMin: 60, lonMax: 99, latMin: 4, latMax: 39 },
+    bounds: { lonMin: 61, lonMax: 100, latMin: 4, latMax: 39 },
     pins: [
       { id: "1984-jk", lat: 34.1, lon: 74.8, region: "Jammu & Kashmir", craft: "Pashmina & Sozni", note: "Srinagar's Kanihama weavers continue Mughal-era jamawars." },
       { id: "1984-hp", lat: 31.1, lon: 77.2, region: "Himachal Pradesh", craft: "Kullu & Kinnauri shawls", note: "Geometric border shawls woven across the upper Beas valley." },
