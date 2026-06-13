@@ -60,9 +60,9 @@ const eras: Era[] = [
     title: "Crown rule over a patchwork of courts",
     body: "British presidencies stretch from Punjab to Madras while princely states keep their darbars alive. Railways carry crafts to world fairs.",
     mapUrl: map1900.url,
-    aspect: 1.2193,
+    aspect: 1.2628,
     // British India + Burma tail (wide aspect)
-    bounds: { lonMin: 66.0, lonMax: 102.0, latMin: 8.0, latMax: 37.5 },
+    bounds: { lonMin: 66.0, lonMax: 102.5, latMin: 8.0, latMax: 36.9 },
     pins: [
       { id: "1900-punjab", lat: 31.6, lon: 74.9, region: "Punjab Province", craft: "Phulkari & Pashmina trade", note: "Amritsar becomes a hub for Kashmiri shawls bound for Europe." },
       { id: "1900-up", lat: 26.8, lon: 80.9, region: "United Provinces (Oudh)", craft: "Chikankari & Banarasi silk", note: "Lucknow shadow-work and Varanasi brocades dominate festive wardrobes." },
