@@ -61,8 +61,8 @@ const eras: Era[] = [
     body: "British presidencies stretch from Punjab to Madras while princely states keep their darbars alive. Railways carry crafts to world fairs.",
     mapUrl: map1900.url,
     aspect: 1.117,
-    // 1900 reference map (Persia/Afghanistan → Siam)
-    bounds: { lonMin: 58, lonMax: 103, latMin: 4, latMax: 41 },
+    // 1900 reference map (Persia → Siam, calibrated against Delhi/Calcutta/Bombay)
+    bounds: { lonMin: 57, lonMax: 104, latMin: 2, latMax: 44 },
     pins: [
       { id: "1900-punjab", lat: 31.6, lon: 74.9, region: "Punjab Province", craft: "Phulkari & Pashmina trade", note: "Amritsar becomes a hub for Kashmiri shawls bound for Europe." },
       { id: "1900-up", lat: 26.8, lon: 80.9, region: "United Provinces (Oudh)", craft: "Chikankari & Banarasi silk", note: "Lucknow shadow-work and Varanasi brocades dominate festive wardrobes." },
