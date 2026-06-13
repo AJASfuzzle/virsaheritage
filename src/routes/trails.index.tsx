@@ -15,7 +15,7 @@ export const Route = createFileRoute("/trails/")({
 
 function TrailsIndex() {
   return (
-    <div className="pt-24">
+    <div className="pt-20">
       <Trails />
     </div>
   );

@@ -15,7 +15,7 @@ export const Route = createFileRoute("/assistant")({
 
 function AssistantPage() {
   return (
-    <div className="pt-24">
+    <div className="pt-20">
       <Assistant />
     </div>
   );

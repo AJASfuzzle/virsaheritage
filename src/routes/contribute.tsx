@@ -15,7 +15,7 @@ export const Route = createFileRoute("/contribute")({
 
 function ContributePage() {
   return (
-    <div className="pt-24">
+    <div className="pt-20">
       <Contribute />
     </div>
   );

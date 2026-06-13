@@ -16,7 +16,7 @@ export const Route = createFileRoute("/library")({
 
 function LibraryPage() {
   return (
-    <div className="pt-24">
+    <div className="pt-20">
       <Traditions />
       <Features />
     </div>
