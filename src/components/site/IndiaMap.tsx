@@ -107,7 +107,7 @@ const eras: Era[] = [
     title: "Linguistic states, living looms",
     body: "After the States Reorganisation Act and the formation of the North-East, India is a federation of language-defined states.",
     mapUrl: map1984.url,
-    aspect: 0.9111,
+    aspect: 0.9120,
     bounds: { lonMin: 68.0, lonMax: 97.5, latMin: 6.5, latMax: 38.9 },
     pins: [
       { id: "1984-jk", lat: 34.1, lon: 74.8, region: "Jammu & Kashmir", craft: "Pashmina & Sozni", note: "Srinagar's Kanihama weavers continue Mughal-era jamawars." },
