@@ -96,7 +96,7 @@ export function Traditions() {
               Stories the country <span className="italic text-gradient-ember">still remembers</span>
             </h2>
           </div>
-          <a href="#library" className="text-sm text-foreground/70 hover:text-foreground underline-offset-4 hover:underline">
+          <a href="/library" className="text-sm text-foreground/70 hover:text-foreground underline-offset-4 hover:underline">
             Enter the Living Library →
           </a>
         </div>
