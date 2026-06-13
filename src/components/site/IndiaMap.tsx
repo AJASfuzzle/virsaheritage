@@ -300,7 +300,6 @@ export function IndiaMap() {
                     alt={`Map of India in ${era.year}`}
                     draggable={false}
                     className="absolute inset-0 h-full w-full object-contain drop-shadow-[0_18px_40px_oklch(0.20_0.06_270/0.45)]"
-                    style={{ filter: mapFilter }}
                   />
 
                   {/* Pins are positioned inside the same box as the image,
