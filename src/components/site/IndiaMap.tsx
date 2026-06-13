@@ -1,6 +1,19 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Clock, History, MapPin, Search, Sparkles, Trash2, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import map1800 from "@/assets/map-1800.png.asset.json";
+import map1900 from "@/assets/map-1900.png.asset.json";
+import map1947 from "@/assets/map-1947.png.asset.json";
+import map1984 from "@/assets/map-1984.png.asset.json";
+import map2026 from "@/assets/map-2026.png.asset.json";
+
+const eraMaps: Record<number, string> = {
+  1800: map1800.url,
+  1900: map1900.url,
+  1947: map1947.url,
+  1984: map1984.url,
+  2026: map2026.url,
+};
 
 type Pin = {
   id: string;
