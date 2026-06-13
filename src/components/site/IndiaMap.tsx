@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import map1800 from "@/assets/map-1800-v8.png.asset.json";
 import map1900 from "@/assets/map-1900-v7.png.asset.json";
 import map1947 from "@/assets/map-1947-v7.png.asset.json";
-import map1984 from "@/assets/map-1984-v7.png.asset.json";
+
 import map2026 from "@/assets/map-2026-v7.png.asset.json";
 
 type Pin = {
@@ -46,7 +46,7 @@ const eras: Era[] = [
       { id: "1800-punjab", lat: 31.6, lon: 74.9, region: "Punjab (Sikh Misls)", craft: "Phulkari embroidery", note: "Flower-work shawls stitched by women for weddings and harvest." },
       { id: "1800-rajputana", lat: 26.9, lon: 75.8, region: "Rajputana", craft: "Bandhani tie-dye", note: "Tiny knotted dots forming odhnis worn across desert courts." },
       { id: "1800-awadh", lat: 26.8, lon: 80.9, region: "Awadh (Lucknow)", craft: "Chikankari", note: "White-on-white shadow embroidery refined under Nawabi ateliers." },
-      { id: "1800-bengal", lat: 23.8, lon: 90.4, region: "Bengal", craft: "Jamdani muslin", note: "Air-light Dhaka muslin patterned on the loom itself." },
+      { id: "1800-bengal", lat: 24.2, lon: 87.6, region: "Bengal", craft: "Jamdani muslin", note: "Air-light Dhaka muslin patterned on the loom itself." },
       { id: "1800-sindhia", lat: 26.2, lon: 78.2, region: "Sindhia / Maratha Gwalior", craft: "Chanderi weaving", note: "Sheer cotton-silk saris patronised by Maratha queens." },
       { id: "1800-cp", lat: 21.1, lon: 79.1, region: "Central Provinces", craft: "Gond painting", note: "Forest-spirit murals dotted in natural pigment by Gond clans." },
       { id: "1800-nizam", lat: 17.4, lon: 78.5, region: "Nizam Dominions", craft: "Bidriware", note: "Blackened zinc-copper alloy inlaid with silver thread." },
@@ -64,15 +64,15 @@ const eras: Era[] = [
     // 1900 reference map (Persia → Siam, calibrated against Delhi/Calcutta/Bombay)
     bounds: { lonMin: 57, lonMax: 104, latMin: 2, latMax: 44 },
     pins: [
-      { id: "1900-punjab", lat: 31.6, lon: 74.9, region: "Punjab Province", craft: "Phulkari & Pashmina trade", note: "Amritsar becomes a hub for Kashmiri shawls bound for Europe." },
+      { id: "1900-punjab", lat: 31.0, lon: 73.5, region: "Punjab Province", craft: "Phulkari & Pashmina trade", note: "Amritsar becomes a hub for Kashmiri shawls bound for Europe." },
       { id: "1900-up", lat: 26.8, lon: 80.9, region: "United Provinces (Oudh)", craft: "Chikankari & Banarasi silk", note: "Lucknow shadow-work and Varanasi brocades dominate festive wardrobes." },
       { id: "1900-rajputana", lat: 26.9, lon: 75.8, region: "Rajputana Agency", craft: "Blue pottery of Jaipur", note: "Quartz-based cobalt ceramics revived under Sawai Ram Singh II." },
       { id: "1900-bengal", lat: 22.6, lon: 88.4, region: "Bengal Presidency", craft: "Kantha embroidery", note: "Layered old saris stitched with running thread into quilts and stories." },
       { id: "1900-assam", lat: 26.1, lon: 91.7, region: "Assam", craft: "Muga silk", note: "Golden-yellow silk reared only along the Brahmaputra." },
       { id: "1900-bombay", lat: 19.1, lon: 72.9, region: "Bombay Presidency", craft: "Paithani sari & Warli art", note: "Yeola looms weave peacock pallus; Adivasi villages paint ritual murals." },
       { id: "1900-hyderabad", lat: 17.4, lon: 78.5, region: "Hyderabad State", craft: "Bidriware", note: "Silver-inlaid hookahs and pandans crafted by Bidar artisans." },
-      { id: "1900-mysore", lat: 12.3, lon: 76.7, region: "Mysore State", craft: "Mysore silk", note: "Wodeyars set up state silk farms; the zari-bordered sari becomes iconic." },
-      { id: "1900-madras", lat: 13.1, lon: 80.3, region: "Madras Presidency", craft: "Tanjore painting", note: "Gold-leaf devotional panels patronised by the Maratha Bhonsles of Thanjavur." },
+      { id: "1900-mysore", lat: 13.6, lon: 75.0, region: "Mysore State", craft: "Mysore silk", note: "Wodeyars set up state silk farms; the zari-bordered sari becomes iconic." },
+      { id: "1900-madras", lat: 12.97, lon: 77.6, region: "Madras Presidency", craft: "Tanjore painting", note: "Gold-leaf devotional panels patronised by the Maratha Bhonsles of Thanjavur." },
       { id: "1900-goa", lat: 15.5, lon: 73.8, region: "Portuguese Goa", craft: "Azulejo tiles & Kunbi weave", note: "Indo-Portuguese tilework on church facades and old Goan homes." },
     ],
   },
@@ -86,51 +86,19 @@ const eras: Era[] = [
     // 1947 India reference (calibrated against Delhi/Calcutta/Andaman)
     bounds: { lonMin: 67, lonMax: 95, latMin: 4, latMax: 39 },
     pins: [
-      { id: "1947-punjab", lat: 30.7, lon: 76.8, region: "East Punjab", craft: "Phulkari", note: "Bagh shawls carried by Partition refugees from Lyallpur into Patiala and Delhi." },
+      { id: "1947-punjab", lat: 32.0, lon: 75.2, region: "Punjab", craft: "Phulkari", note: "Bagh shawls carried by Partition refugees from Lyallpur into Patiala and Delhi." },
       { id: "1947-up", lat: 26.8, lon: 80.9, region: "United Provinces", craft: "Chikankari & Banarasi brocade", note: "Lucknow and Varanasi remain the workshops of the Indo-Gangetic plain." },
       { id: "1947-rajasthan", lat: 26.9, lon: 75.8, region: "Rajasthan", craft: "Blue pottery & Bandhani", note: "Jaipur, Jodhpur and Sanganer keep their court crafts." },
-      { id: "1947-mb", lat: 22.7, lon: 75.9, region: "Madhya Bharat", craft: "Chanderi & Maheshwari", note: "Holkar-patronised Maheshwari saris re-enter national wardrobes." },
+      { id: "1947-mb", lat: 23.5, lon: 78.0, region: "Madhya Pradesh", craft: "Chanderi & Maheshwari", note: "Holkar-patronised Maheshwari saris re-enter national wardrobes." },
       { id: "1947-bihar", lat: 25.6, lon: 85.1, region: "Bihar", craft: "Madhubani painting", note: "Courtyard murals first 'discovered' by the wider world after the 1934 quake." },
       { id: "1947-wb", lat: 22.6, lon: 88.4, region: "West Bengal", craft: "Kantha & Baluchari", note: "Refugee women from East Bengal carry the kantha stitch into Bengal's cities." },
       { id: "1947-assam", lat: 26.1, lon: 91.7, region: "Assam", craft: "Muga & Eri silk", note: "Sualkuchi villages weave golden Muga for the post-independence elite." },
       { id: "1947-orissa", lat: 20.3, lon: 85.8, region: "Orissa", craft: "Pattachitra & Sambalpuri ikat", note: "Palm-leaf scrolls of Jagannath stories and tie-dyed ikat saris." },
-      { id: "1947-bombay", lat: 19.1, lon: 72.9, region: "Bombay State", craft: "Warli & Paithani", note: "Tribal Warli art and Yeola's peacock saris share one administrative roof." },
-      { id: "1947-hyderabad", lat: 17.4, lon: 78.5, region: "Hyderabad State", craft: "Bidriware & Pochampally ikat", note: "Nizam-era ateliers persist even as the state merges into the Union." },
-      { id: "1947-mysore", lat: 12.3, lon: 76.7, region: "Mysore State", craft: "Mysore silk & Channapatna toys", note: "Lacquered wooden toys ride the new Indian Railways to children nationwide." },
+      { id: "1947-bombay", lat: 19.0, lon: 73.5, region: "Bombay State", craft: "Warli & Paithani", note: "Tribal Warli art and Yeola's peacock saris share one administrative roof." },
+      { id: "1947-hyderabad", lat: 17.4, lon: 78.9, region: "Hyderabad State", craft: "Bidriware & Pochampally ikat", note: "Nizam-era ateliers persist even as the state merges into the Union." },
+      { id: "1947-mysore", lat: 12.5, lon: 77.4, region: "Mysore State", craft: "Mysore silk & Channapatna toys", note: "Lacquered wooden toys ride the new Indian Railways to children nationwide." },
       { id: "1947-madras", lat: 13.1, lon: 80.3, region: "Madras State", craft: "Kanchipuram silk", note: "Temple-town looms weave triple-ply zari saris for the republic's weddings." },
-      { id: "1947-tc", lat: 9.9, lon: 76.3, region: "Travancore–Cochin", craft: "Kasavu & Aranmula mirror", note: "Off-white cotton with gold border becomes Kerala's signature drape." },
-    ],
-  },
-  {
-    year: 1984,
-    tag: "Reorganised India",
-    title: "Linguistic states, living looms",
-    body: "After the States Reorganisation Act and the formation of the North-East, India is a federation of language-defined states.",
-    mapUrl: map1984.url,
-    aspect: 1.113,
-    bounds: { lonMin: 61, lonMax: 100, latMin: 4, latMax: 39 },
-    pins: [
-      { id: "1984-jk", lat: 34.1, lon: 74.8, region: "Jammu & Kashmir", craft: "Pashmina & Sozni", note: "Srinagar's Kanihama weavers continue Mughal-era jamawars." },
-      { id: "1984-hp", lat: 31.1, lon: 77.2, region: "Himachal Pradesh", craft: "Kullu & Kinnauri shawls", note: "Geometric border shawls woven across the upper Beas valley." },
-      { id: "1984-punjab", lat: 30.9, lon: 75.4, region: "Punjab", craft: "Phulkari", note: "GI-protected floral embroidery from Patiala and Bathinda." },
-      { id: "1984-haryana", lat: 29.0, lon: 76.5, region: "Haryana", craft: "Surajkund pottery & durries", note: "The famed Surajkund crafts mela begins (1987)." },
-      { id: "1984-rajasthan", lat: 26.9, lon: 74.0, region: "Rajasthan", craft: "Blue pottery & miniature painting", note: "Jaipur and Kishangarh schools sustain Mughal-Rajput miniature." },
-      { id: "1984-up", lat: 26.8, lon: 80.9, region: "Uttar Pradesh", craft: "Chikankari & Banarasi silk", note: "Lucknow and Varanasi continue as the bridal trousseau's heart." },
-      { id: "1984-bihar", lat: 25.6, lon: 85.1, region: "Bihar", craft: "Madhubani / Mithila painting", note: "Now exported worldwide on paper, silk and sarees." },
-      { id: "1984-wb", lat: 22.9, lon: 87.9, region: "West Bengal", craft: "Kantha & Baluchari", note: "Bishnupur's mythic-scene silk saris and rural kantha quilts." },
-      { id: "1984-sikkim", lat: 27.5, lon: 88.5, region: "Sikkim", craft: "Thangka & Lepcha weaving", note: "Buddhist scroll painting and bamboo-loom textiles." },
-      { id: "1984-assam", lat: 26.2, lon: 92.9, region: "Assam", craft: "Muga silk", note: "Only state to produce golden Muga; weavers' cooperatives expand." },
-      { id: "1984-naga", lat: 25.7, lon: 94.1, region: "Nagaland", craft: "Naga shawls", note: "Tribe-specific patterns — Ao, Angami, Sumi — woven on loin looms." },
-      { id: "1984-manipur", lat: 24.7, lon: 93.9, region: "Manipur", craft: "Moirang Phee & Phanek", note: "Temple-motif borders woven in Imphal's home looms." },
-      { id: "1984-mp", lat: 23.3, lon: 78.0, region: "Madhya Pradesh", craft: "Chanderi & Maheshwari", note: "Rehwa Society revives Maheshwari weaving on the Narmada." },
-      { id: "1984-gujarat", lat: 22.5, lon: 71.2, region: "Gujarat", craft: "Patola silk & Bandhani", note: "Patan's double-ikat Patola — months on a single sari." },
-      { id: "1984-orissa", lat: 20.3, lon: 85.0, region: "Orissa", craft: "Pattachitra & Sambalpuri ikat", note: "Bandha tie-dye weaving from Bargarh; Raghurajpur painters." },
-      { id: "1984-mh", lat: 19.5, lon: 75.7, region: "Maharashtra", craft: "Paithani & Warli", note: "Warli enters Bombay's design schools and gallery circuits." },
-      { id: "1984-ap", lat: 16.5, lon: 80.0, region: "Andhra Pradesh", craft: "Kalamkari & Bidriware", note: "Sri Kalahasti pen-painted cottons telling Puranic stories." },
-      { id: "1984-goa", lat: 15.5, lon: 73.9, region: "Goa (UT)", craft: "Azulejo tiles", note: "Indo-Portuguese tile art revived for Goan villas and churches." },
-      { id: "1984-ktk", lat: 14.5, lon: 76.0, region: "Karnataka", craft: "Mysore silk & Channapatna toys", note: "Lacquer-turned wooden toys become the state's children's icon." },
-      { id: "1984-tn", lat: 11.1, lon: 78.7, region: "Tamil Nadu", craft: "Kanchipuram silk & Tanjore painting", note: "Temple silks and gold-foil devotional panels." },
-      { id: "1984-kerala", lat: 10.5, lon: 76.3, region: "Kerala", craft: "Kasavu & Aranmula Kannadi", note: "Onam wardrobes drape the gold-bordered Kasavu mundu." },
+      { id: "1947-tc", lat: 9.4, lon: 76.8, region: "Travancore–Cochin", craft: "Kasavu & Aranmula mirror", note: "Off-white cotton with gold border becomes Kerala's signature drape." },
     ],
   },
   {
