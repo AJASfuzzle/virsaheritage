@@ -39,8 +39,8 @@ const eras: Era[] = [
     body: "Sikh misls, Maratha confederacies, Rajput houses and southern princely states each guard their own court arts, looms and kilns.",
     mapUrl: map1800.url,
     aspect: 0.812,
-    // A.K. Johnston 1799–1806 map (grid 65–95°E, 5–46°N)
-    bounds: { lonMin: 66, lonMax: 95, latMin: 5, latMax: 37 },
+    // A.K. Johnston 1799–1806 map — image extends from ~3°N (south of Ceylon) to ~37°N
+    bounds: { lonMin: 67, lonMax: 95, latMin: 3, latMax: 37 },
     pins: [
       { id: "1800-kashmir", lat: 34.1, lon: 74.8, region: "Kashmir", craft: "Pashmina & Kani shawls", note: "Changthangi wool hand-woven on twill-tapestry looms for Mughal and Persian courts." },
       { id: "1800-punjab", lat: 31.6, lon: 74.9, region: "Punjab (Sikh Misls)", craft: "Phulkari embroidery", note: "Flower-work shawls stitched by women for weddings and harvest." },
