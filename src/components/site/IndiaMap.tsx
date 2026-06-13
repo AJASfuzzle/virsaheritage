@@ -83,8 +83,8 @@ const eras: Era[] = [
     body: "Princely states accede, lines are redrawn, refugees carry recipes and looms across new borders. Crafts become quiet markers of identity.",
     mapUrl: map1947.url,
     aspect: 0.798,
-    // 1947 India reference (West Pakistan to East Pakistan)
-    bounds: { lonMin: 67, lonMax: 97, latMin: 5, latMax: 37 },
+    // 1947 India reference (calibrated against Delhi/Calcutta/Andaman)
+    bounds: { lonMin: 67, lonMax: 95, latMin: 4, latMax: 39 },
     pins: [
       { id: "1947-punjab", lat: 30.7, lon: 76.8, region: "East Punjab", craft: "Phulkari", note: "Bagh shawls carried by Partition refugees from Lyallpur into Patiala and Delhi." },
       { id: "1947-up", lat: 26.8, lon: 80.9, region: "United Provinces", craft: "Chikankari & Banarasi brocade", note: "Lucknow and Varanasi remain the workshops of the Indo-Gangetic plain." },
