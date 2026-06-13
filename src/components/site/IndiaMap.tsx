@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import map1800 from "@/assets/map-1800-v8.png.asset.json";
 import map1900 from "@/assets/map-1900-v7.png.asset.json";
 import map1947 from "@/assets/map-1947-v7.png.asset.json";
-import map1984 from "@/assets/map-1984-v7.png.asset.json";
+
 import map2026 from "@/assets/map-2026-v7.png.asset.json";
 
 type Pin = {
