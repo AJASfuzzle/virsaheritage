@@ -147,6 +147,26 @@ const eras: Era[] = [
   },
 ];
 
+// India silhouettes per era (viewBox 0 0 100 100).
+// Hand-tuned polylines approximating the country's borders in each period.
+// 1800: Mughal-era subcontinent (incl. today's Pakistan & Bangladesh, no Afghanistan, no Ceylon)
+// 1900: British India (subcontinent + Burma tail)
+// 1947: Independent India (no Pakistan, no East Pakistan, no Ceylon; no Sikkim yet)
+// 1984: Reorganised India (modern silhouette incl. Sikkim & NE seven sisters)
+// 2026: Present-day India (with Ladakh UT carved at the top)
+const eraPaths: Record<number, string> = {
+  1800:
+    "M40 4 L52 6 L60 10 L66 14 L62 20 L58 26 L66 26 L72 30 L78 38 L80 44 L74 46 L70 44 L64 48 L60 52 L58 62 L56 72 L52 82 L48 92 L44 88 L42 80 L40 72 L36 64 L30 58 L24 54 L16 50 L10 42 L8 34 L12 28 L16 22 L24 18 L30 14 L34 8 Z",
+  1900:
+    "M40 4 L52 6 L60 10 L66 14 L62 20 L58 26 L66 26 L72 30 L78 36 L84 38 L88 42 L90 50 L88 58 L84 60 L82 54 L80 48 L74 46 L70 44 L64 48 L60 52 L58 62 L56 72 L52 82 L48 92 L44 88 L42 80 L40 72 L36 64 L30 58 L24 54 L16 50 L10 42 L8 34 L12 28 L16 22 L24 18 L30 14 L34 8 Z",
+  1947:
+    "M38 8 L46 8 L54 10 L60 14 L66 18 L62 24 L60 28 L66 30 L72 32 L70 36 L66 40 L64 44 L62 48 L60 54 L58 64 L56 74 L52 84 L48 94 L44 88 L42 80 L40 72 L36 64 L30 58 L24 54 L20 50 L18 44 L20 38 L24 34 L28 30 L30 24 L32 18 L34 12 Z",
+  1984:
+    "M38 6 L46 6 L54 8 L62 12 L68 18 L74 22 L80 24 L86 26 L84 32 L78 34 L72 32 L66 36 L70 40 L74 42 L78 46 L76 52 L72 50 L68 48 L64 46 L60 50 L58 56 L58 64 L56 72 L52 82 L48 94 L44 90 L42 82 L40 74 L36 66 L30 60 L24 56 L20 52 L18 46 L20 40 L24 36 L28 32 L30 26 L32 20 L34 14 L36 10 Z",
+  2026:
+    "M42 4 L50 4 L56 8 L54 12 L48 14 L54 16 L62 14 L68 18 L74 22 L80 24 L86 26 L84 32 L78 34 L72 32 L66 36 L70 40 L74 42 L78 46 L76 52 L72 50 L68 48 L64 46 L60 50 L58 56 L58 64 L56 72 L52 82 L48 94 L44 90 L42 82 L40 74 L36 66 L30 60 L24 56 L20 52 L18 46 L20 40 L24 36 L28 32 L30 26 L32 20 L34 14 L38 8 Z",
+};
+
 const HISTORY_KEY = "kaal:explored:v2";
 
 function useExplored() {
@@ -236,29 +256,38 @@ export function IndiaMap() {
           <div className="relative h-[62vh] min-h-[520px] w-full">
             <div className="absolute inset-0 [background:radial-gradient(ellipse_at_50%_30%,oklch(0.74_0.13_75/0.18),transparent_60%),radial-gradient(ellipse_at_70%_80%,oklch(0.20_0.06_270/0.25),transparent_60%)]" />
 
-            <svg viewBox="0 0 100 100" className="absolute inset-0 m-auto h-[92%] w-auto" preserveAspectRatio="xMidYMid meet">
+            <svg viewBox="0 0 100 100" className="absolute inset-0 m-auto h-[94%] w-auto" preserveAspectRatio="xMidYMid meet">
               <defs>
                 <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="oklch(0.74 0.13 75 / 0.35)" />
-                  <stop offset="100%" stopColor="oklch(0.20 0.06 270 / 0.25)" />
+                  <stop offset="0%" stopColor="oklch(0.74 0.13 75 / 0.38)" />
+                  <stop offset="100%" stopColor="oklch(0.20 0.06 270 / 0.28)" />
                 </linearGradient>
-                <filter id="glow"><feGaussianBlur stdDeviation="0.6" /></filter>
+                <filter id="glow"><feGaussianBlur stdDeviation="0.5" /></filter>
               </defs>
+              <AnimatePresence mode="wait">
+                <motion.path
+                  key={era.year}
+                  initial={{ opacity: 0, scale: 0.985 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 1.015 }}
+                  transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+                  d={eraPaths[era.year]}
+                  fill="url(#g1)"
+                  stroke="oklch(0.92 0.035 80 / 0.55)"
+                  strokeWidth="0.45"
+                  strokeLinejoin="round"
+                  style={{ transformOrigin: "50% 50%" }}
+                />
+              </AnimatePresence>
               <motion.path
-                key={era.year}
+                key={`glow-${era.year}`}
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.7 }}
-                d="M30 12 Q42 8 50 14 Q60 10 70 18 Q80 22 78 32 Q86 38 78 48 Q82 58 70 64 Q68 74 60 82 Q54 92 48 90 Q44 80 40 76 Q34 70 38 60 Q28 56 30 48 Q22 42 28 34 Q24 24 30 12 Z"
-                fill="url(#g1)"
-                stroke="oklch(0.92 0.035 80 / 0.35)"
-                strokeWidth="0.4"
-              />
-              <path
-                d="M30 12 Q42 8 50 14 Q60 10 70 18 Q80 22 78 32 Q86 38 78 48 Q82 58 70 64 Q68 74 60 82 Q54 92 48 90"
+                animate={{ opacity: 0.7 }}
+                transition={{ duration: 0.9 }}
+                d={eraPaths[era.year]}
                 fill="none"
-                stroke="oklch(0.92 0.035 80 / 0.5)"
-                strokeWidth="0.3"
+                stroke="oklch(0.92 0.035 80 / 0.45)"
+                strokeWidth="0.25"
                 filter="url(#glow)"
               />
             </svg>
