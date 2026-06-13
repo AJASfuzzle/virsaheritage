@@ -1,43 +1,153 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { Clock, History, Layers, MapPin, Search, Sparkles, Trash2, X } from "lucide-react";
+import { Clock, History, MapPin, Search, Sparkles, Trash2, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 type Pin = {
   id: string;
   x: number;
   y: number;
-  label: string;
   region: string;
-  era: string;
-  category: string;
-  blurb: string;
-  legacy: string;
-  successors: string;
+  craft: string;
+  note: string;
 };
 
-const pins: Pin[] = [
-  { id: "pashmina", x: 30, y: 22, label: "Kashmir Pashmina", region: "Kashmir Valley", era: "15th c. – present", category: "Crafts", blurb: "Fine wool from the Changthangi goat, hand-spun and woven into shawls for Mughal courts.", legacy: "Defined luxury textile vocabulary across Persia and Europe; survives through GI-protected artisans.", successors: "Kanihama Jamawar · Sozni embroidery" },
-  { id: "bhangra", x: 38, y: 30, label: "Punjabi Bhangra", region: "Punjab", era: "Harvest festival, 14th c.", category: "Dance", blurb: "A harvest dance born in the wheat fields of Punjab, set to the dhol's heartbeat.", legacy: "Travelled with the diaspora to become a global pop-folk language.", successors: "Giddha · Punjabi MC era" },
-  { id: "mithila", x: 56, y: 33, label: "Mithila Painting", region: "Bihar · Nepal border", era: "Ancient · documented 7th c.", category: "Crafts", blurb: "Geometric, mythic murals painted on courtyard walls by women for weddings and festivals.", legacy: "Carried forward Vedic iconography; now an internationally collected folk-art form.", successors: "Madhubani art on paper & silk" },
-  { id: "bihu", x: 76, y: 38, label: "Assamese Bihu", region: "Brahmaputra valley", era: "Pre-Ahom, ~3rd c.", category: "Festivals", blurb: "Three-fold spring, autumn and winter festivals tied to rice cultivation and the river's moods.", legacy: "Anchors Assamese identity; Rongali Bihu now a global cultural celebration.", successors: "Bihu geet · Husori troupes" },
-  { id: "ghoomar", x: 32, y: 48, label: "Rajasthani Ghoomar", region: "Rajputana", era: "Bhil origin, ~14th c.", category: "Dance", blurb: "A swirling, veiled dance of Rajput women, performed in concentric circles to folk percussion.", legacy: "Symbol of feminine grace across Rajasthan's royal courts.", successors: "Kalbeliya · Chari dance" },
-  { id: "warli", x: 48, y: 56, label: "Warli Art", region: "Western Ghats, Maharashtra", era: "Tribal, ~2500 BCE", category: "Crafts", blurb: "Stick-figure murals of dance, hunt and harvest painted in rice paste on mud walls.", legacy: "One of India's oldest living art traditions; now a design language of its own.", successors: "Contemporary Warli on canvas" },
-  { id: "fado", x: 38, y: 70, label: "Goan Fado", region: "Goa coast", era: "Portuguese era, 16th–19th c.", category: "Music", blurb: "Saudade-soaked ballads sung in Konkani and Portuguese in candle-lit taverns.", legacy: "Living memory of Indo-Portuguese fusion; mando is its surviving cousin.", successors: "Mando · Konkani tiatr" },
-  { id: "kathakali", x: 55, y: 78, label: "Kathakali", region: "Kerala", era: "17th c.", category: "Dance", blurb: "Operatic dance-theatre in elaborate green-faced make-up enacting epics through the night.", legacy: "Shaped global perceptions of classical Indian performance.", successors: "Mohiniyattam · Krishnanattam" },
-  { id: "carnatic", x: 68, y: 70, label: "Carnatic Music", region: "Tamil Nadu · Karnataka", era: "Codified 18th c.", category: "Music", blurb: "A raga-tala system perfected by the Trinity — Tyagaraja, Dikshitar and Syama Sastri.", legacy: "Living classical tradition still taught guru-to-shishya across the south.", successors: "Margazhi season · Fusion ensembles" },
-  { id: "awadhi", x: 50, y: 42, label: "Awadhi Cuisine", region: "Lucknow, Awadh", era: "Nawabi era, 18th c.", category: "Food", blurb: "Slow-cooked dum biryanis, kebabs and breads refined in the kitchens of Nawabi Lucknow.", legacy: "Set the template for North Indian fine dining and street legends like the Galouti.", successors: "Tunday Kababi · Modern dum cuisine" },
+type Era = {
+  year: number;
+  tag: string;
+  title: string;
+  body: string;
+  pins: Pin[];
+};
+
+const eras: Era[] = [
+  {
+    year: 1800,
+    tag: "Age of Kingdoms",
+    title: "A subcontinent of sovereigns",
+    body: "Sikh misls, Maratha confederacies, Rajput houses and southern princely states each guard their own court arts, looms and kilns.",
+    pins: [
+      { id: "1800-kashmir", x: 32, y: 18, region: "Kashmir", craft: "Pashmina & Kani shawls", note: "Changthangi wool hand-woven on twill-tapestry looms for Mughal and Persian courts." },
+      { id: "1800-punjab", x: 36, y: 26, region: "Punjab (Sikh Misls)", craft: "Phulkari embroidery", note: "Flower-work shawls stitched by women for weddings and harvest." },
+      { id: "1800-rajputana", x: 30, y: 38, region: "Rajputana", craft: "Bandhani tie-dye", note: "Tiny knotted dots forming odhnis worn across desert courts." },
+      { id: "1800-awadh", x: 50, y: 36, region: "Awadh (Lucknow)", craft: "Chikankari", note: "White-on-white shadow embroidery refined under Nawabi ateliers." },
+      { id: "1800-bengal", x: 66, y: 44, region: "Bengal", craft: "Jamdani muslin", note: "Air-light Dhaka muslin patterned on the loom itself." },
+      { id: "1800-sindhia", x: 44, y: 44, region: "Sindhia / Maratha Gwalior", craft: "Chanderi weaving", note: "Sheer cotton-silk saris patronised by Maratha queens." },
+      { id: "1800-cp", x: 50, y: 52, region: "Central Provinces", craft: "Gond painting", note: "Forest-spirit murals dotted in natural pigment by Gond clans." },
+      { id: "1800-nizam", x: 48, y: 64, region: "Nizam Dominions", craft: "Bidriware", note: "Blackened zinc-copper alloy inlaid with silver thread." },
+      { id: "1800-mysore", x: 42, y: 76, region: "Mysore", craft: "Mysore silk & sandalwood", note: "Court looms of Wodeyar Mysore wove gold-bordered silks." },
+      { id: "1800-travancore", x: 44, y: 86, region: "Travancore", craft: "Aranmula Kannadi", note: "Hand-polished metal mirrors cast by a single family lineage." },
+    ],
+  },
+  {
+    year: 1900,
+    tag: "British Raj",
+    title: "Crown rule over a patchwork of courts",
+    body: "British presidencies stretch from Punjab to Madras while princely states keep their darbars alive. Railways carry crafts to world fairs.",
+    pins: [
+      { id: "1900-punjab", x: 36, y: 26, region: "Punjab Province", craft: "Phulkari & Pashmina trade", note: "Amritsar becomes a hub for Kashmiri shawls bound for Europe." },
+      { id: "1900-up", x: 50, y: 36, region: "United Provinces (Oudh)", craft: "Chikankari & Banarasi silk", note: "Lucknow shadow-work and Varanasi brocades dominate festive wardrobes." },
+      { id: "1900-rajputana", x: 30, y: 40, region: "Rajputana Agency", craft: "Blue pottery of Jaipur", note: "Quartz-based cobalt ceramics revived under Sawai Ram Singh II." },
+      { id: "1900-bengal", x: 66, y: 44, region: "Bengal Presidency", craft: "Kantha embroidery", note: "Layered old saris stitched with running thread into quilts and stories." },
+      { id: "1900-assam", x: 78, y: 40, region: "Assam", craft: "Muga silk", note: "Golden-yellow silk reared only along the Brahmaputra." },
+      { id: "1900-bombay", x: 34, y: 58, region: "Bombay Presidency", craft: "Paithani sari & Warli art", note: "Yeola looms weave peacock pallus; Adivasi villages paint ritual murals." },
+      { id: "1900-hyderabad", x: 48, y: 64, region: "Hyderabad State", craft: "Bidriware", note: "Silver-inlaid hookahs and pandans crafted by Bidar artisans." },
+      { id: "1900-mysore", x: 42, y: 76, region: "Mysore State", craft: "Mysore silk", note: "Wodeyars set up state silk farms; the zari-bordered sari becomes iconic." },
+      { id: "1900-madras", x: 50, y: 80, region: "Madras Presidency", craft: "Tanjore painting", note: "Gold-leaf devotional panels patronised by the Maratha Bhonsles of Thanjavur." },
+      { id: "1900-goa", x: 34, y: 68, region: "Portuguese Goa", craft: "Azulejo tiles & Kunbi weave", note: "Indo-Portuguese tilework on church facades and old Goan homes." },
+    ],
+  },
+  {
+    year: 1947,
+    tag: "Independence",
+    title: "A new union of states",
+    body: "Princely states accede, lines are redrawn, refugees carry recipes and looms across new borders. Crafts become quiet markers of identity.",
+    pins: [
+      { id: "1947-punjab", x: 36, y: 26, region: "East Punjab", craft: "Phulkari", note: "Bagh shawls carried by Partition refugees from Lyallpur into Patiala and Delhi." },
+      { id: "1947-up", x: 50, y: 36, region: "United Provinces", craft: "Chikankari & Banarasi brocade", note: "Lucknow and Varanasi remain the workshops of the Indo-Gangetic plain." },
+      { id: "1947-rajasthan", x: 30, y: 40, region: "Rajasthan", craft: "Blue pottery & Bandhani", note: "Jaipur, Jodhpur and Sanganer keep their court crafts." },
+      { id: "1947-mb", x: 44, y: 48, region: "Madhya Bharat", craft: "Chanderi & Maheshwari", note: "Holkar-patronised Maheshwari saris re-enter national wardrobes." },
+      { id: "1947-bihar", x: 58, y: 42, region: "Bihar", craft: "Madhubani painting", note: "Courtyard murals first 'discovered' by the wider world after the 1934 quake." },
+      { id: "1947-wb", x: 66, y: 44, region: "West Bengal", craft: "Kantha & Baluchari", note: "Refugee women from East Bengal carry the kantha stitch into Bengal's cities." },
+      { id: "1947-assam", x: 78, y: 40, region: "Assam", craft: "Muga & Eri silk", note: "Sualkuchi villages weave golden Muga for the post-independence elite." },
+      { id: "1947-orissa", x: 60, y: 54, region: "Orissa", craft: "Pattachitra & Sambalpuri ikat", note: "Palm-leaf scrolls of Jagannath stories and tie-dyed ikat saris." },
+      { id: "1947-bombay", x: 34, y: 58, region: "Bombay State", craft: "Warli & Paithani", note: "Tribal Warli art and Yeola's peacock saris share one administrative roof." },
+      { id: "1947-hyderabad", x: 48, y: 64, region: "Hyderabad State", craft: "Bidriware & Pochampally ikat", note: "Nizam-era ateliers persist even as the state merges into the Union." },
+      { id: "1947-mysore", x: 42, y: 76, region: "Mysore State", craft: "Mysore silk & Channapatna toys", note: "Lacquered wooden toys ride the new Indian Railways to children nationwide." },
+      { id: "1947-madras", x: 50, y: 80, region: "Madras State", craft: "Kanchipuram silk", note: "Temple-town looms weave triple-ply zari saris for the republic's weddings." },
+      { id: "1947-tc", x: 44, y: 86, region: "Travancore–Cochin", craft: "Kasavu & Aranmula mirror", note: "Off-white cotton with gold border becomes Kerala's signature drape." },
+    ],
+  },
+  {
+    year: 1984,
+    tag: "Reorganised India",
+    title: "Linguistic states, living looms",
+    body: "After the States Reorganisation Act and the formation of the North-East, India is a federation of language-defined states.",
+    pins: [
+      { id: "1984-jk", x: 32, y: 18, region: "Jammu & Kashmir", craft: "Pashmina & Sozni", note: "Srinagar's Kanihama weavers continue Mughal-era jamawars." },
+      { id: "1984-hp", x: 40, y: 24, region: "Himachal Pradesh", craft: "Kullu & Kinnauri shawls", note: "Geometric border shawls woven across the upper Beas valley." },
+      { id: "1984-punjab", x: 36, y: 28, region: "Punjab", craft: "Phulkari", note: "GI-protected floral embroidery from Patiala and Bathinda." },
+      { id: "1984-haryana", x: 40, y: 32, region: "Haryana", craft: "Surajkund pottery & durries", note: "The famed Surajkund crafts mela begins (1987)." },
+      { id: "1984-rajasthan", x: 30, y: 40, region: "Rajasthan", craft: "Blue pottery & miniature painting", note: "Jaipur and Kishangarh schools sustain Mughal-Rajput miniature." },
+      { id: "1984-up", x: 50, y: 36, region: "Uttar Pradesh", craft: "Chikankari & Banarasi silk", note: "Lucknow and Varanasi continue as the bridal trousseau's heart." },
+      { id: "1984-bihar", x: 58, y: 42, region: "Bihar", craft: "Madhubani / Mithila painting", note: "Now exported worldwide on paper, silk and sarees." },
+      { id: "1984-wb", x: 66, y: 44, region: "West Bengal", craft: "Kantha & Baluchari", note: "Bishnupur's mythic-scene silk saris and rural kantha quilts." },
+      { id: "1984-sikkim", x: 68, y: 36, region: "Sikkim", craft: "Thangka & Lepcha weaving", note: "Buddhist scroll painting and bamboo-loom textiles." },
+      { id: "1984-assam", x: 76, y: 40, region: "Assam", craft: "Muga silk", note: "Only state to produce golden Muga; weavers' cooperatives expand." },
+      { id: "1984-naga", x: 82, y: 42, region: "Nagaland", craft: "Naga shawls", note: "Tribe-specific patterns — Ao, Angami, Sumi — woven on loin looms." },
+      { id: "1984-manipur", x: 82, y: 48, region: "Manipur", craft: "Moirang Phee & Phanek", note: "Temple-motif borders woven in Imphal's home looms." },
+      { id: "1984-mp", x: 46, y: 50, region: "Madhya Pradesh", craft: "Chanderi & Maheshwari", note: "Rehwa Society revives Maheshwari weaving on the Narmada." },
+      { id: "1984-gujarat", x: 22, y: 50, region: "Gujarat", craft: "Patola silk & Bandhani", note: "Patan's double-ikat Patola — months on a single sari." },
+      { id: "1984-orissa", x: 60, y: 54, region: "Orissa", craft: "Pattachitra & Sambalpuri ikat", note: "Bandha tie-dye weaving from Bargarh; Raghurajpur painters." },
+      { id: "1984-mh", x: 34, y: 58, region: "Maharashtra", craft: "Paithani & Warli", note: "Warli enters Bombay's design schools and gallery circuits." },
+      { id: "1984-ap", x: 50, y: 66, region: "Andhra Pradesh", craft: "Kalamkari & Bidriware", note: "Sri Kalahasti pen-painted cottons telling Puranic stories." },
+      { id: "1984-goa", x: 34, y: 68, region: "Goa (UT)", craft: "Azulejo tiles", note: "Indo-Portuguese tile art revived for Goan villas and churches." },
+      { id: "1984-ktk", x: 42, y: 74, region: "Karnataka", craft: "Mysore silk & Channapatna toys", note: "Lacquer-turned wooden toys become the state's children's icon." },
+      { id: "1984-tn", x: 50, y: 82, region: "Tamil Nadu", craft: "Kanchipuram silk & Tanjore painting", note: "Temple silks and gold-foil devotional panels." },
+      { id: "1984-kerala", x: 44, y: 86, region: "Kerala", craft: "Kasavu & Aranmula Kannadi", note: "Onam wardrobes drape the gold-bordered Kasavu mundu." },
+    ],
+  },
+  {
+    year: 2026,
+    tag: "Living Atlas",
+    title: "Twenty-eight states, a thousand crafts",
+    body: "GI tags, e-commerce and KAAL itself help artisans reach the world. Memory becomes a map you can search.",
+    pins: [
+      { id: "2026-ladakh", x: 40, y: 14, region: "Ladakh (UT)", craft: "Thangka & Pashmina", note: "Changpa nomads herd the goats whose wool becomes the world's finest shawl." },
+      { id: "2026-jk", x: 32, y: 20, region: "Jammu & Kashmir (UT)", craft: "Pashmina, Sozni, Papier-mâché", note: "Srinagar's craft economy among the densest in the world." },
+      { id: "2026-hp", x: 40, y: 24, region: "Himachal Pradesh", craft: "Kullu & Kinnauri shawls", note: "GI-tagged geometric-bordered wool shawls." },
+      { id: "2026-punjab", x: 36, y: 28, region: "Punjab", craft: "Phulkari", note: "Co-operatives in Patiala and Sangrur lead a global revival." },
+      { id: "2026-uk", x: 46, y: 28, region: "Uttarakhand", craft: "Aipan art", note: "Red-and-white ritual floor paintings of the Kumaon hills." },
+      { id: "2026-haryana", x: 40, y: 32, region: "Haryana", craft: "Surajkund pottery & durries", note: "Surajkund Mela hosts artisans from every state each February." },
+      { id: "2026-delhi", x: 42, y: 33, region: "Delhi (UT)", craft: "Zardozi & Meenakari", note: "Old Delhi's karkhanas embroider couture for global runways." },
+      { id: "2026-rajasthan", x: 28, y: 40, region: "Rajasthan", craft: "Blue pottery, Bandhani, Miniatures", note: "Jaipur Literature, Jodhpur RIFF and craft melas anchor the calendar." },
+      { id: "2026-up", x: 50, y: 38, region: "Uttar Pradesh", craft: "Chikankari & Banarasi silk", note: "Lucknow and Varanasi remain India's largest craft economies." },
+      { id: "2026-bihar", x: 58, y: 42, region: "Bihar", craft: "Madhubani painting", note: "Now seen on railway stations, sneakers and fashion runways." },
+      { id: "2026-jharkhand", x: 58, y: 48, region: "Jharkhand", craft: "Sohrai & Khovar painting", note: "Harvest and wedding murals by Santhal and Kurmi women of Hazaribagh." },
+      { id: "2026-wb", x: 66, y: 46, region: "West Bengal", craft: "Kantha, Baluchari & Dokra", note: "Birbhum and Bishnupur run designer-craft collaborations." },
+      { id: "2026-sikkim", x: 68, y: 36, region: "Sikkim", craft: "Thangka & Lepcha weaving", note: "Monastery-trained painters and bamboo-loom textiles." },
+      { id: "2026-arunachal", x: 84, y: 34, region: "Arunachal Pradesh", craft: "Apatani & Monpa weaves", note: "Wool shawls and bamboo hats from the eastern Himalayan tribes." },
+      { id: "2026-assam", x: 76, y: 40, region: "Assam", craft: "Muga silk & bamboo", note: "Sualkuchi's golden Muga remains exclusive to the Brahmaputra valley." },
+      { id: "2026-meghalaya", x: 74, y: 44, region: "Meghalaya", craft: "Khasi-Jaintia bamboo & cane", note: "Living-root bridges and woven homeware of the Khasi hills." },
+      { id: "2026-nagaland", x: 82, y: 42, region: "Nagaland", craft: "Naga shawls & wood carving", note: "Hornbill Festival showcases tribe-specific weaves every December." },
+      { id: "2026-manipur", x: 82, y: 48, region: "Manipur", craft: "Moirang Phee & Longpi pottery", note: "Temple-motif weaves and black-stone pottery." },
+      { id: "2026-mizoram", x: 80, y: 52, region: "Mizoram", craft: "Puanchei textile", note: "Bridal shawls woven in red, white and black on loin looms." },
+      { id: "2026-tripura", x: 76, y: 50, region: "Tripura", craft: "Risa & bamboo craft", note: "Tribal Risa wrap, woven by Tripuri and Reang women." },
+      { id: "2026-mp", x: 46, y: 50, region: "Madhya Pradesh", craft: "Chanderi, Maheshwari & Gond art", note: "Gond painters from Jangarh Singh Shyam's lineage exhibit worldwide." },
+      { id: "2026-chhattisgarh", x: 54, y: 52, region: "Chhattisgarh", craft: "Dhokra metal casting", note: "4,000-year-old lost-wax bronze tradition of the Bastar adivasis." },
+      { id: "2026-gujarat", x: 22, y: 50, region: "Gujarat", craft: "Patola, Bandhani & Rogan art", note: "Nirona village's last Rogan painters keep an 8-family tradition alive." },
+      { id: "2026-odisha", x: 60, y: 54, region: "Odisha", craft: "Pattachitra & Sambalpuri ikat", note: "Raghurajpur heritage village trains a new generation of painters." },
+      { id: "2026-mh", x: 34, y: 58, region: "Maharashtra", craft: "Paithani & Warli", note: "Warli enters museum collections from Mumbai to MoMA." },
+      { id: "2026-telangana", x: 48, y: 62, region: "Telangana", craft: "Pochampally Ikat & Bidriware", note: "India's first GI-tagged handloom; double-ikat silk-cotton." },
+      { id: "2026-ap", x: 52, y: 68, region: "Andhra Pradesh", craft: "Kalamkari", note: "Sri Kalahasti's pen-drawn, vegetable-dyed cottons go global." },
+      { id: "2026-goa", x: 34, y: 68, region: "Goa", craft: "Azulejo tiles & coconut craft", note: "Indo-Portuguese tilework revived by contemporary Goan studios." },
+      { id: "2026-karnataka", x: 42, y: 74, region: "Karnataka", craft: "Mysore silk & Channapatna toys", note: "GI-tagged lacquerware now sold from Tokyo to Toronto." },
+      { id: "2026-tn", x: 50, y: 82, region: "Tamil Nadu", craft: "Kanchipuram silk & Thanjavur paintings", note: "Temple-town crafts thrive on weddings and online couture." },
+      { id: "2026-kerala", x: 44, y: 86, region: "Kerala", craft: "Kasavu & Aranmula Kannadi", note: "One of only nine GI-tagged metal crafts in India." },
+    ],
+  },
 ];
 
-const categories = ["All", "Food", "Languages", "Festivals", "Music", "Dance", "Architecture", "Stories", "Crafts", "Rituals"];
-
-const layers = [
-  { id: "empires", label: "Empires", color: "oklch(0.74 0.13 75 / 0.18)" },
-  { id: "kingdoms", label: "Kingdoms", color: "oklch(0.62 0.14 40 / 0.16)" },
-  { id: "linguistic", label: "Linguistic", color: "oklch(0.58 0.10 165 / 0.16)" },
-  { id: "trade", label: "Trade routes", color: "oklch(0.20 0.06 270 / 0.22)" },
-];
-
-const HISTORY_KEY = "kaal:explored:v1";
+const HISTORY_KEY = "kaal:explored:v2";
 
 function useExplored() {
   const [ids, setIds] = useState<string[]>([]);
@@ -57,30 +167,33 @@ function useExplored() {
 }
 
 export function IndiaMap() {
-  const [category, setCategory] = useState("All");
+  const [activeYear, setActiveYear] = useState<number>(2026);
   const [active, setActive] = useState<Pin | null>(null);
-  const [layer, setLayer] = useState<string>("empires");
   const [query, setQuery] = useState("");
   const { ids: explored, add, clear } = useExplored();
 
+  const era = eras.find((e) => e.year === activeYear)!;
+
   const filtered = useMemo(() => {
-    return pins.filter((p) => {
-      const matchCat = category === "All" || p.category === category;
-      const matchQ = !query || `${p.label} ${p.region} ${p.era}`.toLowerCase().includes(query.toLowerCase());
-      return matchCat && matchQ;
-    });
-  }, [category, query]);
+    if (!query) return era.pins;
+    const q = query.toLowerCase();
+    return era.pins.filter((p) => `${p.region} ${p.craft} ${p.note}`.toLowerCase().includes(q));
+  }, [era, query]);
 
   const recentlyExplored = explored
-    .map((id) => pins.find((p) => p.id === id))
-    .filter((p): p is Pin => Boolean(p));
+    .map((id) => {
+      for (const e of eras) {
+        const p = e.pins.find((x) => x.id === id);
+        if (p) return { ...p, year: e.year };
+      }
+      return null;
+    })
+    .filter((p): p is Pin & { year: number } => Boolean(p));
 
   const open = (p: Pin) => {
     setActive(p);
     add(p.id);
   };
-
-  const activeLayer = layers.find((l) => l.id === layer)!;
 
   return (
     <section id="explore" className="relative py-24 sm:py-32 scroll-mt-24">
@@ -92,32 +205,38 @@ export function IndiaMap() {
               A living map of <span className="italic text-gradient-ember">a thousand Indias</span>
             </h2>
             <p className="mt-4 max-w-xl text-muted-foreground">
-              Drop into any village, valley or coast. Every glowing pin holds a
-              memory — a recipe, a dialect, a festival, a song.
+              Step through the eras. Every glowing pin holds a kingdom, a state
+              and the craft it gave the world.
             </p>
           </div>
           <div className="flex max-w-full flex-wrap gap-2">
-            {categories.map((c) => (
+            {eras.map((e) => (
               <button
-                key={c}
-                onClick={() => setCategory(c)}
-                className={`btn-glossy whitespace-nowrap rounded-full px-3 py-1.5 text-xs transition ${
-                  category === c
+                key={e.year}
+                onClick={() => setActiveYear(e.year)}
+                className={`btn-glossy whitespace-nowrap rounded-full px-3.5 py-1.5 text-xs transition ${
+                  activeYear === e.year
                     ? "gradient-ember text-primary-foreground shadow-[0_8px_22px_-10px_oklch(0.74_0.13_75/0.8)]"
                     : "glass text-foreground/80 hover:text-foreground"
                 }`}
               >
-                {c}
+                {e.year}
               </button>
             ))}
           </div>
         </div>
 
+        <div className="mb-5 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <div className="font-display text-2xl text-foreground">{era.title}</div>
+          <div className="text-xs uppercase tracking-[0.22em] text-primary/80">{era.tag}</div>
+          <p className="basis-full text-sm text-muted-foreground max-w-3xl">{era.body}</p>
+        </div>
+
         <div className="relative overflow-hidden rounded-[2rem] glass grain shadow-[var(--shadow-soft)]">
-          <div className="relative h-[60vh] min-h-[480px] w-full">
+          <div className="relative h-[62vh] min-h-[520px] w-full">
             <div className="absolute inset-0 [background:radial-gradient(ellipse_at_50%_30%,oklch(0.74_0.13_75/0.18),transparent_60%),radial-gradient(ellipse_at_70%_80%,oklch(0.20_0.06_270/0.25),transparent_60%)]" />
 
-            <svg viewBox="0 0 100 100" className="absolute inset-0 m-auto h-[90%] w-auto" preserveAspectRatio="xMidYMid meet">
+            <svg viewBox="0 0 100 100" className="absolute inset-0 m-auto h-[92%] w-auto" preserveAspectRatio="xMidYMid meet">
               <defs>
                 <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
                   <stop offset="0%" stopColor="oklch(0.74 0.13 75 / 0.35)" />
@@ -126,12 +245,12 @@ export function IndiaMap() {
                 <filter id="glow"><feGaussianBlur stdDeviation="0.6" /></filter>
               </defs>
               <motion.path
-                key={activeLayer.id}
+                key={era.year}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 0.7 }}
                 d="M30 12 Q42 8 50 14 Q60 10 70 18 Q80 22 78 32 Q86 38 78 48 Q82 58 70 64 Q68 74 60 82 Q54 92 48 90 Q44 80 40 76 Q34 70 38 60 Q28 56 30 48 Q22 42 28 34 Q24 24 30 12 Z"
-                fill={activeLayer.color}
+                fill="url(#g1)"
                 stroke="oklch(0.92 0.035 80 / 0.35)"
                 strokeWidth="0.4"
               />
@@ -144,60 +263,75 @@ export function IndiaMap() {
               />
             </svg>
 
-            {filtered.map((p, i) => {
-              const visited = explored.includes(p.id);
-              return (
-                <motion.button
-                  key={p.id}
-                  initial={{ opacity: 0, scale: 0 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.15 + i * 0.06, type: "spring", stiffness: 180, damping: 14 }}
-                  onClick={() => open(p)}
-                  className="group absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer"
-                  style={{ left: `${p.x}%`, top: `${p.y}%` }}
-                  aria-label={`Explore ${p.label}`}
-                >
-                  <span className={`absolute -inset-3 rounded-full blur-md animate-pulse-pin ${visited ? "bg-jade/40" : "bg-primary/30"}`} />
-                  <span className={`relative block h-3 w-3 rounded-full ring-2 ring-background shadow-[0_0_18px_oklch(0.74_0.13_75/0.9)] ${visited ? "bg-jade" : "bg-primary"}`} />
-                  <div className="pointer-events-none absolute left-1/2 top-4 -translate-x-1/2 whitespace-nowrap rounded-full glass px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] opacity-0 transition group-hover:opacity-100">
-                    {p.label}
-                  </div>
-                </motion.button>
-              );
-            })}
+            <AnimatePresence mode="popLayout">
+              {filtered.map((p, i) => {
+                const visited = explored.includes(p.id);
+                return (
+                  <motion.button
+                    key={p.id}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0 }}
+                    transition={{ delay: 0.05 + i * 0.025, type: "spring", stiffness: 180, damping: 14 }}
+                    onClick={() => open(p)}
+                    className="group absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                    style={{ left: `${p.x}%`, top: `${p.y}%` }}
+                    aria-label={`Explore ${p.region}`}
+                  >
+                    <span className={`absolute -inset-3 rounded-full blur-md animate-pulse-pin ${visited ? "bg-jade/40" : "bg-primary/30"}`} />
+                    <span className={`relative block h-3 w-3 rounded-full ring-2 ring-background shadow-[0_0_18px_oklch(0.74_0.13_75/0.9)] ${visited ? "bg-jade" : "bg-primary"}`} />
+                    <div className="pointer-events-none absolute left-1/2 top-4 -translate-x-1/2 whitespace-nowrap rounded-full glass px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] opacity-0 transition group-hover:opacity-100">
+                      {p.region}
+                    </div>
+                  </motion.button>
+                );
+              })}
+            </AnimatePresence>
 
-            <div className="absolute left-1/2 top-6 w-[min(90%,420px)] -translate-x-1/2">
+            <div className="absolute left-1/2 top-6 w-[min(90%,460px)] -translate-x-1/2">
               <div className="flex items-center gap-2 rounded-full glass px-4 py-2.5">
                 <Search className="h-4 w-4 text-muted-foreground" />
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search a region, language, or tradition…"
+                  placeholder={`Search ${era.year} — region, craft, tradition…`}
                   className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
                 />
-                <button className="rounded-full bg-primary/90 px-3 py-1 text-xs font-medium text-primary-foreground">
-                  Find
-                </button>
+                <span className="rounded-full bg-primary/90 px-3 py-1 text-xs font-medium text-primary-foreground">
+                  {era.year}
+                </span>
               </div>
             </div>
 
-            <div className="absolute bottom-5 left-5 flex flex-wrap items-center gap-2 rounded-2xl glass p-2 text-xs">
-              <Layers className="ml-1 h-3.5 w-3.5 text-primary" />
-              {layers.map((l) => (
+            <div className="absolute bottom-5 right-5 rounded-full glass px-3 py-2 text-xs text-foreground/70">
+              {filtered.length} of {era.pins.length} regions
+            </div>
+          </div>
+        </div>
+
+        {/* Era slider */}
+        <div className="mt-6 rounded-2xl glass p-4">
+          <div className="relative">
+            <div className="absolute left-0 right-0 top-[7px] h-px bg-foreground/15" />
+            <div className="flex items-center justify-between relative">
+              {eras.map((e) => (
                 <button
-                  key={l.id}
-                  onClick={() => setLayer(l.id)}
-                  className={`btn-glossy rounded-full px-2.5 py-1 text-[11px] transition ${
-                    layer === l.id ? "bg-primary/15 text-foreground ring-1 ring-primary/40" : "text-foreground/65 hover:text-foreground"
-                  }`}
+                  key={e.year}
+                  onClick={() => setActiveYear(e.year)}
+                  className="group flex flex-col items-center gap-2"
                 >
-                  {l.label}
+                  <span
+                    className={`block h-3.5 w-3.5 rounded-full transition-all ${
+                      activeYear === e.year
+                        ? "bg-primary ring-4 ring-primary/25 scale-125"
+                        : "bg-foreground/30 group-hover:bg-foreground/60"
+                    }`}
+                  />
+                  <span className={`font-display text-xs transition ${activeYear === e.year ? "text-foreground" : "text-foreground/50"}`}>
+                    {e.year}
+                  </span>
                 </button>
               ))}
-            </div>
-            <div className="absolute bottom-5 right-5 rounded-full glass px-3 py-2 text-xs text-foreground/70">
-              {filtered.length} of {pins.length} memories shown
             </div>
           </div>
         </div>
@@ -225,10 +359,12 @@ export function IndiaMap() {
               {recentlyExplored.map((p) => (
                 <button
                   key={p.id}
-                  onClick={() => open(p)}
+                  onClick={() => { setActiveYear(p.year); open(p); }}
                   className="btn-glossy inline-flex items-center gap-2 rounded-full bg-background/40 px-3 py-1.5 text-xs ring-1 ring-white/5 hover:bg-background/60"
                 >
-                  <MapPin className="h-3 w-3 text-jade" /> {p.label}
+                  <MapPin className="h-3 w-3 text-jade" />
+                  <span className="text-foreground/85">{p.region}</span>
+                  <span className="text-muted-foreground">· {p.year}</span>
                 </button>
               ))}
             </div>
@@ -265,26 +401,20 @@ export function IndiaMap() {
                 <X className="h-4 w-4" />
               </button>
 
-              <div className="text-xs uppercase tracking-[0.28em] text-primary/90">{active.category}</div>
-              <h3 className="mt-2 font-display text-3xl sm:text-4xl text-balance">{active.label}</h3>
+              <div className="text-xs uppercase tracking-[0.28em] text-primary/90">Local Craft</div>
+              <h3 className="mt-2 font-display text-3xl sm:text-4xl text-balance">{active.craft}</h3>
               <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                 <span className="inline-flex items-center gap-1.5"><MapPin className="h-3 w-3" /> {active.region}</span>
-                <span className="inline-flex items-center gap-1.5"><Clock className="h-3 w-3" /> {active.era}</span>
+                <span className="inline-flex items-center gap-1.5"><Clock className="h-3 w-3" /> {era.year} · {era.tag}</span>
               </div>
 
-              <p className="mt-5 text-foreground/85 leading-relaxed text-pretty">{active.blurb}</p>
+              <p className="mt-5 text-foreground/85 leading-relaxed text-pretty">{active.note}</p>
 
-              <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                <div className="rounded-2xl bg-background/40 p-4 ring-1 ring-white/5">
-                  <div className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-                    <Sparkles className="h-3 w-3 text-primary" /> Cultural Legacy
-                  </div>
-                  <p className="mt-2 text-sm text-foreground/85">{active.legacy}</p>
+              <div className="mt-6 rounded-2xl bg-background/40 p-4 ring-1 ring-white/5">
+                <div className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                  <Sparkles className="h-3 w-3 text-primary" /> Era context
                 </div>
-                <div className="rounded-2xl bg-background/40 p-4 ring-1 ring-white/5">
-                  <div className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">Successors & Cousins</div>
-                  <p className="mt-2 text-sm text-foreground/85">{active.successors}</p>
-                </div>
+                <p className="mt-2 text-sm text-foreground/85">{era.title} — {era.body}</p>
               </div>
 
               <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-5 text-xs text-muted-foreground">
