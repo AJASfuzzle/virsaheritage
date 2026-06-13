@@ -38,7 +38,7 @@ const eras: Era[] = [
     title: "A subcontinent of sovereigns",
     body: "Sikh misls, Maratha confederacies, Rajput houses and southern princely states each guard their own court arts, looms and kilns.",
     mapUrl: map1800.url,
-    aspect: 0.6937,
+    aspect: 0.6925,
     // Subcontinent including Sindh & East Bengal (no Afghanistan, no Ceylon)
     bounds: { lonMin: 67.0, lonMax: 93.5, latMin: 6.0, latMax: 44.2 },
     pins: [
