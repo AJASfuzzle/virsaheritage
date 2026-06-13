@@ -82,9 +82,9 @@ const eras: Era[] = [
     title: "A new union of states",
     body: "Princely states accede, lines are redrawn, refugees carry recipes and looms across new borders. Crafts become quiet markers of identity.",
     mapUrl: map1947.url,
-    aspect: 0.9745,
-    // Independent India (no Pakistan, no East Pakistan, no Ceylon)
-    bounds: { lonMin: 68.0, lonMax: 97.5, latMin: 7.0, latMax: 37.3 },
+    aspect: 0.9780,
+    // Independent India only (no Pakistan, no East Pakistan, no Ceylon)
+    bounds: { lonMin: 68.1, lonMax: 97.5, latMin: 7.5, latMax: 37.5 },
     pins: [
       { id: "1947-punjab", lat: 30.7, lon: 76.8, region: "East Punjab", craft: "Phulkari", note: "Bagh shawls carried by Partition refugees from Lyallpur into Patiala and Delhi." },
       { id: "1947-up", lat: 26.8, lon: 80.9, region: "United Provinces", craft: "Chikankari & Banarasi brocade", note: "Lucknow and Varanasi remain the workshops of the Indo-Gangetic plain." },
