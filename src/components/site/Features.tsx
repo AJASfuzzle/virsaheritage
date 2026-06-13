@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Languages, Mic, Bot, BookOpen, Route, Archive, Gamepad2, Dna, Network, HeartPulse } from "lucide-react";
 
 const features = [
-  { id: "shruti", icon: Languages, title: "SHRUTI — Language Archive", body: "Preserve dialects with pronunciation, folk tales, proverbs and scripts. AI-generated summaries for every tongue." },
+  { id: "shruti", icon: Languages, title: "the kitab — Language Archive", body: "Preserve dialects with pronunciation, folk tales, proverbs and scripts. AI-generated summaries for every tongue." },
   { id: "contribute", icon: Mic, title: "Memory Contribution Portal", body: "Upload photos, voice, video, letters. AI transcribes, detects language, extracts keywords and translates." },
   { id: "assistant", icon: Bot, title: "AI Heritage Assistant", body: "Ask anything — folk dances of Assam, festivals of Rajasthan, foods of 1950s Punjab. Answers with maps, images, sources." },
   { id: "library", icon: BookOpen, title: "Living Heritage Library", body: "A curated digital archive of foods, recipes, dances, crafts, architecture and folklore — each with timeline and kin." },

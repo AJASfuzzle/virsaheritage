@@ -27,7 +27,7 @@ export function Footer() {
             <ul className="mt-4 space-y-2 text-sm">
               <li><a href="#explore" className="hover:text-foreground text-foreground/75">Heritage Map</a></li>
               <li><a href="#timeline" className="hover:text-foreground text-foreground/75">Timeline</a></li>
-              <li><a href="#shruti" className="hover:text-foreground text-foreground/75">SHRUTI Languages</a></li>
+              <li><a href="#shruti" className="hover:text-foreground text-foreground/75">the kitab · Languages</a></li>
               <li><a href="#trails" className="hover:text-foreground text-foreground/75">Heritage Trails</a></li>
             </ul>
           </div>

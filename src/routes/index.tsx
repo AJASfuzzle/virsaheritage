@@ -15,7 +15,7 @@ import { Footer } from "@/components/site/Footer";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "KAAL — India's Living Memory & Heritage Atlas" },
+      { title: "KAAL — India's Living Memory & Heritage Atlas · the kitab" },
       {
         name: "description",
         content:
