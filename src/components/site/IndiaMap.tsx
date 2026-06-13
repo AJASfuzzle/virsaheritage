@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Clock, History, MapPin, Search, Sparkles, Trash2, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import map1800 from "@/assets/map-1800-v7.png.asset.json";
+import map1800 from "@/assets/map-1800-v8.png.asset.json";
 import map1900 from "@/assets/map-1900-v6.png.asset.json";
 import map1947 from "@/assets/map-1947-v6.png.asset.json";
 import map1984 from "@/assets/map-1984-v6.png.asset.json";
@@ -38,9 +38,9 @@ const eras: Era[] = [
     title: "A subcontinent of sovereigns",
     body: "Sikh misls, Maratha confederacies, Rajput houses and southern princely states each guard their own court arts, looms and kilns.",
     mapUrl: map1800.url,
-    aspect: 1.0,
-    // Subcontinent from the 1804 Gardiner atlas (no Afghanistan, no Chinese Empire, no Ceylon)
-    bounds: { lonMin: 56.4, lonMax: 99.6, latMin: 3.5, latMax: 41.3 },
+    aspect: 0.82,
+    // A.K. Johnston 1799–1806 campaign map of India (grid lines 60°–95°E, 5°–40°N)
+    bounds: { lonMin: 66, lonMax: 95, latMin: 6, latMax: 37 },
     pins: [
       { id: "1800-kashmir", lat: 34.1, lon: 74.8, region: "Kashmir", craft: "Pashmina & Kani shawls", note: "Changthangi wool hand-woven on twill-tapestry looms for Mughal and Persian courts." },
       { id: "1800-punjab", lat: 31.6, lon: 74.9, region: "Punjab (Sikh Misls)", craft: "Phulkari embroidery", note: "Flower-work shawls stitched by women for weddings and harvest." },
