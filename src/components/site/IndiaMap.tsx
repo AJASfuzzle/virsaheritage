@@ -1,11 +1,11 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Clock, History, MapPin, Search, Sparkles, Trash2, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import map1800 from "@/assets/map-1800-v3.png.asset.json";
-import map1900 from "@/assets/map-1900-v3.png.asset.json";
-import map1947 from "@/assets/map-1947-v3.png.asset.json";
-import map1984 from "@/assets/map-1984-v3.png.asset.json";
-import map2026 from "@/assets/map-2026-v3.png.asset.json";
+import map1800 from "@/assets/map-1800-v4.png.asset.json";
+import map1900 from "@/assets/map-1900-v4.png.asset.json";
+import map1947 from "@/assets/map-1947-v4.png.asset.json";
+import map1984 from "@/assets/map-1984-v4.png.asset.json";
+import map2026 from "@/assets/map-2026-v4.png.asset.json";
 
 type Pin = {
   id: string;
@@ -38,9 +38,9 @@ const eras: Era[] = [
     title: "A subcontinent of sovereigns",
     body: "Sikh misls, Maratha confederacies, Rajput houses and southern princely states each guard their own court arts, looms and kilns.",
     mapUrl: map1800.url,
-    aspect: 0.6925,
-    // Subcontinent including Sindh & East Bengal (no Afghanistan, no Ceylon)
-    bounds: { lonMin: 67.0, lonMax: 93.5, latMin: 6.0, latMax: 44.2 },
+    aspect: 1.226,
+    // Subcontinent from the 1804 Gardiner atlas (no Afghanistan, no Chinese Empire, no Ceylon)
+    bounds: { lonMin: 63.0, lonMax: 95.0, latMin: 8.0, latMax: 34.0 },
     pins: [
       { id: "1800-kashmir", lat: 34.1, lon: 74.8, region: "Kashmir", craft: "Pashmina & Kani shawls", note: "Changthangi wool hand-woven on twill-tapestry looms for Mughal and Persian courts." },
       { id: "1800-punjab", lat: 31.6, lon: 74.9, region: "Punjab (Sikh Misls)", craft: "Phulkari embroidery", note: "Flower-work shawls stitched by women for weddings and harvest." },
@@ -60,9 +60,9 @@ const eras: Era[] = [
     title: "Crown rule over a patchwork of courts",
     body: "British presidencies stretch from Punjab to Madras while princely states keep their darbars alive. Railways carry crafts to world fairs.",
     mapUrl: map1900.url,
-    aspect: 1.2628,
-    // British India + Burma tail (wide aspect)
-    bounds: { lonMin: 66.0, lonMax: 102.5, latMin: 8.0, latMax: 36.9 },
+    aspect: 1.127,
+    // British India: Pakistan + India + Bangladesh + Kashmir
+    bounds: { lonMin: 64.0, lonMax: 97.0, latMin: 8.0, latMax: 37.3 },
     pins: [
       { id: "1900-punjab", lat: 31.6, lon: 74.9, region: "Punjab Province", craft: "Phulkari & Pashmina trade", note: "Amritsar becomes a hub for Kashmiri shawls bound for Europe." },
       { id: "1900-up", lat: 26.8, lon: 80.9, region: "United Provinces (Oudh)", craft: "Chikankari & Banarasi silk", note: "Lucknow shadow-work and Varanasi brocades dominate festive wardrobes." },
@@ -82,9 +82,9 @@ const eras: Era[] = [
     title: "A new union of states",
     body: "Princely states accede, lines are redrawn, refugees carry recipes and looms across new borders. Crafts become quiet markers of identity.",
     mapUrl: map1947.url,
-    aspect: 0.9780,
-    // Independent India only (no Pakistan, no East Pakistan, no Ceylon)
-    bounds: { lonMin: 68.1, lonMax: 97.5, latMin: 7.5, latMax: 37.5 },
+    aspect: 1.104,
+    // Independent India incl. Kashmir (no Pakistan, no East Pakistan, no Ceylon)
+    bounds: { lonMin: 66.5, lonMax: 98.5, latMin: 8.0, latMax: 37.0 },
     pins: [
       { id: "1947-punjab", lat: 30.7, lon: 76.8, region: "East Punjab", craft: "Phulkari", note: "Bagh shawls carried by Partition refugees from Lyallpur into Patiala and Delhi." },
       { id: "1947-up", lat: 26.8, lon: 80.9, region: "United Provinces", craft: "Chikankari & Banarasi brocade", note: "Lucknow and Varanasi remain the workshops of the Indo-Gangetic plain." },
@@ -107,8 +107,8 @@ const eras: Era[] = [
     title: "Linguistic states, living looms",
     body: "After the States Reorganisation Act and the formation of the North-East, India is a federation of language-defined states.",
     mapUrl: map1984.url,
-    aspect: 0.9120,
-    bounds: { lonMin: 68.0, lonMax: 97.5, latMin: 6.5, latMax: 38.9 },
+    aspect: 1.104,
+    bounds: { lonMin: 66.5, lonMax: 98.5, latMin: 8.0, latMax: 37.0 },
     pins: [
       { id: "1984-jk", lat: 34.1, lon: 74.8, region: "Jammu & Kashmir", craft: "Pashmina & Sozni", note: "Srinagar's Kanihama weavers continue Mughal-era jamawars." },
       { id: "1984-hp", lat: 31.1, lon: 77.2, region: "Himachal Pradesh", craft: "Kullu & Kinnauri shawls", note: "Geometric border shawls woven across the upper Beas valley." },
@@ -139,8 +139,8 @@ const eras: Era[] = [
     title: "Twenty-eight states, a thousand crafts",
     body: "GI tags, e-commerce and KAAL itself help artisans reach the world. Memory becomes a map you can search.",
     mapUrl: map2026.url,
-    aspect: 0.9086,
-    bounds: { lonMin: 68.0, lonMax: 97.5, latMin: 6.5, latMax: 39.7 },
+    aspect: 1.104,
+    bounds: { lonMin: 66.5, lonMax: 98.5, latMin: 8.0, latMax: 37.0 },
     pins: [
       { id: "2026-ladakh", lat: 34.2, lon: 77.6, region: "Ladakh (UT)", craft: "Thangka & Pashmina", note: "Changpa nomads herd the goats whose wool becomes the world's finest shawl." },
       { id: "2026-jk", lat: 34.1, lon: 74.8, region: "Jammu & Kashmir (UT)", craft: "Pashmina, Sozni, Papier-mâché", note: "Srinagar's craft economy among the densest in the world." },
