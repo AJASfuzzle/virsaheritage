@@ -15,7 +15,7 @@ export const Route = createFileRoute("/kitab")({
 
 function KitabPage() {
   return (
-    <div className="pt-24">
+    <div className="pt-20 [&>section:first-child]:!pt-6 sm:[&>section:first-child]:!pt-10">
       <Shruti />
     </div>
   );

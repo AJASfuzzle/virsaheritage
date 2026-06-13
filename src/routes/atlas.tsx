@@ -16,7 +16,7 @@ export const Route = createFileRoute("/atlas")({
 
 function AtlasPage() {
   return (
-    <div className="pt-24">
+    <div className="pt-20 [&>section:first-child]:!pt-6 sm:[&>section:first-child]:!pt-10">
       <IndiaMap />
       <Timeline />
     </div>
