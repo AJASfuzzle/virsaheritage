@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Clock, History, MapPin, Search, Sparkles, Trash2, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import map1800 from "@/assets/map-1800-v6.png.asset.json";
+import map1800 from "@/assets/map-1800-v7.png.asset.json";
 import map1900 from "@/assets/map-1900-v6.png.asset.json";
 import map1947 from "@/assets/map-1947-v6.png.asset.json";
 import map1984 from "@/assets/map-1984-v6.png.asset.json";
