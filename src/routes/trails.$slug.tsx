@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { ArrowLeft, CalendarRange, Clock, MapPin, Sparkles } from "lucide-react";
-import { getTrail, trails } from "@/lib/trails-data";
+import { getTrail, trails, type Trail } from "@/lib/trails-data";
 
 export const Route = createFileRoute("/trails/$slug")({
   loader: ({ params }) => {
@@ -30,7 +30,7 @@ export const Route = createFileRoute("/trails/$slug")({
 });
 
 function TrailDetail() {
-  const { trail } = Route.useLoaderData();
+  const { trail } = Route.useLoaderData() as { trail: Trail };
   const others = trails.filter((t) => t.slug !== trail.slug).slice(0, 3);
 
   return (

@@ -9,38 +9,184 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrailsRouteImport } from './routes/trails'
+import { Route as LibraryRouteImport } from './routes/library'
+import { Route as KitabRouteImport } from './routes/kitab'
+import { Route as ContributeRouteImport } from './routes/contribute'
+import { Route as AtlasRouteImport } from './routes/atlas'
+import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TrailsIndexRouteImport } from './routes/trails.index'
+import { Route as TrailsSlugRouteImport } from './routes/trails.$slug'
 
+const TrailsRoute = TrailsRouteImport.update({
+  id: '/trails',
+  path: '/trails',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryRoute = LibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KitabRoute = KitabRouteImport.update({
+  id: '/kitab',
+  path: '/kitab',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContributeRoute = ContributeRouteImport.update({
+  id: '/contribute',
+  path: '/contribute',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AtlasRoute = AtlasRouteImport.update({
+  id: '/atlas',
+  path: '/atlas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssistantRoute = AssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TrailsIndexRoute = TrailsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TrailsRoute,
+} as any)
+const TrailsSlugRoute = TrailsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => TrailsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/assistant': typeof AssistantRoute
+  '/atlas': typeof AtlasRoute
+  '/contribute': typeof ContributeRoute
+  '/kitab': typeof KitabRoute
+  '/library': typeof LibraryRoute
+  '/trails': typeof TrailsRouteWithChildren
+  '/trails/$slug': typeof TrailsSlugRoute
+  '/trails/': typeof TrailsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/assistant': typeof AssistantRoute
+  '/atlas': typeof AtlasRoute
+  '/contribute': typeof ContributeRoute
+  '/kitab': typeof KitabRoute
+  '/library': typeof LibraryRoute
+  '/trails/$slug': typeof TrailsSlugRoute
+  '/trails': typeof TrailsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/assistant': typeof AssistantRoute
+  '/atlas': typeof AtlasRoute
+  '/contribute': typeof ContributeRoute
+  '/kitab': typeof KitabRoute
+  '/library': typeof LibraryRoute
+  '/trails': typeof TrailsRouteWithChildren
+  '/trails/$slug': typeof TrailsSlugRoute
+  '/trails/': typeof TrailsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/assistant'
+    | '/atlas'
+    | '/contribute'
+    | '/kitab'
+    | '/library'
+    | '/trails'
+    | '/trails/$slug'
+    | '/trails/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/assistant'
+    | '/atlas'
+    | '/contribute'
+    | '/kitab'
+    | '/library'
+    | '/trails/$slug'
+    | '/trails'
+  id:
+    | '__root__'
+    | '/'
+    | '/assistant'
+    | '/atlas'
+    | '/contribute'
+    | '/kitab'
+    | '/library'
+    | '/trails'
+    | '/trails/$slug'
+    | '/trails/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AssistantRoute: typeof AssistantRoute
+  AtlasRoute: typeof AtlasRoute
+  ContributeRoute: typeof ContributeRoute
+  KitabRoute: typeof KitabRoute
+  LibraryRoute: typeof LibraryRoute
+  TrailsRoute: typeof TrailsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/trails': {
+      id: '/trails'
+      path: '/trails'
+      fullPath: '/trails'
+      preLoaderRoute: typeof TrailsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library': {
+      id: '/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof LibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kitab': {
+      id: '/kitab'
+      path: '/kitab'
+      fullPath: '/kitab'
+      preLoaderRoute: typeof KitabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contribute': {
+      id: '/contribute'
+      path: '/contribute'
+      fullPath: '/contribute'
+      preLoaderRoute: typeof ContributeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/atlas': {
+      id: '/atlas'
+      path: '/atlas'
+      fullPath: '/atlas'
+      preLoaderRoute: typeof AtlasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assistant': {
+      id: '/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AssistantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +194,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/trails/': {
+      id: '/trails/'
+      path: '/'
+      fullPath: '/trails/'
+      preLoaderRoute: typeof TrailsIndexRouteImport
+      parentRoute: typeof TrailsRoute
+    }
+    '/trails/$slug': {
+      id: '/trails/$slug'
+      path: '/$slug'
+      fullPath: '/trails/$slug'
+      preLoaderRoute: typeof TrailsSlugRouteImport
+      parentRoute: typeof TrailsRoute
+    }
   }
 }
 
+interface TrailsRouteChildren {
+  TrailsSlugRoute: typeof TrailsSlugRoute
+  TrailsIndexRoute: typeof TrailsIndexRoute
+}
+
+const TrailsRouteChildren: TrailsRouteChildren = {
+  TrailsSlugRoute: TrailsSlugRoute,
+  TrailsIndexRoute: TrailsIndexRoute,
+}
+
+const TrailsRouteWithChildren =
+  TrailsRoute._addFileChildren(TrailsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AssistantRoute: AssistantRoute,
+  AtlasRoute: AtlasRoute,
+  ContributeRoute: ContributeRoute,
+  KitabRoute: KitabRoute,
+  LibraryRoute: LibraryRoute,
+  TrailsRoute: TrailsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
