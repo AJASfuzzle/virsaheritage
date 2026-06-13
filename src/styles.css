@@ -246,8 +246,7 @@
     pointer-events: none;
     z-index: 2;
     backdrop-filter: blur(14px);
-    -webkit-mask-image: linear-gradient(180deg, transparent, black 50%, transparent);
-            mask-image: linear-gradient(180deg, transparent, black 50%, transparent);
+    mask-image: linear-gradient(180deg, transparent, black 50%, transparent);
   }
   .section-seam::before { top: -60px; }
   .section-seam::after  { bottom: -60px; }
