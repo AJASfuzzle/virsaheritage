@@ -46,7 +46,7 @@ const eras: Era[] = [
       { id: "1800-punjab", lat: 31.6, lon: 74.9, region: "Punjab (Sikh Misls)", craft: "Phulkari embroidery", note: "Flower-work shawls stitched by women for weddings and harvest." },
       { id: "1800-rajputana", lat: 26.9, lon: 75.8, region: "Rajputana", craft: "Bandhani tie-dye", note: "Tiny knotted dots forming odhnis worn across desert courts." },
       { id: "1800-awadh", lat: 26.8, lon: 80.9, region: "Awadh (Lucknow)", craft: "Chikankari", note: "White-on-white shadow embroidery refined under Nawabi ateliers." },
-      { id: "1800-bengal", lat: 23.8, lon: 90.4, region: "Bengal", craft: "Jamdani muslin", note: "Air-light Dhaka muslin patterned on the loom itself." },
+      { id: "1800-bengal", lat: 24.2, lon: 87.6, region: "Bengal", craft: "Jamdani muslin", note: "Air-light Dhaka muslin patterned on the loom itself." },
       { id: "1800-sindhia", lat: 26.2, lon: 78.2, region: "Sindhia / Maratha Gwalior", craft: "Chanderi weaving", note: "Sheer cotton-silk saris patronised by Maratha queens." },
       { id: "1800-cp", lat: 21.1, lon: 79.1, region: "Central Provinces", craft: "Gond painting", note: "Forest-spirit murals dotted in natural pigment by Gond clans." },
       { id: "1800-nizam", lat: 17.4, lon: 78.5, region: "Nizam Dominions", craft: "Bidriware", note: "Blackened zinc-copper alloy inlaid with silver thread." },
