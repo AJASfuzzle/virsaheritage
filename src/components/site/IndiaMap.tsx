@@ -232,10 +232,10 @@ export function IndiaMap() {
     add(p.id);
   };
 
-  // Uniform color treatment for every era's map — normalises AI-edited
-  // colour differences into a single saffron/ember silhouette tone.
-  const mapFilter =
-    "grayscale(1) brightness(0.55) sepia(0.85) hue-rotate(-12deg) saturate(2.4) contrast(1.05)";
+  // Silhouette PNGs are already pre-filled with a single saffron tone, so
+  // no CSS colour treatment is needed.
+
+
 
   return (
     <section id="explore" className="relative py-24 sm:py-32 scroll-mt-24">
