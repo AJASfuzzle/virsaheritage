@@ -139,8 +139,8 @@ const eras: Era[] = [
     title: "Twenty-eight states, a thousand crafts",
     body: "GI tags, e-commerce and KAAL itself help artisans reach the world. Memory becomes a map you can search.",
     mapUrl: map2026.url,
-    aspect: 0.8552,
-    bounds: { lonMin: 68.0, lonMax: 97.5, latMin: 6.5, latMax: 37.0 },
+    aspect: 0.9086,
+    bounds: { lonMin: 68.0, lonMax: 97.5, latMin: 6.5, latMax: 39.7 },
     pins: [
       { id: "2026-ladakh", lat: 34.2, lon: 77.6, region: "Ladakh (UT)", craft: "Thangka & Pashmina", note: "Changpa nomads herd the goats whose wool becomes the world's finest shawl." },
       { id: "2026-jk", lat: 34.1, lon: 74.8, region: "Jammu & Kashmir (UT)", craft: "Pashmina, Sozni, Papier-mâché", note: "Srinagar's craft economy among the densest in the world." },
