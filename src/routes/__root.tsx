@@ -122,6 +122,7 @@ function RootComponent() {
         <Outlet />
         <Footer />
       </main>
+      <MouseTrail />
       <Toaster richColors position="top-right" />
     </QueryClientProvider>
   );
