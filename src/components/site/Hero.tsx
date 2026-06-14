@@ -4,7 +4,7 @@ import hero from "@/assets/hero-heritage.jpg";
 
 export function Hero() {
   return (
-    <section id="top" className="relative min-h-[100svh] w-full overflow-hidden grain">
+    <section id="top" className="dark relative min-h-[100svh] w-full overflow-hidden grain bg-background text-foreground">
       <div className="absolute inset-0">
         <img
           src={hero}
