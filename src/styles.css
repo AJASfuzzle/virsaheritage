@@ -142,6 +142,31 @@
     radial-gradient(ellipse 60% 50% at 100% 100%, oklch(0.50 0.14 35 / 0.10), transparent 60%) !important;
 }
 
+/* Force-dark scope: re-applies the dark token palette regardless of .light on html */
+.light .dark,
+.dark {
+  --background: oklch(0.16 0.025 265);
+  --foreground: oklch(0.92 0.035 80);
+  --card: oklch(0.20 0.03 260);
+  --card-foreground: oklch(0.92 0.035 80);
+  --popover: oklch(0.19 0.03 260);
+  --popover-foreground: oklch(0.92 0.035 80);
+  --primary: oklch(0.74 0.13 75);
+  --primary-foreground: oklch(0.16 0.025 265);
+  --secondary: oklch(0.26 0.04 255);
+  --secondary-foreground: oklch(0.92 0.035 80);
+  --muted: oklch(0.24 0.025 260);
+  --muted-foreground: oklch(0.68 0.04 75);
+  --accent: oklch(0.62 0.14 40);
+  --accent-foreground: oklch(0.96 0.02 80);
+  --border: oklch(0.92 0.035 80 / 10%);
+  --input: oklch(0.92 0.035 80 / 14%);
+  --ring: oklch(0.74 0.13 75 / 55%);
+  --glass-bg: oklch(0.92 0.035 80 / 0.05);
+  --glass-border: oklch(0.92 0.035 80 / 0.10);
+  color-scheme: dark;
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
