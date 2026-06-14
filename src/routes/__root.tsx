@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
+import { MouseTrail } from "@/components/site/MouseTrail";
 
 function NotFoundComponent() {
   return (
@@ -121,6 +122,7 @@ function RootComponent() {
         <Outlet />
         <Footer />
       </main>
+      <MouseTrail />
       <Toaster richColors position="top-right" />
     </QueryClientProvider>
   );

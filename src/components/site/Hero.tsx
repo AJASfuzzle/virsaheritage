@@ -58,7 +58,7 @@ export function Hero() {
         >
           <a
             href="/atlas"
-            className="group inline-flex items-center gap-2 rounded-full gradient-ember px-6 py-3.5 text-sm font-medium text-primary-foreground shadow-[0_20px_60px_-20px_oklch(0.72_0.18_55/0.7)] hover:brightness-110 transition"
+            className="btn-glossy group inline-flex items-center gap-2 rounded-full gradient-ember px-6 py-3.5 text-sm font-medium text-primary-foreground shadow-[0_20px_60px_-20px_oklch(0.72_0.18_55/0.7)]"
           >
             <MapPin className="h-4 w-4" />
             Explore Heritage Map
@@ -66,7 +66,7 @@ export function Hero() {
           </a>
           <a
             href="/contribute"
-            className="inline-flex items-center gap-2 rounded-full glass px-6 py-3.5 text-sm font-medium hover:bg-white/10 transition"
+            className="btn-glossy inline-flex items-center gap-2 rounded-full glass px-6 py-3.5 text-sm font-medium"
           >
             Contribute a Memory
           </a>
