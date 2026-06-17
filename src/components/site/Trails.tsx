@@ -52,9 +52,27 @@ export function Trails() {
 
   const onDragEnd = (_: unknown, info: PanInfo) => {
     const { offset, velocity } = info;
-    if (offset.y < -80 || velocity.y < -400) go(1);
-    else if (offset.y > 80 || velocity.y > 400) go(-1);
+    if (offset.y < -60 || velocity.y < -300) go(1);
+    else if (offset.y > 60 || velocity.y > 300) go(-1);
   };
+
+  // Wheel scroll → trail-to-trail navigation when stack is in view.
+  useEffect(() => {
+    let last = 0;
+    const onWheel = (e: WheelEvent) => {
+      const stack = document.getElementById("trail-stack");
+      if (!stack) return;
+      const r = stack.getBoundingClientRect();
+      if (r.bottom < 100 || r.top > window.innerHeight - 100) return;
+      const now = Date.now();
+      if (now - last < 500) return;
+      if (Math.abs(e.deltaY) < 18) return;
+      last = now;
+      go(e.deltaY > 0 ? 1 : -1);
+    };
+    window.addEventListener("wheel", onWheel, { passive: true });
+    return () => window.removeEventListener("wheel", onWheel);
+  }, [go]);
 
   const handleShare = async (t: Trail) => {
     const url = `${window.location.origin}/trails/${t.slug}`;
