@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Coins, Gift, Loader2, Map, Sparkles, X } from "lucide-react";
+import { Coins, Gift, Loader2, Sparkles, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { listRewards, getMyState, redeemReward } from "@/lib/kaal.functions";
