@@ -69,7 +69,7 @@ export function buildCatalog(): CatalogItem[] {
     id: s.id,
     title: s.name,
     blurb: s.shortDescription ?? "",
-    region: s.state,
+    region: s.region,
     category: s.category,
     tags: s.category ? [s.category] : [],
   }));
