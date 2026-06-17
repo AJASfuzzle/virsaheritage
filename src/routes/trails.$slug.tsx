@@ -1,13 +1,14 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, CalendarRange, CheckCircle2, Clock, Coins, Loader2, MapPin, Navigation, Sparkles, Trophy } from "lucide-react";
-import { useState } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { ArrowLeft, CalendarRange, CheckCircle2, Clock, Coins, Footprints, Lightbulb, Loader2, MapPin, MountainSnow, Navigation, Sparkles, Trophy } from "lucide-react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { getTrail, trails, type Trail } from "@/lib/trails-data";
 import { listTrailSites, getMyState, checkInAtSite } from "@/lib/kaal.functions";
 import { useAuth } from "@/hooks/use-auth";
+import { AudioCompanion } from "@/components/site/AudioCompanion";
 
 export const Route = createFileRoute("/trails/$slug")({
   loader: ({ params }) => {
