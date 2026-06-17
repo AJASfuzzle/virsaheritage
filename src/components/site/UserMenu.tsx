@@ -41,23 +41,26 @@ export function UserMenu() {
 
   return (
     <div ref={ref} className="relative">
-      {/* coin pill */}
-      <div className="absolute right-full mr-2 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary whitespace-nowrap">
-        <Coins className="h-3.5 w-3.5" />
-        {data?.balance ?? 0}
+      <div className="flex items-center gap-2">
+        {/* coin pill */}
+        <div className="hidden sm:flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary whitespace-nowrap">
+          <Coins className="h-3.5 w-3.5" />
+          {data?.balance ?? 0}
+        </div>
+
+        <button
+          onClick={() => setOpen((v) => !v)}
+          aria-label="Open user menu"
+          className="btn-glossy relative grid h-9 w-9 place-items-center overflow-hidden rounded-full border border-white/15 bg-gradient-to-br from-primary/30 to-accent/20 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_8px_22px_-8px_oklch(0.74_0.13_75/0.5)] hover:border-primary/40 transition"
+        >
+          {avatarUrl ? (
+            <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
+          ) : (
+            <span className="text-[11px] font-display tracking-wider">{initials}</span>
+          )}
+        </button>
       </div>
 
-      <button
-        onClick={() => setOpen((v) => !v)}
-        aria-label="Open user menu"
-        className="btn-glossy relative grid h-9 w-9 place-items-center overflow-hidden rounded-full border border-white/15 bg-gradient-to-br from-primary/30 to-accent/20 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_8px_22px_-8px_oklch(0.74_0.13_75/0.5)] hover:border-primary/40 transition"
-      >
-        {avatarUrl ? (
-          <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
-        ) : (
-          <span className="text-[11px] font-display tracking-wider">{initials}</span>
-        )}
-      </button>
 
       {open && (
         <div
