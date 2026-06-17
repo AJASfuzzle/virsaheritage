@@ -14,8 +14,8 @@ const links = [
 ] as const;
 
 export function Navbar() {
-
   const [scrolled, setScrolled] = useState(false);
+
   const [open, setOpen] = useState(false);
   const [light, setLight] = useState(false);
   const { user, loading } = useAuth();
@@ -79,8 +79,8 @@ export function Navbar() {
           </span>
         </Link>
 
-
         <nav
+
           className={`hidden lg:flex items-center gap-0.5 rounded-full border border-white/5 px-1.5 py-1 transition-all duration-500 ${
             scrolled ? "glass shadow-[0_10px_40px_-20px_rgba(0,0,0,0.6)]" : "bg-white/[0.03] backdrop-blur-md"
           }`}
