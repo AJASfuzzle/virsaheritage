@@ -128,10 +128,11 @@ function TrailDetail() {
     <article className="relative pt-28 pb-24">
       <div className="mx-auto max-w-5xl px-5">
         <Link
-          to="/trails"
+          to="/khazane"
+          hash="trails"
           className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition"
         >
-          <ArrowLeft className="h-4 w-4" /> All Heritage Trails
+          <ArrowLeft className="h-4 w-4" /> Back to Khazane
         </Link>
 
         <header className="mt-8 rounded-3xl glass grain p-8 sm:p-12 relative overflow-hidden">
