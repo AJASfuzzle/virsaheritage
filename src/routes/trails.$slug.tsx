@@ -193,14 +193,21 @@ function TrailDetail() {
               <span className="text-xs text-primary inline-flex items-center gap-1.5">
                 <Coins className="h-3.5 w-3.5" /> up to {totalCoinsAvailable} Kaal Coins
               </span>
+              {trail.distance && (
+                <span className="text-xs text-muted-foreground inline-flex items-center gap-1.5">
+                  <Footprints className="h-3.5 w-3.5" /> {trail.distance}
+                </span>
+              )}
+              {trail.difficulty && (
+                <span className="text-xs text-muted-foreground inline-flex items-center gap-1.5">
+                  <MountainSnow className="h-3.5 w-3.5" /> {trail.difficulty}
+                </span>
+              )}
             </div>
-            <h1 className="mt-6 font-display text-5xl sm:text-6xl text-balance">
-              <span className="mr-3" aria-hidden>{trail.hero}</span>
-              <span className="italic text-gradient-ember">{trail.title}</span>
-            </h1>
             <p className="mt-6 max-w-3xl text-lg text-foreground/80 text-pretty leading-relaxed">
               {trail.intro}
             </p>
+
 
             {/* Progress strip */}
             {user && totalCount > 0 && (
