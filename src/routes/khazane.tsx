@@ -20,10 +20,11 @@ export const Route = createFileRoute("/khazane")({
   component: KhazanePage,
 });
 
-type Category = "all" | "travel" | "merch" | "digital";
+type Category = "all" | "trails" | "travel" | "merch" | "digital";
 
 const CATEGORIES: { key: Category; label: string; tagline: string }[] = [
   { key: "all", label: "All treasures", tagline: "Every door." },
+  { key: "trails", label: "Trails", tagline: "Walk the living archive." },
   { key: "travel", label: "Travel", tagline: "Experiences in the field." },
   { key: "merch", label: "Merchandise", tagline: "Heirlooms for your shelf." },
   { key: "digital", label: "Digital", tagline: "Archives, stories, scenes." },
