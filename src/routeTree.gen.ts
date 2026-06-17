@@ -13,6 +13,7 @@ import { Route as TrailsRouteImport } from './routes/trails'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as KitabRouteImport } from './routes/kitab'
 import { Route as KhazaneRouteImport } from './routes/khazane'
+import { Route as EchoesRouteImport } from './routes/echoes'
 import { Route as ContributeRouteImport } from './routes/contribute'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AtlasRouteImport } from './routes/atlas'
@@ -20,9 +21,14 @@ import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TrailsIndexRouteImport } from './routes/trails.index'
+import { Route as EchoesIndexRouteImport } from './routes/echoes.index'
 import { Route as TrailsSlugRouteImport } from './routes/trails.$slug'
+import { Route as EchoesPostIdRouteImport } from './routes/echoes.$postId'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as EchoesProfileUserIdRouteImport } from './routes/echoes.profile.$userId'
+import { Route as AuthenticatedEchoesSettingsRouteImport } from './routes/_authenticated/echoes.settings'
+import { Route as AuthenticatedEchoesSavedRouteImport } from './routes/_authenticated/echoes.saved'
 
 const TrailsRoute = TrailsRouteImport.update({
   id: '/trails',
@@ -42,6 +48,11 @@ const KitabRoute = KitabRouteImport.update({
 const KhazaneRoute = KhazaneRouteImport.update({
   id: '/khazane',
   path: '/khazane',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EchoesRoute = EchoesRouteImport.update({
+  id: '/echoes',
+  path: '/echoes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContributeRoute = ContributeRouteImport.update({
@@ -78,10 +89,20 @@ const TrailsIndexRoute = TrailsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => TrailsRoute,
 } as any)
+const EchoesIndexRoute = EchoesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => EchoesRoute,
+} as any)
 const TrailsSlugRoute = TrailsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => TrailsRoute,
+} as any)
+const EchoesPostIdRoute = EchoesPostIdRouteImport.update({
+  id: '/$postId',
+  path: '/$postId',
+  getParentRoute: () => EchoesRoute,
 } as any)
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
@@ -93,6 +114,23 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const EchoesProfileUserIdRoute = EchoesProfileUserIdRouteImport.update({
+  id: '/profile/$userId',
+  path: '/profile/$userId',
+  getParentRoute: () => EchoesRoute,
+} as any)
+const AuthenticatedEchoesSettingsRoute =
+  AuthenticatedEchoesSettingsRouteImport.update({
+    id: '/echoes/settings',
+    path: '/echoes/settings',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedEchoesSavedRoute =
+  AuthenticatedEchoesSavedRouteImport.update({
+    id: '/echoes/saved',
+    path: '/echoes/saved',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -100,14 +138,20 @@ export interface FileRoutesByFullPath {
   '/atlas': typeof AtlasRoute
   '/auth': typeof AuthRoute
   '/contribute': typeof ContributeRoute
+  '/echoes': typeof EchoesRouteWithChildren
   '/khazane': typeof KhazaneRoute
   '/kitab': typeof KitabRoute
   '/library': typeof LibraryRoute
   '/trails': typeof TrailsRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/echoes/$postId': typeof EchoesPostIdRoute
   '/trails/$slug': typeof TrailsSlugRoute
+  '/echoes/': typeof EchoesIndexRoute
   '/trails/': typeof TrailsIndexRoute
+  '/echoes/saved': typeof AuthenticatedEchoesSavedRoute
+  '/echoes/settings': typeof AuthenticatedEchoesSettingsRoute
+  '/echoes/profile/$userId': typeof EchoesProfileUserIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -120,8 +164,13 @@ export interface FileRoutesByTo {
   '/library': typeof LibraryRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/echoes/$postId': typeof EchoesPostIdRoute
   '/trails/$slug': typeof TrailsSlugRoute
+  '/echoes': typeof EchoesIndexRoute
   '/trails': typeof TrailsIndexRoute
+  '/echoes/saved': typeof AuthenticatedEchoesSavedRoute
+  '/echoes/settings': typeof AuthenticatedEchoesSettingsRoute
+  '/echoes/profile/$userId': typeof EchoesProfileUserIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -131,14 +180,20 @@ export interface FileRoutesById {
   '/atlas': typeof AtlasRoute
   '/auth': typeof AuthRoute
   '/contribute': typeof ContributeRoute
+  '/echoes': typeof EchoesRouteWithChildren
   '/khazane': typeof KhazaneRoute
   '/kitab': typeof KitabRoute
   '/library': typeof LibraryRoute
   '/trails': typeof TrailsRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/echoes/$postId': typeof EchoesPostIdRoute
   '/trails/$slug': typeof TrailsSlugRoute
+  '/echoes/': typeof EchoesIndexRoute
   '/trails/': typeof TrailsIndexRoute
+  '/_authenticated/echoes/saved': typeof AuthenticatedEchoesSavedRoute
+  '/_authenticated/echoes/settings': typeof AuthenticatedEchoesSettingsRoute
+  '/echoes/profile/$userId': typeof EchoesProfileUserIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -148,14 +203,20 @@ export interface FileRouteTypes {
     | '/atlas'
     | '/auth'
     | '/contribute'
+    | '/echoes'
     | '/khazane'
     | '/kitab'
     | '/library'
     | '/trails'
     | '/dashboard'
     | '/settings'
+    | '/echoes/$postId'
     | '/trails/$slug'
+    | '/echoes/'
     | '/trails/'
+    | '/echoes/saved'
+    | '/echoes/settings'
+    | '/echoes/profile/$userId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -168,8 +229,13 @@ export interface FileRouteTypes {
     | '/library'
     | '/dashboard'
     | '/settings'
+    | '/echoes/$postId'
     | '/trails/$slug'
+    | '/echoes'
     | '/trails'
+    | '/echoes/saved'
+    | '/echoes/settings'
+    | '/echoes/profile/$userId'
   id:
     | '__root__'
     | '/'
@@ -178,14 +244,20 @@ export interface FileRouteTypes {
     | '/atlas'
     | '/auth'
     | '/contribute'
+    | '/echoes'
     | '/khazane'
     | '/kitab'
     | '/library'
     | '/trails'
     | '/_authenticated/dashboard'
     | '/_authenticated/settings'
+    | '/echoes/$postId'
     | '/trails/$slug'
+    | '/echoes/'
     | '/trails/'
+    | '/_authenticated/echoes/saved'
+    | '/_authenticated/echoes/settings'
+    | '/echoes/profile/$userId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -195,6 +267,7 @@ export interface RootRouteChildren {
   AtlasRoute: typeof AtlasRoute
   AuthRoute: typeof AuthRoute
   ContributeRoute: typeof ContributeRoute
+  EchoesRoute: typeof EchoesRouteWithChildren
   KhazaneRoute: typeof KhazaneRoute
   KitabRoute: typeof KitabRoute
   LibraryRoute: typeof LibraryRoute
@@ -229,6 +302,13 @@ declare module '@tanstack/react-router' {
       path: '/khazane'
       fullPath: '/khazane'
       preLoaderRoute: typeof KhazaneRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/echoes': {
+      id: '/echoes'
+      path: '/echoes'
+      fullPath: '/echoes'
+      preLoaderRoute: typeof EchoesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contribute': {
@@ -280,12 +360,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrailsIndexRouteImport
       parentRoute: typeof TrailsRoute
     }
+    '/echoes/': {
+      id: '/echoes/'
+      path: '/'
+      fullPath: '/echoes/'
+      preLoaderRoute: typeof EchoesIndexRouteImport
+      parentRoute: typeof EchoesRoute
+    }
     '/trails/$slug': {
       id: '/trails/$slug'
       path: '/$slug'
       fullPath: '/trails/$slug'
       preLoaderRoute: typeof TrailsSlugRouteImport
       parentRoute: typeof TrailsRoute
+    }
+    '/echoes/$postId': {
+      id: '/echoes/$postId'
+      path: '/$postId'
+      fullPath: '/echoes/$postId'
+      preLoaderRoute: typeof EchoesPostIdRouteImport
+      parentRoute: typeof EchoesRoute
     }
     '/_authenticated/settings': {
       id: '/_authenticated/settings'
@@ -301,21 +395,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/echoes/profile/$userId': {
+      id: '/echoes/profile/$userId'
+      path: '/profile/$userId'
+      fullPath: '/echoes/profile/$userId'
+      preLoaderRoute: typeof EchoesProfileUserIdRouteImport
+      parentRoute: typeof EchoesRoute
+    }
+    '/_authenticated/echoes/settings': {
+      id: '/_authenticated/echoes/settings'
+      path: '/echoes/settings'
+      fullPath: '/echoes/settings'
+      preLoaderRoute: typeof AuthenticatedEchoesSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/echoes/saved': {
+      id: '/_authenticated/echoes/saved'
+      path: '/echoes/saved'
+      fullPath: '/echoes/saved'
+      preLoaderRoute: typeof AuthenticatedEchoesSavedRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedEchoesSavedRoute: typeof AuthenticatedEchoesSavedRoute
+  AuthenticatedEchoesSettingsRoute: typeof AuthenticatedEchoesSettingsRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedEchoesSavedRoute: AuthenticatedEchoesSavedRoute,
+  AuthenticatedEchoesSettingsRoute: AuthenticatedEchoesSettingsRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
+interface EchoesRouteChildren {
+  EchoesPostIdRoute: typeof EchoesPostIdRoute
+  EchoesIndexRoute: typeof EchoesIndexRoute
+  EchoesProfileUserIdRoute: typeof EchoesProfileUserIdRoute
+}
+
+const EchoesRouteChildren: EchoesRouteChildren = {
+  EchoesPostIdRoute: EchoesPostIdRoute,
+  EchoesIndexRoute: EchoesIndexRoute,
+  EchoesProfileUserIdRoute: EchoesProfileUserIdRoute,
+}
+
+const EchoesRouteWithChildren =
+  EchoesRoute._addFileChildren(EchoesRouteChildren)
 
 interface TrailsRouteChildren {
   TrailsSlugRoute: typeof TrailsSlugRoute
@@ -337,6 +471,7 @@ const rootRouteChildren: RootRouteChildren = {
   AtlasRoute: AtlasRoute,
   AuthRoute: AuthRoute,
   ContributeRoute: ContributeRoute,
+  EchoesRoute: EchoesRouteWithChildren,
   KhazaneRoute: KhazaneRoute,
   KitabRoute: KitabRoute,
   LibraryRoute: LibraryRoute,

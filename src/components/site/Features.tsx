@@ -3,7 +3,7 @@ import { Languages, Mic, Bot, BookOpen, Route, Archive, Gamepad2, Dna, Network, 
 
 const features = [
   { id: "shruti", icon: Languages, title: "kitab — Language Archive", body: "Preserve dialects with pronunciation, folk tales, proverbs and scripts. AI-generated summaries for every tongue." },
-  { id: "contribute", icon: Mic, title: "Memory Contribution Portal", body: "Upload photos, voice, video, letters. AI transcribes, detects language, extracts keywords and translates." },
+  { id: "echoes", icon: Mic, title: "Echoes — A Living Archive", body: "Share photographs, stories, recipes, songs and traditions with a community of keepers. Every echo can be added to the Library." },
   { id: "assistant", icon: Bot, title: "AI Heritage Assistant", body: "Ask anything — folk dances of Assam, festivals of Rajasthan, foods of 1950s Punjab. Answers with maps, images, sources." },
   { id: "library", icon: BookOpen, title: "Living Heritage Library", body: "A curated digital archive of foods, recipes, dances, crafts, architecture and folklore — each with timeline and kin." },
   { id: "trails", icon: Route, title: "Heritage Trails", body: "AI-generated tourism routes: food trails, temple trails, festival trails, craft villages — fully mapped." },

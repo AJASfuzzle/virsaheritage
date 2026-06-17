@@ -65,6 +65,181 @@ export type Database = {
         }
         Relationships: []
       }
+      echo_comments: {
+        Row: {
+          author_id: string
+          content: string
+          created_at: string
+          id: string
+          parent_comment_id: string | null
+          post_id: string
+        }
+        Insert: {
+          author_id: string
+          content: string
+          created_at?: string
+          id?: string
+          parent_comment_id?: string | null
+          post_id: string
+        }
+        Update: {
+          author_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          parent_comment_id?: string | null
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "echo_comments_parent_comment_id_fkey"
+            columns: ["parent_comment_id"]
+            isOneToOne: false
+            referencedRelation: "echo_comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "echo_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "echo_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      echo_follows: {
+        Row: {
+          created_at: string
+          follower_id: string
+          following_id: string
+        }
+        Insert: {
+          created_at?: string
+          follower_id: string
+          following_id: string
+        }
+        Update: {
+          created_at?: string
+          follower_id?: string
+          following_id?: string
+        }
+        Relationships: []
+      }
+      echo_likes: {
+        Row: {
+          created_at: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "echo_likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "echo_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      echo_posts: {
+        Row: {
+          author_id: string
+          caption: string | null
+          category: string | null
+          comments_count: number
+          created_at: string
+          id: string
+          likes_count: number
+          location: string | null
+          media: Json
+          media_type: string
+          saves_count: number
+          state: string | null
+          story: string | null
+          submitted_to_library: boolean
+          submitted_to_library_at: string | null
+          tags: string[] | null
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          caption?: string | null
+          category?: string | null
+          comments_count?: number
+          created_at?: string
+          id?: string
+          likes_count?: number
+          location?: string | null
+          media?: Json
+          media_type?: string
+          saves_count?: number
+          state?: string | null
+          story?: string | null
+          submitted_to_library?: boolean
+          submitted_to_library_at?: string | null
+          tags?: string[] | null
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          caption?: string | null
+          category?: string | null
+          comments_count?: number
+          created_at?: string
+          id?: string
+          likes_count?: number
+          location?: string | null
+          media?: Json
+          media_type?: string
+          saves_count?: number
+          state?: string | null
+          story?: string | null
+          submitted_to_library?: boolean
+          submitted_to_library_at?: string | null
+          tags?: string[] | null
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      echo_saves: {
+        Row: {
+          created_at: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "echo_saves_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "echo_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       heritage_sites: {
         Row: {
           coin_reward: number
@@ -104,24 +279,51 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          banner_url: string | null
+          bio: string | null
           created_at: string
           full_name: string | null
+          heritage_origins: string[] | null
           id: string
+          interests: string[] | null
+          languages: string[] | null
+          location: string | null
+          social_links: Json | null
           updated_at: string
+          username: string | null
+          website: string | null
         }
         Insert: {
           avatar_url?: string | null
+          banner_url?: string | null
+          bio?: string | null
           created_at?: string
           full_name?: string | null
+          heritage_origins?: string[] | null
           id: string
+          interests?: string[] | null
+          languages?: string[] | null
+          location?: string | null
+          social_links?: Json | null
           updated_at?: string
+          username?: string | null
+          website?: string | null
         }
         Update: {
           avatar_url?: string | null
+          banner_url?: string | null
+          bio?: string | null
           created_at?: string
           full_name?: string | null
+          heritage_origins?: string[] | null
           id?: string
+          interests?: string[] | null
+          languages?: string[] | null
+          location?: string | null
+          social_links?: Json | null
           updated_at?: string
+          username?: string | null
+          website?: string | null
         }
         Relationships: []
       }
