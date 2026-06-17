@@ -105,7 +105,7 @@ export function Trails() {
       </div>
 
       {/* Stack */}
-      <div className="relative mx-auto mt-6 max-w-6xl px-3 sm:px-5 select-none">
+      <div id="trail-stack" className="relative mx-auto mt-6 max-w-6xl px-3 sm:px-5 select-none">
         <div className="relative h-[78vh] min-h-[560px] max-h-[860px] [perspective:1400px]">
           {trails.map((t, i) => {
             const offset = i - index;
@@ -125,6 +125,26 @@ export function Trails() {
               />
             );
           })}
+
+          {/* Floating up/down nav — always visible affordance */}
+          <div className="pointer-events-none absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-[200] flex flex-col gap-2">
+            <button
+              onClick={() => go(-1)}
+              disabled={index === 0}
+              aria-label="Previous trail"
+              className="pointer-events-auto grid h-11 w-11 place-items-center rounded-full bg-black/45 text-white ring-1 ring-white/20 backdrop-blur-md transition hover:bg-black/65 disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <ChevronUp className="h-5 w-5" />
+            </button>
+            <button
+              onClick={() => go(1)}
+              disabled={index === max}
+              aria-label="Next trail"
+              className="pointer-events-auto grid h-11 w-11 place-items-center rounded-full bg-black/45 text-white ring-1 ring-white/20 backdrop-blur-md transition hover:bg-black/65 disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <ChevronDown className="h-5 w-5" />
+            </button>
+          </div>
         </div>
 
         {/* Controls */}
@@ -144,9 +164,9 @@ export function Trails() {
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <kbd className="rounded bg-foreground/10 px-1.5 py-0.5">↑</kbd>
             <kbd className="rounded bg-foreground/10 px-1.5 py-0.5">↓</kbd>
-            <span className="hidden sm:inline">to browse · </span>
+            <span className="hidden sm:inline">swipe · scroll · </span>
             <kbd className="rounded bg-foreground/10 px-1.5 py-0.5">↵</kbd>
-            <span>to enter</span>
+            <span>open</span>
           </div>
         </div>
       </div>
