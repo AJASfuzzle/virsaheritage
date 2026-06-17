@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
+import { FloatingAssistantButton } from "@/components/site/FloatingAssistantButton";
 import { AuthProvider } from "@/hooks/use-auth";
 
 function NotFoundComponent() {
@@ -123,6 +124,7 @@ function RootComponent() {
           <Outlet />
           <Footer />
         </main>
+        <FloatingAssistantButton />
         <Toaster richColors position="top-right" />
       </AuthProvider>
     </QueryClientProvider>
