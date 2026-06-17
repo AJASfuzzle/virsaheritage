@@ -4,7 +4,6 @@ import { Link, useRouter } from "@tanstack/react-router";
 import { useAuth } from "@/hooks/use-auth";
 import { UserMenu } from "@/components/site/UserMenu";
 
-
 const links = [
   { to: "/trails", label: "Trails" },
   { to: "/atlas", label: "Heritage Atlas" },
@@ -14,6 +13,7 @@ const links = [
   { to: "/contribute", label: "Contribute" },
 ] as const;
 
+
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -22,8 +22,8 @@ export function Navbar() {
   const router = useRouter();
   const isHome = router.state.location.pathname === "/";
 
-
   useEffect(() => {
+
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
