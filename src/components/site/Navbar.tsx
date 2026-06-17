@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Compass, Menu, Moon, Sun, X } from "lucide-react";
-import { Link, useRouter } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useAuth } from "@/hooks/use-auth";
 import { UserMenu } from "@/components/site/UserMenu";
 
@@ -15,16 +15,12 @@ const links = [
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-
   const [open, setOpen] = useState(false);
   const [light, setLight] = useState(false);
   const { user, loading } = useAuth();
-  const router = useRouter();
-  const isHome = router.state.location.pathname === "/";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
-
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -43,36 +39,14 @@ export function Navbar() {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5">
         <Link
           to="/"
-          aria-label="Virsa home"
+          aria-label="VIRSA home"
           className="flex items-center gap-2.5 group shrink-0"
         >
           <span className="grid h-9 w-9 place-items-center rounded-xl gradient-ember text-primary-foreground shadow-[0_8px_24px_-8px_oklch(0.72_0.18_55/0.6)] transition-transform duration-500 group-hover:scale-105">
             <Compass className="h-4 w-4" strokeWidth={2.4} />
           </span>
           <span className="flex items-baseline gap-2 whitespace-nowrap leading-none">
-            {isHome ? (
-              <span className="inline-flex items-baseline font-display text-xl tracking-tight">
-                V
-                <span className="relative mx-[1px] inline-flex flex-col items-center">
-                  <svg
-                    className="h-3 w-3 text-destructive"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    aria-hidden="true"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
-                    />
-                    <circle cx="12" cy="9" r="2.5" className="fill-background" />
-                  </svg>
-                  <span className="-mt-1">i</span>
-                </span>
-                RSA
-              </span>
-            ) : (
-              <span className="font-display text-xl tracking-tight">VIRSA</span>
-            )}
+            <span className="font-display text-xl tracking-tight">VIRSA</span>
             <span className="text-muted-foreground font-sans text-[10px] uppercase tracking-[0.28em]">
               Heritage Atlas
             </span>
@@ -80,7 +54,6 @@ export function Navbar() {
         </Link>
 
         <nav
-
           className={`hidden lg:flex items-center gap-0.5 rounded-full border border-white/5 px-1.5 py-1 transition-all duration-500 ${
             scrolled ? "glass shadow-[0_10px_40px_-20px_rgba(0,0,0,0.6)]" : "bg-white/[0.03] backdrop-blur-md"
           }`}
