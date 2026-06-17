@@ -2,11 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { Coins, Gift, Loader2, Sparkles, X } from "lucide-react";
+import { ArrowRight, Coins, Gift, Loader2, Map, Sparkles, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { listRewards, getMyState, redeemReward } from "@/lib/kaal.functions";
 import { useAuth } from "@/hooks/use-auth";
+import { Trails } from "@/components/site/Trails";
 
 export const Route = createFileRoute("/khazane")({
   head: () => ({
