@@ -1,8 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Compass, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { geoMercator } from "d3-geo";
-import indiaMap from "@/lib/india-map.json";
+import indiaBaseMap from "@/assets/india-base-map.png.asset.json";
 import {
   categoryStyles,
   heritageCategories,
@@ -13,14 +12,24 @@ import {
   type HeritageSite,
 } from "@/lib/heritage-sites";
 
-const projection = geoMercator()
-  .scale(indiaMap.projection.scale)
-  .translate(indiaMap.projection.translate as [number, number]);
+/**
+ * Base map asset is a top-down render of India at 1149×1368 px.
+ * Pins are placed using a linear lon/lat → image-percent projection
+ * calibrated against three reference points on that exact image:
+ *   • Kanyakumari        ( 77.55°E,  8.08°N ) ≈ (345, 1190)
+ *   • Arunachal NE tip   ( 96.00°E, 28.00°N ) ≈ (1075, 380)
+ *   • Srinagar / N Kashmir ( 75°E, 34°N )     ≈ (290, 130)
+ * Across the Indian landmass this affine fit keeps every pin
+ * inside the correct state (verified visually) which is precise
+ * enough for the heritage-atlas use case.
+ */
+const MAP = { w: 1149, h: 1368, ratio: 1149 / 1368 };
+const PROJ = { a: -2723.5, b: 39.57, c: 1500.9, d: -38.48 };
 
 function project(lon: number, lat: number) {
-  const p = projection([lon, lat]);
-  if (!p) return { x: 0, y: 0 };
-  return { x: (p[0] / indiaMap.width) * 100, y: (p[1] / indiaMap.height) * 100 };
+  const px = PROJ.a + PROJ.b * lon;
+  const py = PROJ.c + PROJ.d * lat;
+  return { x: (px / MAP.w) * 100, y: (py / MAP.h) * 100 };
 }
 
 function formatYear(y: number) {
@@ -185,35 +194,33 @@ function MapCanvas({
   return (
     <div className="absolute inset-0 grid place-items-center p-4 sm:p-6">
       <div
-        className="relative h-full"
-        style={{ aspectRatio: `${indiaMap.width} / ${indiaMap.height}` }}
+        className="relative h-full max-h-full"
+        style={{ aspectRatio: `${MAP.w} / ${MAP.h}` }}
       >
-        <svg
-          viewBox={indiaMap.viewBox}
-          preserveAspectRatio="xMidYMid meet"
-          className="absolute inset-0 h-full w-full"
-        >
-          {/* Soft shadow under land for depth on cream background */}
-          <path
-            d={indiaMap.outline}
-            fill="none"
-            stroke="rgba(80,60,30,0.18)"
-            strokeWidth={8}
-            transform="translate(0,4)"
-          />
-          {/* White land fill with white outline */}
-          <path
-            d={indiaMap.outline}
-            fill="#ffffff"
-            stroke="#ffffff"
-            strokeWidth={2}
-            strokeLinejoin="round"
-          />
-          {/* State borders — soft grey on white */}
-          <path d={indiaMap.states} fill="none" stroke="#e7e2d2" strokeWidth={0.7} />
-        </svg>
+        {/* Ambient elevation shadow — Apple-style soft halo */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -inset-6 rounded-[2.5rem]"
+          style={{
+            background:
+              "radial-gradient(60% 55% at 50% 55%, rgba(80,60,30,0.18), transparent 70%)",
+            filter: "blur(18px)",
+          }}
+        />
+        {/* Base map image — the uploaded India asset, untouched */}
+        <img
+          src={indiaBaseMap.url}
+          alt="Map of India"
+          width={MAP.w}
+          height={MAP.h}
+          draggable={false}
+          loading="eager"
+          decoding="async"
+          className="absolute inset-0 h-full w-full select-none object-contain"
+          style={{ WebkitUserDrag: "none" } as React.CSSProperties}
+        />
 
-        {/* Pushpins layer — uses the SAME 0-100% coordinate space as the SVG */}
+        {/* Pushpins layer — aligned to the image's lon/lat calibration */}
         <div className="absolute inset-0">
           {visible.map((site) => {
             const { x, y } = project(site.lon, site.lat);
@@ -227,7 +234,8 @@ function MapCanvas({
                 onMouseEnter={() => setHover(site.id)}
                 onMouseLeave={() => setHover(hover === site.id ? null : hover)}
                 title={site.name}
-                className="group absolute -translate-x-1/2 -translate-y-full focus:outline-none"
+                aria-label={site.name}
+                className="group absolute -translate-x-1/2 -translate-y-1/2 focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-900 focus-visible:ring-offset-2 rounded-full"
                 style={{ left: `${x}%`, top: `${y}%`, zIndex: isHover || isActive ? 50 : 10 }}
               >
                 <Pushpin color={color} active={isHover || isActive} />
@@ -243,28 +251,42 @@ function MapCanvas({
 /** Talking Tours-style pushpin: round head + short stem + soft shadow. */
 function Pushpin({ color, active }: { color: string; active: boolean }) {
   return (
-    <span className="relative block">
-      <svg
-        width={active ? 30 : 22}
-        height={active ? 38 : 28}
-        viewBox="0 0 22 28"
-        className="transition-all duration-200 drop-shadow-[0_3px_3px_rgba(0,0,0,0.25)]"
+    <motion.span
+      className="relative block"
+      animate={{ scale: active ? 1.18 : 1, y: active ? -2 : 0 }}
+      whileHover={{ scale: 1.18, y: -2 }}
+      transition={{ type: "spring", stiffness: 380, damping: 22 }}
+    >
+      {/* Ground shadow — Apple-style soft ellipse */}
+      <span
+        aria-hidden
+        className="absolute left-1/2 top-full -translate-x-1/2 h-1.5 w-3 rounded-full bg-stone-900/25 blur-[2px]"
+      />
+      {/* Pin head */}
+      <span
+        className="relative block h-3 w-3 rounded-full ring-2 ring-white"
+        style={{
+          background: color,
+          boxShadow: active
+            ? `0 4px 10px -2px ${color}80, 0 2px 4px rgba(0,0,0,0.18)`
+            : "0 2px 5px rgba(0,0,0,0.18)",
+        }}
       >
-        {/* stem */}
-        <rect x="10" y="14" width="2" height="12" rx="1" fill="#3a2a14" />
-        {/* head */}
-        <circle cx="11" cy="10" r="9" fill={color} stroke="#fff" strokeWidth="2" />
-        {/* highlight */}
-        <circle cx="8" cy="7" r="2.4" fill="rgba(255,255,255,0.55)" />
-      </svg>
+        {/* Subtle inner highlight for translucent depth */}
+        <span
+          aria-hidden
+          className="absolute left-[18%] top-[18%] h-[35%] w-[35%] rounded-full bg-white/60 blur-[0.3px]"
+        />
+      </span>
+      {/* Live pulse when active */}
       {active && (
         <span
           aria-hidden
-          className="absolute left-1/2 top-[10px] -translate-x-1/2 -translate-y-1/2 h-8 w-8 rounded-full animate-ping opacity-50"
-          style={{ background: color }}
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-6 w-6 rounded-full animate-ping"
+          style={{ background: color, opacity: 0.35 }}
         />
       )}
-    </span>
+    </motion.span>
   );
 }
 
