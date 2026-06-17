@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Hero } from "@/components/site/Hero";
 import { Stats } from "@/components/site/Stats";
+import { RecommendationsRow } from "@/components/recs/RecommendationsRow";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -26,6 +27,11 @@ function Index() {
   return (
     <>
       <Hero />
+      <RecommendationsRow
+        surface="home"
+        title="Your Virsa, for you"
+        subtitle="Stories, trails and heritage sites ranked by Virsa AI from your interests and check-ins."
+      />
       <Stats />
     </>
   );

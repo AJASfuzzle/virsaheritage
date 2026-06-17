@@ -261,6 +261,54 @@ export type Database = {
         }
         Relationships: []
       }
+      user_interests: {
+        Row: {
+          categories: string[]
+          onboarded: boolean
+          regions: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          categories?: string[]
+          onboarded?: boolean
+          regions?: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          categories?: string[]
+          onboarded?: boolean
+          regions?: string[]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_saves: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string
+          item_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id: string
+          item_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          item_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

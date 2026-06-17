@@ -16,6 +16,7 @@ import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
 import { FloatingAssistantButton } from "@/components/site/FloatingAssistantButton";
 import { AuthProvider } from "@/hooks/use-auth";
+import { InterestsOnboarding } from "@/components/recs/InterestsOnboarding";
 
 function NotFoundComponent() {
   return (
@@ -125,6 +126,7 @@ function RootComponent() {
           <Footer />
         </main>
         <FloatingAssistantButton />
+        <InterestsOnboarding />
         <Toaster richColors position="top-right" />
       </AuthProvider>
     </QueryClientProvider>

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Trails } from "@/components/site/Trails";
+import { RecommendationsRow } from "@/components/recs/RecommendationsRow";
 
 export const Route = createFileRoute("/trails/")({
   head: () => ({
@@ -16,7 +17,13 @@ export const Route = createFileRoute("/trails/")({
 function TrailsIndex() {
   return (
     <div className="pt-20 [&>section:first-child]:!pt-6 sm:[&>section:first-child]:!pt-10">
+      <RecommendationsRow
+        surface="trails"
+        title="Trails for you"
+        subtitle="Virsa AI suggests trails and stops aligned with where you've been and what you love."
+      />
       <Trails />
     </div>
   );
 }
+
