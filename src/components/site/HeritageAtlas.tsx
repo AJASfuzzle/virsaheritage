@@ -234,7 +234,7 @@ function MapCanvas({
                 onMouseLeave={() => setHover(hover === site.id ? null : hover)}
                 title={site.name}
                 aria-label={site.name}
-                className="group absolute -translate-x-1/2 -translate-y-1/2 focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-900 focus-visible:ring-offset-2 rounded-full"
+                className="group absolute -translate-x-1/2 -translate-y-1/2 focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 rounded-full"
                 style={{ left: `${x}%`, top: `${y}%`, zIndex: isHover || isActive ? 50 : 10 }}
               >
                 <Pushpin color={color} active={isHover || isActive} />
