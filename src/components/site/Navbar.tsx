@@ -54,7 +54,7 @@ export function Navbar() {
         </Link>
 
         <nav
-          className={`hidden md:flex items-center gap-0.5 rounded-full border border-white/5 px-1.5 py-1 transition-all duration-500 ${
+          className={`hidden lg:flex items-center gap-0.5 rounded-full border border-white/5 px-1.5 py-1 transition-all duration-500 ${
             scrolled ? "glass shadow-[0_10px_40px_-20px_rgba(0,0,0,0.6)]" : "bg-white/[0.03] backdrop-blur-md"
           }`}
         >
@@ -95,7 +95,7 @@ export function Navbar() {
           )}
 
           <button
-            className="btn-glossy md:hidden grid h-9 w-9 place-items-center rounded-full glass"
+            className="btn-glossy lg:hidden grid h-9 w-9 place-items-center rounded-full glass"
             onClick={() => setOpen((v) => !v)}
             aria-label="Menu"
           >
@@ -105,7 +105,7 @@ export function Navbar() {
       </div>
 
       {open && (
-        <div className="md:hidden mx-5 mt-3 rounded-2xl glass p-3 animate-fade-in">
+        <div className="lg:hidden mx-5 mt-3 rounded-2xl glass p-3 animate-fade-in">
           {links.map((l) => (
             <Link
               key={l.to}

@@ -43,7 +43,7 @@ export function UserMenu() {
     <div ref={ref} className="relative">
       <div className="flex items-center gap-2">
         {/* coin pill */}
-        <div className="hidden sm:flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary whitespace-nowrap">
+        <div className="hidden xl:flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary whitespace-nowrap">
           <Coins className="h-3.5 w-3.5" />
           {data?.balance ?? 0}
         </div>
