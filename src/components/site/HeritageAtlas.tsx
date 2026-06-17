@@ -68,11 +68,11 @@ export function HeritageAtlas() {
   }, [selected]);
 
   return (
-    <section className="relative w-full" style={{ background: "#f5f1ea" }}>
+    <section className="relative w-full bg-background text-foreground">
       {/* Subtle paper texture */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.35] mix-blend-multiply"
+        className="pointer-events-none absolute inset-0 opacity-[0.25] mix-blend-multiply dark:opacity-[0.08] dark:mix-blend-screen"
         style={{
           backgroundImage:
             "radial-gradient(rgba(120,90,50,0.18) 1px, transparent 1px)",
@@ -84,16 +84,16 @@ export function HeritageAtlas() {
         {/* Header */}
         <header className="mb-4 flex items-end justify-between gap-6 flex-wrap">
           <div>
-            <p className="flex items-center gap-2 text-[11px] uppercase tracking-[0.32em] text-stone-500">
+            <p className="flex items-center gap-2 text-[11px] uppercase tracking-[0.32em] text-muted-foreground">
               <Compass className="h-3.5 w-3.5" /> Heritage Atlas
             </p>
             <h1
-              className="mt-2 font-display text-3xl sm:text-5xl text-stone-900 text-balance leading-[1.05]"
+              className="mt-2 font-display text-3xl sm:text-5xl text-foreground text-balance leading-[1.05]"
               style={{ fontFamily: "var(--font-display, 'Cormorant Garamond', serif)" }}
             >
-              India, <em className="italic font-normal text-stone-700">pin by pin</em>
+              India, <em className="italic font-normal text-foreground/80">pin by pin</em>
             </h1>
-            <p className="mt-2 max-w-xl text-sm text-stone-600">
+            <p className="mt-2 max-w-xl text-sm text-muted-foreground">
               Drop a pin. Read the story. Scrub the centuries.
             </p>
           </div>
@@ -104,8 +104,8 @@ export function HeritageAtlas() {
               onClick={() => setActiveCats(new Set())}
               className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition border ${
                 allOn
-                  ? "bg-stone-900 text-stone-50 border-stone-900"
-                  : "bg-white text-stone-700 border-stone-300 hover:border-stone-500"
+                  ? "bg-foreground text-background border-foreground"
+                  : "bg-card text-foreground/80 border-border hover:border-foreground/40"
               }`}
             >
               All sites
@@ -119,8 +119,8 @@ export function HeritageAtlas() {
                   onClick={() => toggleCat(c)}
                   className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition border flex items-center gap-2 ${
                     on
-                      ? "bg-white text-stone-900 border-stone-900"
-                      : "bg-white/70 text-stone-600 border-stone-300 hover:border-stone-500"
+                      ? "bg-card text-foreground border-foreground"
+                      : "bg-card/70 text-muted-foreground border-border hover:border-foreground/40"
                   }`}
                   style={on ? { boxShadow: `inset 3px 0 0 ${color}` } : undefined}
                 >
@@ -133,7 +133,7 @@ export function HeritageAtlas() {
         </header>
 
         {/* Map canvas — fills the rest of the viewport */}
-        <div className="relative flex-1 min-h-[640px] rounded-3xl bg-white/60 ring-1 ring-stone-300/60 shadow-[0_30px_60px_-30px_rgba(80,60,30,0.25)] overflow-hidden">
+        <div className="relative flex-1 min-h-[640px] rounded-3xl bg-card/60 ring-1 ring-border/60 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.45)] overflow-hidden">
           <MapCanvas
             visible={visible}
             hover={hover}
@@ -143,7 +143,7 @@ export function HeritageAtlas() {
           />
 
           {/* Counter */}
-          <div className="absolute left-4 top-4 rounded-full bg-white/90 backdrop-blur px-3 py-1.5 text-[11px] font-medium text-stone-700 ring-1 ring-stone-300 shadow-sm">
+          <div className="absolute left-4 top-4 rounded-full bg-card/90 backdrop-blur px-3 py-1.5 text-[11px] font-medium text-foreground/80 ring-1 ring-border shadow-sm">
             {visible.length} sites · {formatYear(year)}
           </div>
 
@@ -155,7 +155,7 @@ export function HeritageAtlas() {
                 initial={{ opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="pointer-events-none absolute right-4 top-4 rounded-lg bg-stone-900 text-stone-50 px-3 py-1.5 text-xs shadow-lg"
+                className="pointer-events-none absolute right-4 top-4 rounded-lg bg-foreground text-background px-3 py-1.5 text-xs shadow-lg"
               >
                 {heritageSites.find((s) => s.id === hover)?.name}
               </motion.div>
@@ -259,7 +259,7 @@ function Pushpin({ color, active }: { color: string; active: boolean }) {
       {/* Ground shadow — Apple-style soft ellipse */}
       <span
         aria-hidden
-        className="absolute left-1/2 top-full -translate-x-1/2 h-1.5 w-3 rounded-full bg-stone-900/25 blur-[2px]"
+        className="absolute left-1/2 top-full -translate-x-1/2 h-1.5 w-3 rounded-full bg-foreground/25 blur-[2px]"
       />
       {/* Pin head */}
       <span
@@ -274,7 +274,7 @@ function Pushpin({ color, active }: { color: string; active: boolean }) {
         {/* Subtle inner highlight for translucent depth */}
         <span
           aria-hidden
-          className="absolute left-[18%] top-[18%] h-[35%] w-[35%] rounded-full bg-white/60 blur-[0.3px]"
+          className="absolute left-[18%] top-[18%] h-[35%] w-[35%] rounded-full bg-card/60 blur-[0.3px]"
         />
       </span>
       {/* Live pulse when active */}
@@ -296,12 +296,12 @@ const TIMELINE_TICKS = [-2500, -1000, -500, 1, 500, 1000, 1500, 1800, 2000];
 function TimelineScrubber({ year, setYear }: { year: number; setYear: (n: number) => void }) {
   return (
     <div className="absolute inset-x-4 bottom-4 sm:inset-x-8 sm:bottom-6 z-30">
-      <div className="rounded-2xl bg-white/95 backdrop-blur ring-1 ring-stone-300 shadow-[0_15px_30px_-15px_rgba(80,60,30,0.25)] px-5 py-3.5">
+      <div className="rounded-2xl bg-card/95 backdrop-blur ring-1 ring-border shadow-[0_15px_30px_-15px_rgba(0,0,0,0.4)] px-5 py-3.5">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-[10px] uppercase tracking-[0.28em] text-stone-500">
+          <span className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
             Travel back in time
           </span>
-          <span className="font-display text-xl text-stone-900 tabular-nums">
+          <span className="font-display text-xl text-foreground tabular-nums">
             {formatYear(year)}
           </span>
         </div>
@@ -315,12 +315,12 @@ function TimelineScrubber({ year, setYear }: { year: number; setYear: (n: number
             onChange={(e) => setYear(parseInt(e.target.value))}
             className="atlas-range w-full"
           />
-          <div className="mt-1 flex justify-between text-[10px] text-stone-500 tabular-nums">
+          <div className="mt-1 flex justify-between text-[10px] text-muted-foreground tabular-nums">
             {TIMELINE_TICKS.map((t) => (
               <button
                 key={t}
                 onClick={() => setYear(t)}
-                className="hover:text-stone-900 transition cursor-pointer"
+                className="hover:text-foreground transition cursor-pointer"
               >
                 {formatYear(t)}
               </button>
@@ -343,8 +343,8 @@ function TimelineScrubber({ year, setYear }: { year: number; setYear: (n: number
           width: 22px;
           height: 22px;
           border-radius: 50%;
-          background: #1c1917;
-          border: 3px solid #fff;
+          background: hsl(var(--foreground, 24 6% 10%));
+          border: 3px solid var(--color-background);
           box-shadow: 0 2px 6px rgba(0,0,0,0.3);
           cursor: grab;
         }
@@ -352,8 +352,8 @@ function TimelineScrubber({ year, setYear }: { year: number; setYear: (n: number
           width: 22px;
           height: 22px;
           border-radius: 50%;
-          background: #1c1917;
-          border: 3px solid #fff;
+          background: hsl(var(--foreground, 24 6% 10%));
+          border: 3px solid var(--color-background);
           box-shadow: 0 2px 6px rgba(0,0,0,0.3);
           cursor: grab;
         }
@@ -374,7 +374,7 @@ function SitePanel({ site, onClose }: { site: HeritageSite; onClose: () => void 
         exit={{ opacity: 0 }}
         transition={{ duration: 0.18 }}
         onClick={onClose}
-        className="fixed inset-0 z-40 bg-stone-900/40 backdrop-blur-sm"
+        className="fixed inset-0 z-40 bg-foreground/30 backdrop-blur-sm"
       />
       {/* Desktop right rail */}
       <motion.aside
@@ -383,7 +383,7 @@ function SitePanel({ site, onClose }: { site: HeritageSite; onClose: () => void 
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: 40, opacity: 0 }}
         transition={{ type: "spring", stiffness: 280, damping: 32 }}
-        className="fixed right-4 top-4 bottom-4 z-50 hidden w-full max-w-md overflow-y-auto rounded-3xl bg-white shadow-2xl ring-1 ring-stone-300 sm:block"
+        className="fixed right-4 top-4 bottom-4 z-50 hidden w-full max-w-md overflow-y-auto rounded-3xl bg-card shadow-2xl ring-1 ring-border sm:block"
       >
         <PanelBody site={site} color={color} onClose={onClose} />
       </motion.aside>
@@ -395,10 +395,10 @@ function SitePanel({ site, onClose }: { site: HeritageSite; onClose: () => void 
         animate={{ y: 0 }}
         exit={{ y: "100%" }}
         transition={{ type: "spring", stiffness: 280, damping: 32 }}
-        className="fixed inset-x-0 bottom-0 z-50 max-h-[88vh] overflow-y-auto rounded-t-3xl bg-white shadow-2xl ring-1 ring-stone-300 sm:hidden"
+        className="fixed inset-x-0 bottom-0 z-50 max-h-[88vh] overflow-y-auto rounded-t-3xl bg-card shadow-2xl ring-1 ring-border sm:hidden"
       >
-        <div className="sticky top-0 z-10 flex justify-center bg-white pt-2">
-          <span className="h-1.5 w-12 rounded-full bg-stone-300" />
+        <div className="sticky top-0 z-10 flex justify-center bg-card pt-2">
+          <span className="h-1.5 w-12 rounded-full bg-border" />
         </div>
         <PanelBody site={site} color={color} onClose={onClose} />
       </motion.aside>
@@ -419,17 +419,17 @@ function PanelBody({
     <div>
       <div className="relative">
         <img src={site.imageUrl} alt={site.name} className="h-64 w-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/10 to-transparent" />
         <button
           onClick={onClose}
           aria-label="Close"
-          className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-white/90 text-stone-700 ring-1 ring-stone-300 backdrop-blur hover:bg-white"
+          className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-card/90 text-foreground/80 ring-1 ring-border backdrop-blur hover:bg-card"
         >
           <X className="h-4 w-4" />
         </button>
         <div className="absolute bottom-3 left-4 right-4">
           <span
-            className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ring-1"
+            className="inline-flex items-center gap-1.5 rounded-full bg-card px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ring-1"
             style={{ color, boxShadow: `inset 0 0 0 1px ${color}33` }}
           >
             <span className="h-1.5 w-1.5 rounded-full" style={{ background: color }} />
@@ -440,16 +440,16 @@ function PanelBody({
 
       <div className="px-6 pb-10 pt-5">
         <h2
-          className="font-display text-3xl leading-tight text-stone-900"
+          className="font-display text-3xl leading-tight text-foreground"
           style={{ fontFamily: "var(--font-display, 'Cormorant Garamond', serif)" }}
         >
           {site.name}
         </h2>
-        <div className="mt-1 text-xs text-stone-500">
+        <div className="mt-1 text-xs text-muted-foreground">
           {site.region} · {formatYear(site.year)}
         </div>
 
-        <div className="mt-5 space-y-3 text-[15px] leading-relaxed text-stone-700">
+        <div className="mt-5 space-y-3 text-[15px] leading-relaxed text-foreground/80">
           {site.fullDescription.map((p, i) => (
             <p key={i}>{p}</p>
           ))}
@@ -459,11 +459,11 @@ function PanelBody({
           <div className="text-[10px] uppercase tracking-[0.22em]" style={{ color }}>
             Quick facts
           </div>
-          <dl className="mt-3 divide-y divide-stone-200 rounded-xl border border-stone-200">
+          <dl className="mt-3 divide-y divide-border rounded-xl border border-border">
             {site.quickFacts.map((f) => (
               <div key={f.label} className="grid grid-cols-[1fr_1.4fr] gap-3 px-4 py-2.5 text-sm">
-                <dt className="text-stone-500">{f.label}</dt>
-                <dd className="text-stone-900">{f.value}</dd>
+                <dt className="text-muted-foreground">{f.label}</dt>
+                <dd className="text-foreground">{f.value}</dd>
               </div>
             ))}
           </dl>
