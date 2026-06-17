@@ -10,7 +10,7 @@ const links = [
   { to: "/library", label: "Library" },
   { to: "/kitab", label: "kitab" },
   { to: "/khazane", label: "Khazane" },
-  { to: "/contribute", label: "Contribute" },
+  { to: "/echoes", label: "Echoes" },
 ] as const;
 
 export function Navbar() {
