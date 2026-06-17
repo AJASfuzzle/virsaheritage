@@ -256,12 +256,8 @@ function TrailCard({
         </div>
       </div>
 
-      {/* Content */}
-      <button
-        onClick={() => isActive && onOpen()}
-        disabled={!isActive}
-        className="absolute inset-x-0 bottom-0 text-left p-5 sm:p-8 cursor-pointer focus:outline-none"
-      >
+      {/* Content (non-interactive — lets drag pass through) */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 p-5 sm:p-8">
         <div className="text-white/80 text-xs inline-flex items-center gap-1.5">
           <MapPin className="h-3.5 w-3.5" /> {trail.region}
         </div>
@@ -287,10 +283,14 @@ function TrailCard({
           <span className="inline-flex items-center gap-1.5 text-amber-200"><Coins className="h-3.5 w-3.5" /> earn Kaal Coins</span>
         </div>
 
-        <span className="mt-6 inline-flex items-center gap-2 rounded-full bg-white text-foreground px-5 py-2.5 text-sm font-semibold shadow-lg">
+        <button
+          onClick={(e) => { e.stopPropagation(); if (isActive) onOpen(); }}
+          disabled={!isActive}
+          className="pointer-events-auto mt-6 inline-flex items-center gap-2 rounded-full bg-white text-foreground px-5 py-2.5 text-sm font-semibold shadow-lg hover:bg-white/90 transition disabled:opacity-60"
+        >
           Explore Trail <ArrowRight className="h-4 w-4" />
-        </span>
-      </button>
+        </button>
+      </div>
 
       {/* Swipe affordance */}
       {isActive && (
