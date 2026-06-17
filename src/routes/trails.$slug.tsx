@@ -30,7 +30,7 @@ export const Route = createFileRoute("/trails/$slug")({
   notFoundComponent: () => (
     <div className="pt-32 pb-24 text-center">
       <h1 className="font-display text-4xl">Trail not found</h1>
-      <Link to="/trails" className="mt-6 inline-block text-primary hover:underline">← Back to all trails</Link>
+      <Link to="/khazane" hash="trails" className="mt-6 inline-block text-primary hover:underline">← Back to Khazane</Link>
     </div>
   ),
 });
