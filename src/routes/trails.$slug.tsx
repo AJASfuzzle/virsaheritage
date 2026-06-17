@@ -1,13 +1,14 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, CalendarRange, CheckCircle2, Clock, Coins, Loader2, MapPin, Navigation, Sparkles, Trophy } from "lucide-react";
-import { useState } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { ArrowLeft, CalendarRange, CheckCircle2, Clock, Coins, Footprints, Lightbulb, Loader2, MapPin, MountainSnow, Navigation, Sparkles, Trophy } from "lucide-react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { getTrail, trails, type Trail } from "@/lib/trails-data";
 import { listTrailSites, getMyState, checkInAtSite } from "@/lib/kaal.functions";
 import { useAuth } from "@/hooks/use-auth";
+import { AudioCompanion } from "@/components/site/AudioCompanion";
 
 export const Route = createFileRoute("/trails/$slug")({
   loader: ({ params }) => {
@@ -124,16 +125,53 @@ function TrailDetail() {
     );
   }
 
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll();
+  const heroY = useTransform(scrollY, [0, 600], [0, 120]);
+  const heroScale = useTransform(scrollY, [0, 400], [1, 1.08]);
+
   return (
-    <article className="relative pt-28 pb-24">
-      <div className="mx-auto max-w-5xl px-5">
-        <Link
-          to="/khazane"
-          hash="trails"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition"
-        >
-          <ArrowLeft className="h-4 w-4" /> Back to Khazane
-        </Link>
+    <article className="relative pb-24">
+      {/* Cinematic hero */}
+      <div ref={heroRef} className="relative h-[72vh] min-h-[520px] w-full overflow-hidden">
+        <motion.img
+          src={trail.coverImage}
+          alt={trail.title}
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ y: heroY, scale: heroScale }}
+        />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 30%, rgba(0,0,0,0.2) 60%, var(--background) 100%)" }} />
+
+        <div className="absolute inset-x-0 top-0 z-10 pt-24">
+          <div className="mx-auto max-w-5xl px-5">
+            <Link
+              to="/trails"
+              className="inline-flex items-center gap-2 rounded-full bg-black/40 text-white/90 backdrop-blur ring-1 ring-white/15 px-3 py-1.5 text-sm hover:bg-black/60 transition"
+            >
+              <ArrowLeft className="h-4 w-4" /> All trails
+            </Link>
+          </div>
+        </div>
+
+        <div className="absolute inset-x-0 bottom-0 z-10">
+          <div className="mx-auto max-w-5xl px-5 pb-10">
+            <div className="flex items-center gap-2 text-white/80 text-xs">
+              <span className="rounded-full bg-white/15 ring-1 ring-white/25 backdrop-blur px-3 py-1 uppercase tracking-[0.22em]">{trail.kind}</span>
+              <span className="inline-flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> {trail.region}</span>
+            </div>
+            <h1 className="mt-4 font-display text-5xl sm:text-7xl text-white text-balance leading-[1.02] drop-shadow">
+              {trail.title}
+            </h1>
+            {trail.hook && (
+              <p className="mt-4 max-w-2xl text-white/90 text-lg italic">"{trail.hook}"</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-5xl px-5 -mt-8 relative">
+
+
 
         <header className="mt-8 rounded-3xl glass grain p-8 sm:p-12 relative overflow-hidden">
           <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-primary/20 blur-[100px]" />
@@ -155,14 +193,21 @@ function TrailDetail() {
               <span className="text-xs text-primary inline-flex items-center gap-1.5">
                 <Coins className="h-3.5 w-3.5" /> up to {totalCoinsAvailable} Kaal Coins
               </span>
+              {trail.distance && (
+                <span className="text-xs text-muted-foreground inline-flex items-center gap-1.5">
+                  <Footprints className="h-3.5 w-3.5" /> {trail.distance}
+                </span>
+              )}
+              {trail.difficulty && (
+                <span className="text-xs text-muted-foreground inline-flex items-center gap-1.5">
+                  <MountainSnow className="h-3.5 w-3.5" /> {trail.difficulty}
+                </span>
+              )}
             </div>
-            <h1 className="mt-6 font-display text-5xl sm:text-6xl text-balance">
-              <span className="mr-3" aria-hidden>{trail.hero}</span>
-              <span className="italic text-gradient-ember">{trail.title}</span>
-            </h1>
             <p className="mt-6 max-w-3xl text-lg text-foreground/80 text-pretty leading-relaxed">
               {trail.intro}
             </p>
+
 
             {/* Progress strip */}
             {user && totalCount > 0 && (
@@ -210,51 +255,72 @@ function TrailDetail() {
                   <span className={`absolute -left-[42px] top-1 grid h-8 w-8 place-items-center rounded-full ${checked ? "bg-jade text-background" : "gradient-ember text-primary-foreground"} font-display text-sm shadow-[0_8px_22px_-8px_oklch(0.74_0.13_75/0.7)]`}>
                     {checked ? <CheckCircle2 className="h-4 w-4" /> : i + 1}
                   </span>
-                  <div className={`rounded-2xl glass p-5 ring-1 ${checked ? "ring-jade/40" : "ring-white/5"} transition`}>
-                    <div className="flex items-baseline justify-between gap-3 flex-wrap">
-                      <h3 className="font-display text-xl">{s.name}</h3>
-                      <span className="text-xs text-muted-foreground inline-flex items-center gap-1.5">
-                        <MapPin className="h-3 w-3 text-primary" /> {s.place}
-                      </span>
-                    </div>
-                    <p className="mt-2 text-sm text-foreground/80 leading-relaxed text-pretty">
-                      {s.blurb}
-                    </p>
-                    {site && (
-                      <div className="mt-4 flex items-center justify-between gap-3 flex-wrap">
-                        <div className="inline-flex items-center gap-3 text-xs text-muted-foreground">
-                          <span className="inline-flex items-center gap-1 text-primary"><Coins className="h-3 w-3" />{site.coin_reward}</span>
-                          <span>radius {site.radius_m}m</span>
-                        </div>
-                        {checked ? (
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-jade/15 text-jade ring-1 ring-jade/30 px-3 py-1 text-xs font-medium">
-                            <CheckCircle2 className="h-3.5 w-3.5" /> Visited
-                          </span>
-                        ) : (
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => attemptCheckIn(site, false)}
-                              disabled={isPending || !user}
-                              className="btn-glossy inline-flex items-center gap-1.5 rounded-full gradient-ember px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-[0_8px_22px_-8px_oklch(0.72_0.18_55/0.7)] disabled:opacity-50"
-                            >
-                              {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Navigation className="h-3.5 w-3.5" />}
-                              Check in here
-                            </button>
-                            {user && import.meta.env.DEV && (
-                              <button
-                                onClick={() => attemptCheckIn(site, true)}
-                                disabled={isPending}
-                                title="Demo check-in (dev only) — bypasses geolocation"
-                                className="rounded-full bg-white/5 text-foreground/60 hover:text-foreground px-2.5 py-1.5 text-[11px] ring-1 ring-white/10 transition"
-                              >
-                                Demo
-                              </button>
-                            )}
-                          </div>
-                        )}
+                  <div className={`overflow-hidden rounded-2xl glass ring-1 ${checked ? "ring-jade/40" : "ring-white/5"} transition`}>
+                    {s.imageUrl && (
+                      <div className="relative aspect-[16/7] w-full overflow-hidden">
+                        <img src={s.imageUrl} alt={s.name} className="h-full w-full object-cover" loading="lazy" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
                       </div>
                     )}
+                    <div className="p-5">
+                      <div className="flex items-baseline justify-between gap-3 flex-wrap">
+                        <h3 className="font-display text-xl">{s.name}</h3>
+                        <span className="text-xs text-muted-foreground inline-flex items-center gap-1.5">
+                          <MapPin className="h-3 w-3 text-primary" /> {s.place}
+                        </span>
+                      </div>
+                      <p className="mt-2 text-sm text-foreground/80 leading-relaxed text-pretty">
+                        {s.story ?? s.blurb}
+                      </p>
+
+                      {s.secret && (
+                        <div className="mt-4 rounded-xl bg-primary/5 ring-1 ring-primary/20 p-3.5">
+                          <div className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.18em] text-primary">
+                            <Lightbulb className="h-3 w-3" /> {s.secret.kind}
+                          </div>
+                          <p className="mt-1 text-sm text-foreground/85 italic leading-relaxed">
+                            {s.secret.text}
+                          </p>
+                        </div>
+                      )}
+
+                      {site && (
+                        <div className="mt-4 flex items-center justify-between gap-3 flex-wrap">
+                          <div className="inline-flex items-center gap-3 text-xs text-muted-foreground">
+                            <span className="inline-flex items-center gap-1 text-primary"><Coins className="h-3 w-3" />{site.coin_reward}</span>
+                            <span>radius {site.radius_m}m</span>
+                          </div>
+                          {checked ? (
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-jade/15 text-jade ring-1 ring-jade/30 px-3 py-1 text-xs font-medium">
+                              <CheckCircle2 className="h-3.5 w-3.5" /> Visited
+                            </span>
+                          ) : (
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => attemptCheckIn(site, false)}
+                                disabled={isPending || !user}
+                                className="btn-glossy inline-flex items-center gap-1.5 rounded-full gradient-ember px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-[0_8px_22px_-8px_oklch(0.72_0.18_55/0.7)] disabled:opacity-50"
+                              >
+                                {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Navigation className="h-3.5 w-3.5" />}
+                                Check in here
+                              </button>
+                              {user && import.meta.env.DEV && (
+                                <button
+                                  onClick={() => attemptCheckIn(site, true)}
+                                  disabled={isPending}
+                                  title="Demo check-in (dev only) — bypasses geolocation"
+                                  className="rounded-full bg-white/5 text-foreground/60 hover:text-foreground px-2.5 py-1.5 text-[11px] ring-1 ring-white/10 transition"
+                                >
+                                  Demo
+                                </button>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
+
                 </motion.li>
               );
             })}
@@ -306,13 +372,21 @@ function TrailDetail() {
                   <Trophy className="h-4 w-4" /> Trail complete — Trail Master unlocked
                 </div>
               )}
-              <button onClick={() => setCelebration(null)} className="btn-glossy mt-6 inline-flex items-center rounded-full gradient-ember px-5 py-2 text-sm font-semibold text-primary-foreground">
-                Continue
-              </button>
+              <div className="mt-6 flex items-center justify-center gap-2 flex-wrap">
+                <button onClick={() => setCelebration(null)} className="btn-glossy inline-flex items-center rounded-full gradient-ember px-5 py-2 text-sm font-semibold text-primary-foreground">
+                  Continue
+                </button>
+                <Link to="/khazane" className="inline-flex items-center rounded-full bg-white/10 ring-1 ring-white/15 px-5 py-2 text-sm font-medium text-foreground hover:bg-white/15 transition">
+                  Redeem in Khazane →
+                </Link>
+              </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      <AudioCompanion trail={trail} />
     </article>
+
   );
 }
