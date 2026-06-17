@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
+import { AuthProvider } from "@/hooks/use-auth";
 
 function NotFoundComponent() {
   return (
@@ -116,12 +117,14 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <main className="relative min-h-screen overflow-x-hidden">
-        <Navbar />
-        <Outlet />
-        <Footer />
-      </main>
-      <Toaster richColors position="top-right" />
+      <AuthProvider>
+        <main className="relative min-h-screen overflow-x-hidden">
+          <Navbar />
+          <Outlet />
+          <Footer />
+        </main>
+        <Toaster richColors position="top-right" />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
