@@ -4,9 +4,9 @@ import { Assistant } from "@/components/site/Assistant";
 export const Route = createFileRoute("/assistant")({
   head: () => ({
     meta: [
-      { title: "Heritage Assistant — KAAL" },
-      { name: "description", content: "Ask India anything — a research-grade AI assistant trained on KAAL's cultural archive." },
-      { property: "og:title", content: "Heritage Assistant — KAAL" },
+      { title: "Heritage Assistant — VIRSA" },
+      { name: "description", content: "Ask India anything — a research-grade AI assistant trained on VIRSA's cultural archive." },
+      { property: "og:title", content: "Heritage Assistant — VIRSA" },
       { property: "og:description", content: "Ask about a tradition, region, dish or language." },
     ],
   }),

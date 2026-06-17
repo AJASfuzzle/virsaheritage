@@ -5,13 +5,13 @@ import { Stats } from "@/components/site/Stats";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "KAAL — India's Living Memory & Heritage Atlas" },
+      { title: "VIRSA — India's Living Memory & Heritage Atlas" },
       {
         name: "description",
         content:
-          "KAAL preserves India's languages, stories, recipes, festivals and traditions on an AI-powered cultural memory map.",
+          "VIRSA preserves India's languages, stories, recipes, festivals and traditions on an AI-powered cultural memory map.",
       },
-      { property: "og:title", content: "KAAL — India's Living Memory & Heritage Atlas" },
+      { property: "og:title", content: "VIRSA — India's Living Memory & Heritage Atlas" },
       {
         property: "og:description",
         content:

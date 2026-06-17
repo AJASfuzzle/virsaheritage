@@ -39,14 +39,14 @@ export function Navbar() {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5">
         <Link
           to="/"
-          aria-label="KAAL home"
+          aria-label="VIRSA home"
           className="flex items-center gap-2.5 group shrink-0"
         >
           <span className="grid h-9 w-9 place-items-center rounded-xl gradient-ember text-primary-foreground shadow-[0_8px_24px_-8px_oklch(0.72_0.18_55/0.6)] transition-transform duration-500 group-hover:scale-105">
             <Compass className="h-4 w-4" strokeWidth={2.4} />
           </span>
           <span className="flex items-baseline gap-2 whitespace-nowrap leading-none">
-            <span className="font-display text-xl tracking-tight">KAAL</span>
+            <span className="font-display text-xl tracking-tight">VIRSA</span>
             <span className="text-muted-foreground font-sans text-[10px] uppercase tracking-[0.28em]">
               Heritage Atlas
             </span>

@@ -4,9 +4,9 @@ import { Trails } from "@/components/site/Trails";
 export const Route = createFileRoute("/trails/")({
   head: () => ({
     meta: [
-      { title: "Heritage Trails — KAAL" },
+      { title: "Heritage Trails — VIRSA" },
       { name: "description", content: "AI-generated heritage itineraries through India — food trails, temple trails, craft villages and festival loops." },
-      { property: "og:title", content: "Heritage Trails — KAAL" },
+      { property: "og:title", content: "Heritage Trails — VIRSA" },
       { property: "og:description", content: "Tourism guided by memory, not maps." },
     ],
   }),

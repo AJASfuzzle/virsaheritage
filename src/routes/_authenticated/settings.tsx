@@ -8,8 +8,8 @@ import { useAuth } from "@/hooks/use-auth";
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
     meta: [
-      { title: "Settings — KAAL Heritage" },
-      { name: "description", content: "Manage your KAAL account, profile and preferences." },
+      { title: "Settings — VIRSA Heritage" },
+      { name: "description", content: "Manage your VIRSA account, profile and preferences." },
     ],
   }),
   component: SettingsPage,
@@ -54,7 +54,7 @@ function SettingsPage() {
       <div className="mx-auto max-w-3xl px-5">
         <p className="text-xs uppercase tracking-[0.28em] text-primary/90">Account</p>
         <h1 className="mt-2 font-display text-4xl sm:text-5xl">Settings</h1>
-        <p className="mt-2 text-muted-foreground">Manage your KAAL profile and preferences.</p>
+        <p className="mt-2 text-muted-foreground">Manage your VIRSA profile and preferences.</p>
 
         <div className="mt-10 space-y-6">
           <section className="rounded-3xl glass p-6">
@@ -91,7 +91,7 @@ function SettingsPage() {
             </div>
             <p className="mt-3 text-sm text-muted-foreground">
               Your check-in locations are stored only when you actively check in at a site, and are visible only to you.
-              You can request deletion of your account at any time by emailing KAAL.
+              You can request deletion of your account at any time by emailing VIRSA.
             </p>
           </section>
         </div>

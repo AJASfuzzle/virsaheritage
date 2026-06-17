@@ -4,9 +4,9 @@ import { HeritageAtlas } from "@/components/site/HeritageAtlas";
 export const Route = createFileRoute("/atlas")({
   head: () => ({
     meta: [
-      { title: "Heritage Atlas — KAAL" },
+      { title: "Heritage Atlas — VIRSA" },
       { name: "description", content: "An interactive map of India's cultural and natural heritage — monuments, sanctuaries and living traditions, pin by pin, across three millennia." },
-      { property: "og:title", content: "Heritage Atlas — KAAL" },
+      { property: "og:title", content: "Heritage Atlas — VIRSA" },
       { property: "og:description", content: "Explore India's cultural and natural heritage on an interactive curated map." },
     ],
   }),

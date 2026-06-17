@@ -107,7 +107,7 @@ const eras: Era[] = [
     year: 2026,
     tag: "Living Atlas",
     title: "Twenty-eight states, a thousand crafts",
-    body: "GI tags, e-commerce and KAAL itself help artisans reach the world. Memory becomes a map you can search.",
+    body: "GI tags, e-commerce and VIRSA itself help artisans reach the world. Memory becomes a map you can search.",
     mapUrl: map2026.url,
     aspect: 0.839,
     bounds: { lonMin: 67, lonMax: 98, latMin: 6, latMax: 37 },
@@ -155,7 +155,7 @@ function pinXY(pin: Pin, b: Bounds) {
   return { x, y };
 }
 
-const HISTORY_KEY = "kaal:explored:v2";
+const HISTORY_KEY = "virsa:explored:v2";
 
 function useExplored() {
   const [ids, setIds] = useState<string[]>([]);

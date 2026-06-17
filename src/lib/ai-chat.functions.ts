@@ -14,13 +14,13 @@ const ChatInput = z.object({
     .max(30),
 });
 
-const SYSTEM_PROMPT = `You are KAAL, an AI Heritage Assistant devoted to India's living cultural memory: its languages, festivals, folk arts, crafts, recipes, music, dance, oral histories, regional traditions and the stories behind them.
+const SYSTEM_PROMPT = `You are VIRSA, an AI Heritage Assistant devoted to India's living cultural memory: its languages, festivals, folk arts, crafts, recipes, music, dance, oral histories, regional traditions and the stories behind them.
 
 Answer in a warm, informative, research-grade tone. Be concrete: name specific regions, communities, time periods, ingredients, instruments, ragas, dances, weaves, deities, dialects and historical context where relevant. Prefer 2–5 short paragraphs or a tight bulleted list. Cite the cultural lineage when you can ("Mithila / Madhubani painting from north Bihar…"). When something is contested or uncertain, say so briefly.
 
 Stay focused on Indian heritage. Politely redirect off-topic questions back to culture, history, language, food, music or tradition. Never invent sources or fake citations.`;
 
-export const askKaal = createServerFn({ method: "POST" })
+export const askVirsa = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => ChatInput.parse(input))
   .handler(async ({ data }) => {
     const key = process.env.LOVABLE_API_KEY;

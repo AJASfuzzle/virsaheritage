@@ -1,6 +1,6 @@
 
 -- ============================================
--- KAAL Heritage — Phase 1 schema
+-- VIRSA Heritage — Phase 1 schema
 -- ============================================
 
 -- ===== Profiles =====

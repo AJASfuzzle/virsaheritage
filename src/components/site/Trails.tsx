@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { trails, type Trail } from "@/lib/trails-data";
 
-const SAVED_KEY = "kaal:trails:saved";
+const SAVED_KEY = "virsa:trails:saved";
 
 function useSaved() {
   const [saved, setSaved] = useState<string[]>([]);
@@ -280,7 +280,7 @@ function TrailCard({
             <span className="inline-flex items-center gap-1.5"><MountainSnow className="h-3.5 w-3.5" /> {trail.difficulty}</span>
           )}
           <span className="inline-flex items-center gap-1.5"><Sparkles className="h-3.5 w-3.5" /> {trail.stops.length} stops</span>
-          <span className="inline-flex items-center gap-1.5 text-amber-200"><Coins className="h-3.5 w-3.5" /> earn Kaal Coins</span>
+          <span className="inline-flex items-center gap-1.5 text-amber-200"><Coins className="h-3.5 w-3.5" /> earn Virsa Coins</span>
         </div>
 
         <button

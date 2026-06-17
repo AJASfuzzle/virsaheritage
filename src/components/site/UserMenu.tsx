@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Coins, LogOut, Map, Settings as SettingsIcon, UserRound, Gift } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
-import { getMyState } from "@/lib/kaal.functions";
+import { getMyState } from "@/lib/virsa.functions";
 
 function initialsFrom(name?: string | null, email?: string | null) {
   const base = (name ?? email ?? "K").trim();
@@ -70,7 +70,7 @@ export function UserMenu() {
             <div className="text-sm font-medium truncate">{fullName ?? user.email}</div>
             <div className="text-[11px] text-muted-foreground truncate">{user.email}</div>
             <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-primary/15 px-2 py-0.5 text-[11px] text-primary">
-              <Coins className="h-3 w-3" /> {data?.balance ?? 0} Kaal Coins
+              <Coins className="h-3 w-3" /> {data?.balance ?? 0} Virsa Coins
             </div>
           </div>
           <div className="p-1">
