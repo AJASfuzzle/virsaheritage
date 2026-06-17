@@ -316,16 +316,20 @@ function TimelineScrubber({ year, setYear }: { year: number; setYear: (n: number
             onChange={(e) => setYear(parseInt(e.target.value))}
             className="atlas-range w-full"
           />
-          <div className="mt-1 flex justify-between text-[10px] text-muted-foreground tabular-nums">
-            {TIMELINE_TICKS.map((t) => (
-              <button
-                key={t}
-                onClick={() => setYear(t)}
-                className="hover:text-foreground transition cursor-pointer"
-              >
-                {formatYear(t)}
-              </button>
-            ))}
+          <div className="relative mt-2 h-5">
+            {TIMELINE_TICKS.map((t) => {
+              const pct = ((t - TIMELINE_MIN) / (TIMELINE_MAX - TIMELINE_MIN)) * 100;
+              return (
+                <button
+                  key={t}
+                  onClick={() => setYear(t)}
+                  className="absolute -translate-x-1/2 text-[10px] tabular-nums text-muted-foreground hover:text-foreground transition cursor-pointer whitespace-nowrap"
+                  style={{ left: `${pct}%` }}
+                >
+                  {formatYear(t)}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>

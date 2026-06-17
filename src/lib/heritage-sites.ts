@@ -1,3 +1,14 @@
+import goldenTempleImg from "@/assets/golden-temple.png.asset.json";
+import greatHimalayanImg from "@/assets/great-himalayan.png.asset.json";
+import nandaDeviImg from "@/assets/nanda-devi.png.asset.json";
+import rakhigarhiImg from "@/assets/rakhigarhi.png.asset.json";
+import redFortImg from "@/assets/red-fort.png.asset.json";
+import tajMahalImg from "@/assets/taj-mahal.png.asset.json";
+import keoladeoImg from "@/assets/keoladeo.png.asset.json";
+import pushkarImg from "@/assets/pushkar.png.asset.json";
+import jaisalmerImg from "@/assets/jaisalmer.png.asset.json";
+import kumbhImg from "@/assets/kumbh.png.asset.json";
+
 export type HeritageCategory =
   | "Archaeology"
   | "Nature"
@@ -160,7 +171,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Civilisation", value: "Indus Valley" },
       { label: "Famous for", value: "Largest Harappan city known" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Rakhigarhi_Harappan_civilization.jpg/1600px-Rakhigarhi_Harappan_civilization.jpg",
+    imageUrl: rakhigarhiImg.url,
   },
 
   // ────────── NATURE ──────────
@@ -207,7 +218,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Highest point", value: "Nanda Devi — 7,816 m" },
       { label: "UNESCO", value: "World Heritage Site (1988)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Valley_of_flowers_national_park%2C_Uttarakhand%2C_India_03_%28edit%29.jpg/1600px-Valley_of_flowers_national_park%2C_Uttarakhand%2C_India_03_%28edit%29.jpg",
+    imageUrl: nandaDeviImg.url,
   },
   {
     id: "western-ghats", name: "Western Ghats", category: "Nature",
@@ -237,7 +248,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Bird species", value: "370+" },
       { label: "UNESCO", value: "World Heritage Site (1985)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/008_Eurasian_hoopoe_eating_in_Keoladeo_National_Park_Photo_by_Giles_Laurent.jpg/1600px-008_Eurasian_hoopoe_eating_in_Keoladeo_National_Park_Photo_by_Giles_Laurent.jpg",
+    imageUrl: keoladeoImg.url,
   },
   {
     id: "great-himalayan", name: "Great Himalayan National Park", category: "Nature",
@@ -252,7 +263,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Altitude range", value: "1,500–6,110 m" },
       { label: "UNESCO", value: "World Heritage Site (2014)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Himalayn_National_Park_01.jpg/1600px-Himalayn_National_Park_01.jpg",
+    imageUrl: greatHimalayanImg.url,
   },
   {
     id: "andaman-reef", name: "Andaman & Nicobar Coral Reefs", category: "Nature",
@@ -299,7 +310,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Commissioned by", value: "Shah Jahan" },
       { label: "UNESCO", value: "World Heritage Site (1983)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Taj_Mahal_%28Edited%29.jpeg/1600px-Taj_Mahal_%28Edited%29.jpeg",
+    imageUrl: tajMahalImg.url,
   },
   {
     id: "qutub-minar", name: "Qutub Minar", category: "Architecture",
@@ -329,7 +340,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Patron", value: "Shah Jahan" },
       { label: "UNESCO", value: "World Heritage Site (2007)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Delhi_fort.jpg/1600px-Delhi_fort.jpg",
+    imageUrl: redFortImg.url,
   },
   {
     id: "meenakshi", name: "Meenakshi Temple", category: "Architecture",
@@ -359,7 +370,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Tradition", value: "Sikhism" },
       { label: "Langar", value: "~100,000 meals/day" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/The_Golden_Temple_of_Amrithsar_7.jpg/1600px-The_Golden_Temple_of_Amrithsar_7.jpg",
+    imageUrl: goldenTempleImg.url,
   },
   {
     id: "mysore-palace", name: "Mysore Palace", category: "Architecture",
@@ -512,7 +523,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Founder", value: "Rao Jaisal Bhati" },
       { label: "UNESCO", value: "Hill Forts of Rajasthan (2013)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Jaisalmer_forteresse.jpg/1600px-Jaisalmer_forteresse.jpg",
+    imageUrl: jaisalmerImg.url,
   },
   {
     id: "varanasi", name: "Varanasi Ghats", category: "Living Heritage",
@@ -542,7 +553,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Cycle", value: "Every 12 years" },
       { label: "UNESCO", value: "Intangible Heritage (2017)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Third_Shahi_Snan_in_Hari_Ki_Pauri.jpg/1600px-Third_Shahi_Snan_in_Hari_Ki_Pauri.jpg",
+    imageUrl: kumbhImg.url,
   },
   {
     id: "theyyam", name: "Theyyam of North Malabar", category: "Living Heritage",
@@ -572,7 +583,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Held in", value: "Kartik (Oct–Nov)" },
       { label: "Footfall", value: "~200,000" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/%28A%29_Camel_Pushkar_fair.jpg/1600px-%28A%29_Camel_Pushkar_fair.jpg",
+    imageUrl: pushkarImg.url,
   },
   {
     id: "majuli", name: "Majuli Satras", category: "Living Heritage",
