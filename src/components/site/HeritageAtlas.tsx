@@ -251,28 +251,42 @@ function MapCanvas({
 /** Talking Tours-style pushpin: round head + short stem + soft shadow. */
 function Pushpin({ color, active }: { color: string; active: boolean }) {
   return (
-    <span className="relative block">
-      <svg
-        width={active ? 30 : 22}
-        height={active ? 38 : 28}
-        viewBox="0 0 22 28"
-        className="transition-all duration-200 drop-shadow-[0_3px_3px_rgba(0,0,0,0.25)]"
+    <motion.span
+      className="relative block"
+      animate={{ scale: active ? 1.18 : 1, y: active ? -2 : 0 }}
+      whileHover={{ scale: 1.18, y: -2 }}
+      transition={{ type: "spring", stiffness: 380, damping: 22 }}
+    >
+      {/* Ground shadow — Apple-style soft ellipse */}
+      <span
+        aria-hidden
+        className="absolute left-1/2 top-full -translate-x-1/2 h-1.5 w-3 rounded-full bg-stone-900/25 blur-[2px]"
+      />
+      {/* Pin head */}
+      <span
+        className="relative block h-3 w-3 rounded-full ring-2 ring-white"
+        style={{
+          background: color,
+          boxShadow: active
+            ? `0 4px 10px -2px ${color}80, 0 2px 4px rgba(0,0,0,0.18)`
+            : "0 2px 5px rgba(0,0,0,0.18)",
+        }}
       >
-        {/* stem */}
-        <rect x="10" y="14" width="2" height="12" rx="1" fill="#3a2a14" />
-        {/* head */}
-        <circle cx="11" cy="10" r="9" fill={color} stroke="#fff" strokeWidth="2" />
-        {/* highlight */}
-        <circle cx="8" cy="7" r="2.4" fill="rgba(255,255,255,0.55)" />
-      </svg>
+        {/* Subtle inner highlight for translucent depth */}
+        <span
+          aria-hidden
+          className="absolute left-[18%] top-[18%] h-[35%] w-[35%] rounded-full bg-white/60 blur-[0.3px]"
+        />
+      </span>
+      {/* Live pulse when active */}
       {active && (
         <span
           aria-hidden
-          className="absolute left-1/2 top-[10px] -translate-x-1/2 -translate-y-1/2 h-8 w-8 rounded-full animate-ping opacity-50"
-          style={{ background: color }}
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-6 w-6 rounded-full animate-ping"
+          style={{ background: color, opacity: 0.35 }}
         />
       )}
-    </span>
+    </motion.span>
   );
 }
 
