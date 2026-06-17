@@ -184,6 +184,11 @@ function KhazanePage() {
         )}
       </section>
 
+      {/* Trails — the full Heritage Trails page, now part of Khazane */}
+      <section id="trails" className="mt-10">
+        <Trails />
+      </section>
+
       {/* Confirm modal */}
       <AnimatePresence>
         {confirm && (
