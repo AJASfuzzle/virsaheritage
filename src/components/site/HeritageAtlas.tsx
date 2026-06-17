@@ -14,21 +14,21 @@ import {
 
 /**
  * Base map asset is a top-down render of India at 1149×1368 px.
- * Pins are placed using a linear lon/lat → image-percent projection
- * calibrated against three reference points on that exact image:
- *   • Kanyakumari        ( 77.55°E,  8.08°N ) ≈ (345, 1190)
- *   • Arunachal NE tip   ( 96.00°E, 28.00°N ) ≈ (1075, 380)
- *   • Srinagar / N Kashmir ( 75°E, 34°N )     ≈ (290, 130)
- * Across the Indian landmass this affine fit keeps every pin
- * inside the correct state (verified visually) which is precise
- * enough for the heritage-atlas use case.
+ * Pins use a 6-parameter affine lon/lat → image-px projection fit
+ * to three landmark pixels detected directly on this exact asset:
+ *   • Kanyakumari (south tip)      77.55°E  8.08°N → (353, 1302)
+ *   • Arunachal Pradesh (east tip) 97.40°E 28.20°N → (1131, 410)
+ *   • Sir Creek / Kutch (west tip) 68.20°E 23.70°N → ( 21, 598)
+ * Verified visually for all states/UTs incl. Andaman & Nicobar.
+ *
+ *   px = -2589.65 + 37.802·lon + 1.373·lat
+ *   py =  1627.89 +  0.465·lon - 44.792·lat
  */
 const MAP = { w: 1149, h: 1368, ratio: 1149 / 1368 };
-const PROJ = { a: -2723.5, b: 39.57, c: 1500.9, d: -38.48 };
 
 function project(lon: number, lat: number) {
-  const px = PROJ.a + PROJ.b * lon;
-  const py = PROJ.c + PROJ.d * lat;
+  const px = -2589.65 + 37.802 * lon + 1.373 * lat;
+  const py = 1627.89 + 0.465 * lon - 44.792 * lat;
   return { x: (px / MAP.w) * 100, y: (py / MAP.h) * 100 };
 }
 
