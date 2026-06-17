@@ -296,7 +296,7 @@ const TIMELINE_TICKS = [-2500, -1000, -500, 1, 500, 1000, 1500, 1800, 2000];
 
 function TimelineScrubber({ year, setYear }: { year: number; setYear: (n: number) => void }) {
   return (
-    <div className="absolute inset-x-4 bottom-4 sm:inset-x-8 sm:bottom-6 z-30">
+    <div className="mt-4 w-full">
       <div className="rounded-2xl bg-card/95 backdrop-blur ring-1 ring-border shadow-[0_15px_30px_-15px_rgba(0,0,0,0.4)] px-5 py-3.5">
         <div className="flex items-center justify-between mb-2">
           <span className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
