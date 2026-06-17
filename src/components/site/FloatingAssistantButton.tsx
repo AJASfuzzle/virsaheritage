@@ -71,7 +71,7 @@ export function FloatingAssistantButton() {
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Close VIRSA assistant" : "Open VIRSA assistant"}
         aria-expanded={open}
-        className="fixed left-5 bottom-5 z-50 group flex items-center gap-2"
+        className="fixed right-5 bottom-5 z-[60] group flex items-center gap-2"
       >
         <span className="grid h-12 w-12 place-items-center rounded-full gradient-ember text-primary-foreground shadow-[0_10px_30px_-10px_oklch(0.72_0.18_55/0.7)] ring-1 ring-white/20 transition-all duration-500 hover:scale-110 active:scale-95">
           <AnimatePresence mode="wait" initial={false}>
@@ -114,7 +114,7 @@ export function FloatingAssistantButton() {
             transition={{ type: "spring", stiffness: 320, damping: 28 }}
             role="dialog"
             aria-label="VIRSA Assistant"
-            className="fixed left-4 right-4 bottom-24 z-50 sm:left-5 sm:right-auto sm:bottom-24 sm:w-[400px] glass grain rounded-2xl shadow-[var(--shadow-soft)] ring-1 ring-white/10 overflow-hidden flex flex-col max-h-[min(640px,calc(100vh-7rem))]"
+            className="fixed left-4 right-4 bottom-24 z-[60] sm:left-auto sm:right-5 sm:bottom-24 sm:w-[400px] glass grain rounded-2xl shadow-[var(--shadow-soft)] ring-1 ring-white/10 overflow-hidden flex flex-col max-h-[min(640px,calc(100vh-7rem))]"
           >
             {/* Header */}
             <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-white/10 bg-background/30">
