@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, Send } from "lucide-react";
 import { getPost, listComments, addComment } from "@/lib/echoes.functions";
 import { getSeedPostById, isSeedId } from "@/lib/seed-echoes";
@@ -68,20 +68,16 @@ function PostPage() {
   // Local comments fallback for curated/seed posts (no DB row exists for them)
   const seedKey = `virsa:seed-comments:${postId}`;
   const [seedComments, setSeedComments] = useState<LocalComment[]>([]);
-  // Hydrate from localStorage on client
-  if (typeof window !== "undefined" && seed && seedComments.length === 0) {
+  useEffect(() => {
+    if (!seed) return;
     try {
       const raw = window.localStorage.getItem(seedKey);
       if (raw) {
         const parsed = JSON.parse(raw) as LocalComment[];
-        if (Array.isArray(parsed) && parsed.length) {
-          // setState in render is fine here since guarded by length===0
-          // eslint-disable-next-line react-hooks/rules-of-hooks
-          queueMicrotask(() => setSeedComments(parsed));
-        }
+        if (Array.isArray(parsed)) setSeedComments(parsed);
       }
     } catch {}
-  }
+  }, [seed, seedKey]);
 
   const [content, setContent] = useState("");
   const submit = useMutation({
