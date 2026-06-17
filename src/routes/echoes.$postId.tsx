@@ -35,6 +35,14 @@ function initials(name?: string | null) {
   return base.slice(0, 2).toUpperCase();
 }
 
+type LocalComment = {
+  id: string;
+  author_id: string;
+  content: string;
+  created_at: string;
+  author: { full_name: string | null; avatar_url: string | null } | null;
+};
+
 function PostPage() {
   const { postId } = Route.useParams();
   const { user } = useAuth();
@@ -57,16 +65,57 @@ function PostPage() {
     enabled: !!user && !seed,
   });
 
+  // Local comments fallback for curated/seed posts (no DB row exists for them)
+  const seedKey = `virsa:seed-comments:${postId}`;
+  const [seedComments, setSeedComments] = useState<LocalComment[]>([]);
+  // Hydrate from localStorage on client
+  if (typeof window !== "undefined" && seed && seedComments.length === 0) {
+    try {
+      const raw = window.localStorage.getItem(seedKey);
+      if (raw) {
+        const parsed = JSON.parse(raw) as LocalComment[];
+        if (Array.isArray(parsed) && parsed.length) {
+          // setState in render is fine here since guarded by length===0
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          queueMicrotask(() => setSeedComments(parsed));
+        }
+      }
+    } catch {}
+  }
+
   const [content, setContent] = useState("");
   const submit = useMutation({
-    mutationFn: () => addCommentFn({ data: { postId, content: content.trim() } }),
+    mutationFn: async () => {
+      if (seed) {
+        if (!user) throw new Error("Sign in to comment.");
+        const c: LocalComment = {
+          id: `local-${Date.now()}`,
+          author_id: user.id,
+          content: content.trim(),
+          created_at: new Date().toISOString(),
+          author: {
+            full_name: (user.user_metadata as any)?.full_name ?? user.email ?? "Keeper",
+            avatar_url: (user.user_metadata as any)?.avatar_url ?? null,
+          },
+        };
+        const next = [...seedComments, c];
+        setSeedComments(next);
+        try { window.localStorage.setItem(seedKey, JSON.stringify(next)); } catch {}
+        return { ok: true };
+      }
+      return addCommentFn({ data: { postId, content: content.trim() } });
+    },
     onSuccess: () => {
       setContent("");
-      qc.invalidateQueries({ queryKey: ["echo-comments", postId] });
-      qc.invalidateQueries({ queryKey: ["echo-post", postId] });
+      if (!seed) {
+        qc.invalidateQueries({ queryKey: ["echo-comments", postId] });
+        qc.invalidateQueries({ queryKey: ["echo-post", postId] });
+      }
     },
-    onError: () => toast.error("Couldn't post comment"),
+    onError: (e: any) => toast.error(e?.message ?? "Couldn't post comment"),
   });
+
+  const visibleComments = seed ? seedComments : (comments as any[] | undefined);
 
   return (
     <div className="pt-24 sm:pt-28">
@@ -81,8 +130,8 @@ function PostPage() {
         )}
         {post && <PostCard post={post as unknown as EchoPost} currentUserId={user?.id ?? null} />}
 
-        {/* comments */}
-        {post && !seed && (
+        {/* comments — open on every post, including curated stories */}
+        {post && (
           <section className="mt-6 rounded-3xl border border-[var(--glass-border)] bg-[var(--card)] p-5 shadow-[var(--shadow-soft)]">
             <h2 className="font-display text-lg">Comments</h2>
             {user ? (
@@ -91,7 +140,7 @@ function PostPage() {
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   rows={2}
-                  placeholder="Add a thoughtful note…"
+                  placeholder="Share your reflection on this story…"
                   maxLength={1000}
                 />
                 <Button onClick={() => content.trim() && submit.mutate()} disabled={!content.trim() || submit.isPending} className="self-end gradient-ember text-primary-foreground">
@@ -102,8 +151,10 @@ function PostPage() {
               <p className="mt-3 text-sm text-muted-foreground">Sign in to comment.</p>
             )}
             <div className="mt-5 space-y-4">
-              {comments?.length === 0 && <p className="text-sm text-muted-foreground">Be the first to reflect on this.</p>}
-              {comments?.map((c: any) => (
+              {(!visibleComments || visibleComments.length === 0) && (
+                <p className="text-sm text-muted-foreground">Be the first to reflect on this.</p>
+              )}
+              {visibleComments?.map((c: any) => (
                 <div key={c.id} className="flex gap-3">
                   <Link to="/echoes/profile/$userId" params={{ userId: c.author_id }} className="grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-full bg-gradient-to-br from-primary/30 to-accent/20">
                     {c.author?.avatar_url ? <img src={c.author.avatar_url} alt="" className="h-full w-full object-cover" /> : <span className="text-[10px]">{initials(c.author?.full_name)}</span>}
