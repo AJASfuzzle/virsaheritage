@@ -272,3 +272,25 @@ function TrailCard({
     </motion.article>
   );
 }
+
+function TrailCover({ trail, y, isActive, offset }: { trail: Trail; y: ReturnType<typeof useMotionValue<number>>; isActive: boolean; offset: number }) {
+  const parallax = useTransform(y, [-200, 200], [12, -12]);
+  return (
+    <div className="absolute inset-0">
+      <motion.img
+        src={trail.coverImage}
+        alt={trail.title}
+        className="h-full w-full object-cover"
+        draggable={false}
+        loading={offset === 0 ? "eager" : "lazy"}
+        style={isActive ? { y: parallax } : undefined}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.85) 100%), linear-gradient(135deg, ${trail.accentFrom ?? "#7c2d12"}33, transparent 60%)`,
+        }}
+      />
+    </div>
+  );
+}
