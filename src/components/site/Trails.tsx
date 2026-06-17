@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useMotionValue, useTransform, type PanInfo } from "framer-motion";
-import { ArrowRight, Bookmark, Clock, Coins, Footprints, MapPin, MountainSnow, Share2, Sparkles } from "lucide-react";
+import { ArrowRight, Bookmark, ChevronDown, ChevronUp, Clock, Coins, Footprints, MapPin, MountainSnow, Share2, Sparkles } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -52,9 +52,27 @@ export function Trails() {
 
   const onDragEnd = (_: unknown, info: PanInfo) => {
     const { offset, velocity } = info;
-    if (offset.y < -80 || velocity.y < -400) go(1);
-    else if (offset.y > 80 || velocity.y > 400) go(-1);
+    if (offset.y < -60 || velocity.y < -300) go(1);
+    else if (offset.y > 60 || velocity.y > 300) go(-1);
   };
+
+  // Wheel scroll → trail-to-trail navigation when stack is in view.
+  useEffect(() => {
+    let last = 0;
+    const onWheel = (e: WheelEvent) => {
+      const stack = document.getElementById("trail-stack");
+      if (!stack) return;
+      const r = stack.getBoundingClientRect();
+      if (r.bottom < 100 || r.top > window.innerHeight - 100) return;
+      const now = Date.now();
+      if (now - last < 500) return;
+      if (Math.abs(e.deltaY) < 18) return;
+      last = now;
+      go(e.deltaY > 0 ? 1 : -1);
+    };
+    window.addEventListener("wheel", onWheel, { passive: true });
+    return () => window.removeEventListener("wheel", onWheel);
+  }, [go]);
 
   const handleShare = async (t: Trail) => {
     const url = `${window.location.origin}/trails/${t.slug}`;
@@ -87,7 +105,7 @@ export function Trails() {
       </div>
 
       {/* Stack */}
-      <div className="relative mx-auto mt-6 max-w-6xl px-3 sm:px-5 select-none">
+      <div id="trail-stack" className="relative mx-auto mt-6 max-w-6xl px-3 sm:px-5 select-none">
         <div className="relative h-[78vh] min-h-[560px] max-h-[860px] [perspective:1400px]">
           {trails.map((t, i) => {
             const offset = i - index;
@@ -107,6 +125,26 @@ export function Trails() {
               />
             );
           })}
+
+          {/* Floating up/down nav — always visible affordance */}
+          <div className="pointer-events-none absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-[200] flex flex-col gap-2">
+            <button
+              onClick={() => go(-1)}
+              disabled={index === 0}
+              aria-label="Previous trail"
+              className="pointer-events-auto grid h-11 w-11 place-items-center rounded-full bg-black/45 text-white ring-1 ring-white/20 backdrop-blur-md transition hover:bg-black/65 disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <ChevronUp className="h-5 w-5" />
+            </button>
+            <button
+              onClick={() => go(1)}
+              disabled={index === max}
+              aria-label="Next trail"
+              className="pointer-events-auto grid h-11 w-11 place-items-center rounded-full bg-black/45 text-white ring-1 ring-white/20 backdrop-blur-md transition hover:bg-black/65 disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <ChevronDown className="h-5 w-5" />
+            </button>
+          </div>
         </div>
 
         {/* Controls */}
@@ -126,9 +164,9 @@ export function Trails() {
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <kbd className="rounded bg-foreground/10 px-1.5 py-0.5">↑</kbd>
             <kbd className="rounded bg-foreground/10 px-1.5 py-0.5">↓</kbd>
-            <span className="hidden sm:inline">to browse · </span>
+            <span className="hidden sm:inline">swipe · scroll · </span>
             <kbd className="rounded bg-foreground/10 px-1.5 py-0.5">↵</kbd>
-            <span>to enter</span>
+            <span>open</span>
           </div>
         </div>
       </div>
@@ -218,12 +256,8 @@ function TrailCard({
         </div>
       </div>
 
-      {/* Content */}
-      <button
-        onClick={() => isActive && onOpen()}
-        disabled={!isActive}
-        className="absolute inset-x-0 bottom-0 text-left p-5 sm:p-8 cursor-pointer focus:outline-none"
-      >
+      {/* Content (non-interactive — lets drag pass through) */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 p-5 sm:p-8">
         <div className="text-white/80 text-xs inline-flex items-center gap-1.5">
           <MapPin className="h-3.5 w-3.5" /> {trail.region}
         </div>
@@ -249,10 +283,14 @@ function TrailCard({
           <span className="inline-flex items-center gap-1.5 text-amber-200"><Coins className="h-3.5 w-3.5" /> earn Kaal Coins</span>
         </div>
 
-        <span className="mt-6 inline-flex items-center gap-2 rounded-full bg-white text-foreground px-5 py-2.5 text-sm font-semibold shadow-lg">
+        <button
+          onClick={(e) => { e.stopPropagation(); if (isActive) onOpen(); }}
+          disabled={!isActive}
+          className="pointer-events-auto mt-6 inline-flex items-center gap-2 rounded-full bg-white text-foreground px-5 py-2.5 text-sm font-semibold shadow-lg hover:bg-white/90 transition disabled:opacity-60"
+        >
           Explore Trail <ArrowRight className="h-4 w-4" />
-        </span>
-      </button>
+        </button>
+      </div>
 
       {/* Swipe affordance */}
       {isActive && (
