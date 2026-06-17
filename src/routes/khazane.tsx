@@ -7,6 +7,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { listRewards, getMyState, redeemReward } from "@/lib/kaal.functions";
 import { useAuth } from "@/hooks/use-auth";
+import { Trails } from "@/components/site/Trails";
 
 export const Route = createFileRoute("/khazane")({
   head: () => ({
@@ -181,6 +182,11 @@ function KhazanePage() {
             })}
           </div>
         )}
+      </section>
+
+      {/* Trails — the full Heritage Trails page, now part of Khazane */}
+      <section id="trails" className="mt-10">
+        <Trails />
       </section>
 
       {/* Confirm modal */}
