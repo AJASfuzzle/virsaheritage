@@ -12,12 +12,17 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrailsRouteImport } from './routes/trails'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as KitabRouteImport } from './routes/kitab'
+import { Route as KhazaneRouteImport } from './routes/khazane'
 import { Route as ContributeRouteImport } from './routes/contribute'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AtlasRouteImport } from './routes/atlas'
 import { Route as AssistantRouteImport } from './routes/assistant'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TrailsIndexRouteImport } from './routes/trails.index'
 import { Route as TrailsSlugRouteImport } from './routes/trails.$slug'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 
 const TrailsRoute = TrailsRouteImport.update({
   id: '/trails',
@@ -34,9 +39,19 @@ const KitabRoute = KitabRouteImport.update({
   path: '/kitab',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KhazaneRoute = KhazaneRouteImport.update({
+  id: '/khazane',
+  path: '/khazane',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContributeRoute = ContributeRouteImport.update({
   id: '/contribute',
   path: '/contribute',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AtlasRoute = AtlasRouteImport.update({
@@ -47,6 +62,10 @@ const AtlasRoute = AtlasRouteImport.update({
 const AssistantRoute = AssistantRouteImport.update({
   id: '/assistant',
   path: '/assistant',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -64,15 +83,29 @@ const TrailsSlugRoute = TrailsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => TrailsRoute,
 } as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/assistant': typeof AssistantRoute
   '/atlas': typeof AtlasRoute
+  '/auth': typeof AuthRoute
   '/contribute': typeof ContributeRoute
+  '/khazane': typeof KhazaneRoute
   '/kitab': typeof KitabRoute
   '/library': typeof LibraryRoute
   '/trails': typeof TrailsRouteWithChildren
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/trails/$slug': typeof TrailsSlugRoute
   '/trails/': typeof TrailsIndexRoute
 }
@@ -80,21 +113,30 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/assistant': typeof AssistantRoute
   '/atlas': typeof AtlasRoute
+  '/auth': typeof AuthRoute
   '/contribute': typeof ContributeRoute
+  '/khazane': typeof KhazaneRoute
   '/kitab': typeof KitabRoute
   '/library': typeof LibraryRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/trails/$slug': typeof TrailsSlugRoute
   '/trails': typeof TrailsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/assistant': typeof AssistantRoute
   '/atlas': typeof AtlasRoute
+  '/auth': typeof AuthRoute
   '/contribute': typeof ContributeRoute
+  '/khazane': typeof KhazaneRoute
   '/kitab': typeof KitabRoute
   '/library': typeof LibraryRoute
   '/trails': typeof TrailsRouteWithChildren
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/trails/$slug': typeof TrailsSlugRoute
   '/trails/': typeof TrailsIndexRoute
 }
@@ -104,10 +146,14 @@ export interface FileRouteTypes {
     | '/'
     | '/assistant'
     | '/atlas'
+    | '/auth'
     | '/contribute'
+    | '/khazane'
     | '/kitab'
     | '/library'
     | '/trails'
+    | '/dashboard'
+    | '/settings'
     | '/trails/$slug'
     | '/trails/'
   fileRoutesByTo: FileRoutesByTo
@@ -115,29 +161,41 @@ export interface FileRouteTypes {
     | '/'
     | '/assistant'
     | '/atlas'
+    | '/auth'
     | '/contribute'
+    | '/khazane'
     | '/kitab'
     | '/library'
+    | '/dashboard'
+    | '/settings'
     | '/trails/$slug'
     | '/trails'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/assistant'
     | '/atlas'
+    | '/auth'
     | '/contribute'
+    | '/khazane'
     | '/kitab'
     | '/library'
     | '/trails'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/settings'
     | '/trails/$slug'
     | '/trails/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AssistantRoute: typeof AssistantRoute
   AtlasRoute: typeof AtlasRoute
+  AuthRoute: typeof AuthRoute
   ContributeRoute: typeof ContributeRoute
+  KhazaneRoute: typeof KhazaneRoute
   KitabRoute: typeof KitabRoute
   LibraryRoute: typeof LibraryRoute
   TrailsRoute: typeof TrailsRouteWithChildren
@@ -166,11 +224,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KitabRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/khazane': {
+      id: '/khazane'
+      path: '/khazane'
+      fullPath: '/khazane'
+      preLoaderRoute: typeof KhazaneRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contribute': {
       id: '/contribute'
       path: '/contribute'
       fullPath: '/contribute'
       preLoaderRoute: typeof ContributeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/atlas': {
@@ -185,6 +257,13 @@ declare module '@tanstack/react-router' {
       path: '/assistant'
       fullPath: '/assistant'
       preLoaderRoute: typeof AssistantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -208,8 +287,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrailsSlugRouteImport
       parentRoute: typeof TrailsRoute
     }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface TrailsRouteChildren {
   TrailsSlugRoute: typeof TrailsSlugRoute
@@ -226,9 +332,12 @@ const TrailsRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AssistantRoute: AssistantRoute,
   AtlasRoute: AtlasRoute,
+  AuthRoute: AuthRoute,
   ContributeRoute: ContributeRoute,
+  KhazaneRoute: KhazaneRoute,
   KitabRoute: KitabRoute,
   LibraryRoute: LibraryRoute,
   TrailsRoute: TrailsRouteWithChildren,
@@ -236,13 +345,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

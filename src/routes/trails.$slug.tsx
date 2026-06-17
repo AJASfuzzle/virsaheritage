@@ -1,7 +1,13 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { motion } from "framer-motion";
-import { ArrowLeft, CalendarRange, Clock, MapPin, Sparkles } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, CalendarRange, CheckCircle2, Clock, Coins, Loader2, MapPin, Navigation, Sparkles, Trophy } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import { getTrail, trails, type Trail } from "@/lib/trails-data";
+import { listTrailSites, getMyState, checkInAtSite } from "@/lib/kaal.functions";
+import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/trails/$slug")({
   loader: ({ params }) => {
@@ -29,9 +35,94 @@ export const Route = createFileRoute("/trails/$slug")({
   ),
 });
 
+type Site = {
+  id: string;
+  trail_slug: string;
+  stop_index: number;
+  name: string;
+  place: string;
+  lat: number;
+  lng: number;
+  radius_m: number;
+  coin_reward: number;
+};
+
 function TrailDetail() {
   const { trail } = Route.useLoaderData() as { trail: Trail };
+  const { user } = useAuth();
   const others = trails.filter((t) => t.slug !== trail.slug).slice(0, 3);
+  const fetchSites = useServerFn(listTrailSites);
+  const fetchState = useServerFn(getMyState);
+  const checkIn = useServerFn(checkInAtSite);
+  const qc = useQueryClient();
+
+  const { data: sites = [] } = useQuery({
+    queryKey: ["sites", trail.slug],
+    queryFn: () => fetchSites({ data: { trailSlug: trail.slug } }),
+  });
+  const { data: state } = useQuery({
+    queryKey: ["my-state"],
+    queryFn: () => fetchState(),
+    enabled: !!user,
+  });
+
+  const checkedIds = new Set((state?.progress ?? []).filter((p) => p.trail_slug === trail.slug).map((p) => p.site_id));
+  const doneCount = checkedIds.size;
+  const totalCount = sites.length;
+  const pct = totalCount ? Math.round((doneCount / totalCount) * 100) : 0;
+  const totalCoinsAvailable = sites.reduce((s, x) => s + x.coin_reward, 0) + 100;
+
+  const [pendingId, setPendingId] = useState<string | null>(null);
+  const [celebration, setCelebration] = useState<{ name: string; earned: number; trailComplete: boolean } | null>(null);
+
+  const mutation = useMutation({
+    mutationFn: ({ site, lat, lng, force }: { site: Site; lat: number; lng: number; force?: boolean }) =>
+      checkIn({ data: { siteId: site.id, lat, lng, force } }),
+    onSuccess: (res, vars) => {
+      setPendingId(null);
+      if (!res.ok) {
+        if (res.reason === "too_far") {
+          toast.error(`You're ${res.distance_m}m away. Get within ${res.required_m}m to check in.`);
+        } else if (res.reason === "already_checked_in") {
+          toast.info("Already checked in here.");
+        } else {
+          toast.error("Check-in failed");
+        }
+        return;
+      }
+      qc.invalidateQueries({ queryKey: ["my-state"] });
+      setCelebration({ name: vars.site.name, earned: res.earned ?? 0, trailComplete: !!res.trail_complete });
+    },
+    onError: (e: Error) => {
+      setPendingId(null);
+      toast.error(e.message);
+    },
+  });
+
+  function attemptCheckIn(site: Site, force: boolean) {
+    if (!user) {
+      toast.info("Sign in to check in and earn Kaal Coins.");
+      return;
+    }
+    setPendingId(site.id);
+    if (force) {
+      mutation.mutate({ site, lat: site.lat, lng: site.lng, force: true });
+      return;
+    }
+    if (!("geolocation" in navigator)) {
+      toast.error("Geolocation not supported in this browser.");
+      setPendingId(null);
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => mutation.mutate({ site, lat: pos.coords.latitude, lng: pos.coords.longitude, force: false }),
+      (err) => {
+        toast.error(err.message || "Couldn't get your location");
+        setPendingId(null);
+      },
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 30000 }
+    );
+  }
 
   return (
     <article className="relative pt-28 pb-24">
@@ -60,6 +151,9 @@ function TrailDetail() {
               <span className="text-xs text-muted-foreground inline-flex items-center gap-1.5">
                 <CalendarRange className="h-3.5 w-3.5" /> {trail.bestSeason}
               </span>
+              <span className="text-xs text-primary inline-flex items-center gap-1.5">
+                <Coins className="h-3.5 w-3.5" /> up to {totalCoinsAvailable} Kaal Coins
+              </span>
             </div>
             <h1 className="mt-6 font-display text-5xl sm:text-6xl text-balance">
               <span className="mr-3" aria-hidden>{trail.hero}</span>
@@ -68,6 +162,25 @@ function TrailDetail() {
             <p className="mt-6 max-w-3xl text-lg text-foreground/80 text-pretty leading-relaxed">
               {trail.intro}
             </p>
+
+            {/* Progress strip */}
+            {user && totalCount > 0 && (
+              <div className="mt-8 rounded-2xl bg-background/40 p-4 ring-1 ring-white/5 max-w-xl">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="inline-flex items-center gap-2 text-foreground/85"><Trophy className="h-4 w-4 text-primary" /> Your progress</span>
+                  <span className="text-muted-foreground">{doneCount} / {totalCount} stops · {pct}%</span>
+                </div>
+                <div className="mt-2 h-2 w-full rounded-full bg-white/5 overflow-hidden">
+                  <div className="h-full gradient-ember transition-all duration-700" style={{ width: `${pct}%` }} />
+                </div>
+              </div>
+            )}
+            {!user && (
+              <div className="mt-8 inline-flex items-center gap-3 rounded-full glass px-4 py-2 text-sm">
+                <span className="text-muted-foreground">Sign in to check in at sites and earn coins</span>
+                <Link to="/auth" search={{ mode: "signin", redirect: `/trails/${trail.slug}` }} className="rounded-full gradient-ember px-3 py-1 text-xs font-medium text-primary-foreground">Sign in</Link>
+              </div>
+            )}
           </div>
         </header>
 
@@ -80,31 +193,70 @@ function TrailDetail() {
           </div>
 
           <ol className="relative border-l border-white/15 pl-8 space-y-6">
-            {trail.stops.map((s, i) => (
-              <motion.li
-                key={s.name}
-                initial={{ opacity: 0, x: -10 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.5, delay: i * 0.04 }}
-                className="relative"
-              >
-                <span className="absolute -left-[42px] top-1 grid h-8 w-8 place-items-center rounded-full gradient-ember text-primary-foreground font-display text-sm shadow-[0_8px_22px_-8px_oklch(0.74_0.13_75/0.7)]">
-                  {i + 1}
-                </span>
-                <div className="rounded-2xl glass p-5 ring-1 ring-white/5">
-                  <div className="flex items-baseline justify-between gap-3 flex-wrap">
-                    <h3 className="font-display text-xl">{s.name}</h3>
-                    <span className="text-xs text-muted-foreground inline-flex items-center gap-1.5">
-                      <MapPin className="h-3 w-3 text-primary" /> {s.place}
-                    </span>
+            {trail.stops.map((s, i) => {
+              const site = sites.find((x) => x.stop_index === i);
+              const checked = site ? checkedIds.has(site.id) : false;
+              const isPending = pendingId === site?.id;
+              return (
+                <motion.li
+                  key={s.name}
+                  initial={{ opacity: 0, x: -10 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ duration: 0.5, delay: i * 0.04 }}
+                  className="relative"
+                >
+                  <span className={`absolute -left-[42px] top-1 grid h-8 w-8 place-items-center rounded-full ${checked ? "bg-jade text-background" : "gradient-ember text-primary-foreground"} font-display text-sm shadow-[0_8px_22px_-8px_oklch(0.74_0.13_75/0.7)]`}>
+                    {checked ? <CheckCircle2 className="h-4 w-4" /> : i + 1}
+                  </span>
+                  <div className={`rounded-2xl glass p-5 ring-1 ${checked ? "ring-jade/40" : "ring-white/5"} transition`}>
+                    <div className="flex items-baseline justify-between gap-3 flex-wrap">
+                      <h3 className="font-display text-xl">{s.name}</h3>
+                      <span className="text-xs text-muted-foreground inline-flex items-center gap-1.5">
+                        <MapPin className="h-3 w-3 text-primary" /> {s.place}
+                      </span>
+                    </div>
+                    <p className="mt-2 text-sm text-foreground/80 leading-relaxed text-pretty">
+                      {s.blurb}
+                    </p>
+                    {site && (
+                      <div className="mt-4 flex items-center justify-between gap-3 flex-wrap">
+                        <div className="inline-flex items-center gap-3 text-xs text-muted-foreground">
+                          <span className="inline-flex items-center gap-1 text-primary"><Coins className="h-3 w-3" />{site.coin_reward}</span>
+                          <span>radius {site.radius_m}m</span>
+                        </div>
+                        {checked ? (
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-jade/15 text-jade ring-1 ring-jade/30 px-3 py-1 text-xs font-medium">
+                            <CheckCircle2 className="h-3.5 w-3.5" /> Visited
+                          </span>
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => attemptCheckIn(site, false)}
+                              disabled={isPending || !user}
+                              className="btn-glossy inline-flex items-center gap-1.5 rounded-full gradient-ember px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-[0_8px_22px_-8px_oklch(0.72_0.18_55/0.7)] disabled:opacity-50"
+                            >
+                              {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Navigation className="h-3.5 w-3.5" />}
+                              Check in here
+                            </button>
+                            {user && import.meta.env.DEV && (
+                              <button
+                                onClick={() => attemptCheckIn(site, true)}
+                                disabled={isPending}
+                                title="Demo check-in (dev only) — bypasses geolocation"
+                                className="rounded-full bg-white/5 text-foreground/60 hover:text-foreground px-2.5 py-1.5 text-[11px] ring-1 ring-white/10 transition"
+                              >
+                                Demo
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
-                  <p className="mt-2 text-sm text-foreground/80 leading-relaxed text-pretty">
-                    {s.blurb}
-                  </p>
-                </div>
-              </motion.li>
-            ))}
+                </motion.li>
+              );
+            })}
           </ol>
         </section>
 
@@ -126,6 +278,40 @@ function TrailDetail() {
           </div>
         </section>
       </div>
+
+      {/* Celebration overlay */}
+      <AnimatePresence>
+        {celebration && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 grid place-items-center bg-black/70 backdrop-blur-md p-4"
+            onClick={() => setCelebration(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.85, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 220, damping: 22 }}
+              className="text-center max-w-md"
+            >
+              <div className="mx-auto h-20 w-20 rounded-full gradient-ember grid place-items-center shadow-[0_30px_60px_-15px_oklch(0.72_0.18_55/0.8)]">
+                <CheckCircle2 className="h-10 w-10 text-primary-foreground" />
+              </div>
+              <h3 className="mt-6 font-display text-3xl text-balance">Heritage Site Discovered.</h3>
+              <p className="mt-2 text-muted-foreground">{celebration.name}</p>
+              <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary/15 px-4 py-2 text-sm text-primary ring-1 ring-primary/30">
+                <Coins className="h-4 w-4" /> +{celebration.earned} Kaal Coins
+              </div>
+              {celebration.trailComplete && (
+                <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-jade/15 px-4 py-2 text-sm text-jade ring-1 ring-jade/30">
+                  <Trophy className="h-4 w-4" /> Trail complete — Trail Master unlocked
+                </div>
+              )}
+              <button onClick={() => setCelebration(null)} className="btn-glossy mt-6 inline-flex items-center rounded-full gradient-ember px-5 py-2 text-sm font-semibold text-primary-foreground">
+                Continue
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </article>
   );
 }

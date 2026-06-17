@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Compass, Menu, Moon, Sun, X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { useAuth } from "@/hooks/use-auth";
+import { UserMenu } from "@/components/site/UserMenu";
 
 const links = [
   { to: "/atlas", label: "Heritage Atlas" },
@@ -8,6 +10,7 @@ const links = [
   { to: "/kitab", label: "kitab" },
   { to: "/assistant", label: "Assistant" },
   { to: "/trails", label: "Trails" },
+  { to: "/khazane", label: "Khazane" },
   { to: "/contribute", label: "Contribute" },
 ] as const;
 
@@ -15,6 +18,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [light, setLight] = useState(false);
+  const { user, loading } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -76,12 +80,21 @@ export function Navbar() {
             <Sun className={`absolute h-4 w-4 transition-all duration-500 ${light ? "rotate-90 scale-0 opacity-0" : "rotate-0 scale-100 opacity-100"}`} />
             <Moon className={`absolute h-4 w-4 transition-all duration-500 ${light ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-0 opacity-0"}`} />
           </button>
-          <Link
-            to="/contribute"
-            className="btn-glossy hidden sm:inline-flex items-center rounded-full gradient-ember px-4 py-2 text-sm font-medium text-primary-foreground shadow-[0_10px_30px_-10px_oklch(0.72_0.18_55/0.7)]"
-          >
-            Contribute
-          </Link>
+
+          {loading ? (
+            <div className="h-9 w-20 rounded-full bg-white/5 animate-pulse" />
+          ) : user ? (
+            <UserMenu />
+          ) : (
+            <Link
+              to="/auth"
+              search={{ mode: "signin" }}
+              className="btn-glossy hidden sm:inline-flex items-center rounded-full gradient-ember px-4 py-2 text-sm font-medium text-primary-foreground shadow-[0_10px_30px_-10px_oklch(0.72_0.18_55/0.7)]"
+            >
+              Sign in
+            </Link>
+          )}
+
           <button
             className="btn-glossy md:hidden grid h-9 w-9 place-items-center rounded-full glass"
             onClick={() => setOpen((v) => !v)}
@@ -104,6 +117,16 @@ export function Navbar() {
               {l.label}
             </Link>
           ))}
+          {!user && (
+            <Link
+              to="/auth"
+              search={{ mode: "signin" }}
+              onClick={() => setOpen(false)}
+              className="mt-1 block rounded-xl bg-primary/15 text-primary px-4 py-2.5 text-sm font-medium"
+            >
+              Sign in
+            </Link>
+          )}
         </div>
       )}
     </header>
