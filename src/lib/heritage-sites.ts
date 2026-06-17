@@ -1,3 +1,14 @@
+import goldenTempleImg from "@/assets/golden-temple.png.asset.json";
+import greatHimalayanImg from "@/assets/great-himalayan.png.asset.json";
+import nandaDeviImg from "@/assets/nanda-devi.png.asset.json";
+import rakhigarhiImg from "@/assets/rakhigarhi.png.asset.json";
+import redFortImg from "@/assets/red-fort.png.asset.json";
+import tajMahalImg from "@/assets/taj-mahal.png.asset.json";
+import keoladeoImg from "@/assets/keoladeo.png.asset.json";
+import pushkarImg from "@/assets/pushkar.png.asset.json";
+import jaisalmerImg from "@/assets/jaisalmer.png.asset.json";
+import kumbhImg from "@/assets/kumbh.png.asset.json";
+
 export type HeritageCategory =
   | "Archaeology"
   | "Nature"
