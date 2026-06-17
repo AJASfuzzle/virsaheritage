@@ -162,9 +162,10 @@ export function HeritageAtlas() {
             )}
           </AnimatePresence>
 
-          {/* Timeline scrubber — embedded on the map */}
-          <TimelineScrubber year={year} setYear={setYear} />
         </div>
+
+        {/* Timeline scrubber — below the map so it never covers it */}
+        <TimelineScrubber year={year} setYear={setYear} />
       </div>
 
       {/* Info panel */}
