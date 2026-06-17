@@ -27,8 +27,14 @@ export function Trails() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.55, delay: i * 0.06 }}
-              className="group relative overflow-hidden rounded-3xl glass p-7"
+              className="group relative overflow-hidden rounded-3xl glass p-7 hover:ring-1 hover:ring-primary/30 transition"
             >
+              <Link
+                to="/trails/$slug"
+                params={{ slug: t.slug }}
+                aria-label={`Open ${t.title}`}
+                className="absolute inset-0 z-10"
+              />
               <div className="flex items-center justify-between">
                 <span className="rounded-full bg-primary/15 text-primary ring-1 ring-primary/30 px-3 py-1 text-[11px] uppercase tracking-[0.22em]">
                   {t.kind}
@@ -51,13 +57,9 @@ export function Trails() {
                 ))}
               </div>
 
-              <Link
-                to="/trails/$slug"
-                params={{ slug: t.slug }}
-                className="mt-7 inline-flex items-center gap-2 rounded-full bg-white/5 hover:bg-white/10 transition px-4 py-2 text-sm"
-              >
+              <span className="relative z-20 pointer-events-none mt-7 inline-flex items-center gap-2 rounded-full bg-white/5 group-hover:bg-white/10 transition px-4 py-2 text-sm">
                 View trail →
-              </Link>
+              </span>
             </motion.article>
           ))}
         </div>
