@@ -125,16 +125,53 @@ function TrailDetail() {
     );
   }
 
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll();
+  const heroY = useTransform(scrollY, [0, 600], [0, 120]);
+  const heroScale = useTransform(scrollY, [0, 400], [1, 1.08]);
+
   return (
-    <article className="relative pt-28 pb-24">
-      <div className="mx-auto max-w-5xl px-5">
-        <Link
-          to="/khazane"
-          hash="trails"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition"
-        >
-          <ArrowLeft className="h-4 w-4" /> Back to Khazane
-        </Link>
+    <article className="relative pb-24">
+      {/* Cinematic hero */}
+      <div ref={heroRef} className="relative h-[72vh] min-h-[520px] w-full overflow-hidden">
+        <motion.img
+          src={trail.coverImage}
+          alt={trail.title}
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ y: heroY, scale: heroScale }}
+        />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 30%, rgba(0,0,0,0.2) 60%, var(--background) 100%)" }} />
+
+        <div className="absolute inset-x-0 top-0 z-10 pt-24">
+          <div className="mx-auto max-w-5xl px-5">
+            <Link
+              to="/trails"
+              className="inline-flex items-center gap-2 rounded-full bg-black/40 text-white/90 backdrop-blur ring-1 ring-white/15 px-3 py-1.5 text-sm hover:bg-black/60 transition"
+            >
+              <ArrowLeft className="h-4 w-4" /> All trails
+            </Link>
+          </div>
+        </div>
+
+        <div className="absolute inset-x-0 bottom-0 z-10">
+          <div className="mx-auto max-w-5xl px-5 pb-10">
+            <div className="flex items-center gap-2 text-white/80 text-xs">
+              <span className="rounded-full bg-white/15 ring-1 ring-white/25 backdrop-blur px-3 py-1 uppercase tracking-[0.22em]">{trail.kind}</span>
+              <span className="inline-flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> {trail.region}</span>
+            </div>
+            <h1 className="mt-4 font-display text-5xl sm:text-7xl text-white text-balance leading-[1.02] drop-shadow">
+              {trail.title}
+            </h1>
+            {trail.hook && (
+              <p className="mt-4 max-w-2xl text-white/90 text-lg italic">"{trail.hook}"</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-5xl px-5 -mt-8 relative">
+
+
 
         <header className="mt-8 rounded-3xl glass grain p-8 sm:p-12 relative overflow-hidden">
           <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-primary/20 blur-[100px]" />
