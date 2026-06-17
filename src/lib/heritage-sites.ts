@@ -41,7 +41,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Empire", value: "Vijayanagara" },
       { label: "UNESCO", value: "World Heritage Site (1986)" },
     ],
-    imageUrl: img("photo-1605649487212-47bdab064df7"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Wide_angle_of_Galigopuram_of_Virupaksha_Temple%2C_Hampi_%2804%29_%28cropped%29.jpg/1600px-Wide_angle_of_Galigopuram_of_Virupaksha_Temple%2C_Hampi_%2804%29_%28cropped%29.jpg",
   },
   {
     id: "ajanta-ellora", name: "Ajanta & Ellora Caves", category: "Archaeology",
@@ -56,7 +56,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Ellora carved", value: "6th – 10th c. CE" },
       { label: "UNESCO", value: "World Heritage Sites (1983)" },
     ],
-    imageUrl: img("photo-1582510003544-4d00b7f74220"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Ajanta_%2863%29.jpg/1600px-Ajanta_%2863%29.jpg",
   },
   {
     id: "lothal", name: "Lothal", category: "Archaeology",
@@ -71,7 +71,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Civilisation", value: "Indus Valley (Harappan)" },
       { label: "Famous for", value: "World's earliest known dockyard" },
     ],
-    imageUrl: img("photo-1602216056096-3b40cc0c9944"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/The_drainage_system_at_Lothal_2.JPG/1600px-The_drainage_system_at_Lothal_2.JPG",
   },
   {
     id: "dholavira", name: "Dholavira", category: "Archaeology",
@@ -86,7 +86,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Civilisation", value: "Indus Valley (Harappan)" },
       { label: "UNESCO", value: "World Heritage Site (2021)" },
     ],
-    imageUrl: img("photo-1623059508779-2542c6e83753"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/DHOLAVIRA_SITE_%2824%29.jpg/1600px-DHOLAVIRA_SITE_%2824%29.jpg",
   },
   {
     id: "konark", name: "Konark Sun Temple", category: "Archaeology",
@@ -101,7 +101,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Dynasty", value: "Eastern Ganga" },
       { label: "UNESCO", value: "World Heritage Site (1984)" },
     ],
-    imageUrl: img("photo-1582719478250-c89cae4dc85b"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Konarka_Temple.jpg/1600px-Konarka_Temple.jpg",
   },
   {
     id: "mahabalipuram", name: "Mahabalipuram", category: "Archaeology",
@@ -116,7 +116,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Dynasty", value: "Pallava" },
       { label: "UNESCO", value: "World Heritage Site (1984)" },
     ],
-    imageUrl: img("photo-1524492412937-b28074a5d7da"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Mamallapuram_view.jpg/1600px-Mamallapuram_view.jpg",
   },
   {
     id: "sanchi", name: "Sanchi Stupa", category: "Archaeology",
@@ -131,7 +131,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Patron", value: "Emperor Ashoka" },
       { label: "UNESCO", value: "World Heritage Site (1989)" },
     ],
-    imageUrl: img("photo-1561361513-2d000a50f0dc"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/East_Gateway_-_Stupa_1_-_Sanchi_Hill_2013-02-21_4398.JPG/1600px-East_Gateway_-_Stupa_1_-_Sanchi_Hill_2013-02-21_4398.JPG",
   },
   {
     id: "pattadakal", name: "Pattadakal", category: "Archaeology",
@@ -146,7 +146,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Dynasty", value: "Badami Chalukya" },
       { label: "UNESCO", value: "World Heritage Site (1987)" },
     ],
-    imageUrl: img("photo-1473625247510-8ceb1760943f"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Pattadakal_000.JPG/1600px-Pattadakal_000.JPG",
   },
   {
     id: "rakhigarhi", name: "Rakhigarhi", category: "Archaeology",
@@ -160,7 +160,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Civilisation", value: "Indus Valley" },
       { label: "Famous for", value: "Largest Harappan city known" },
     ],
-    imageUrl: img("photo-1558431382-27e303142255"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Rakhigarhi_Harappan_civilization.jpg/1600px-Rakhigarhi_Harappan_civilization.jpg",
   },
 
   // ────────── NATURE ──────────
@@ -177,7 +177,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Famous for", value: "One-horned rhinoceros" },
       { label: "UNESCO", value: "World Heritage Site (1985)" },
     ],
-    imageUrl: img("photo-1626621341517-bbf3d9990a23"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Beauty_of_Kaziranga_National_Park.jpg/1600px-Beauty_of_Kaziranga_National_Park.jpg",
   },
   {
     id: "sundarbans", name: "Sundarbans", category: "Nature",
@@ -192,7 +192,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Famous for", value: "Royal Bengal tigers" },
       { label: "UNESCO", value: "World Heritage Site (1987)" },
     ],
-    imageUrl: img("photo-1469474968028-56623f02e42e"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Sundarban_Tiger.jpg/1600px-Sundarban_Tiger.jpg",
   },
   {
     id: "nanda-devi", name: "Nanda Devi & Valley of Flowers", category: "Nature",
@@ -207,7 +207,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Highest point", value: "Nanda Devi — 7,816 m" },
       { label: "UNESCO", value: "World Heritage Site (1988)" },
     ],
-    imageUrl: img("photo-1464822759023-fed622ff2c3b"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Valley_of_flowers_national_park%2C_Uttarakhand%2C_India_03_%28edit%29.jpg/1600px-Valley_of_flowers_national_park%2C_Uttarakhand%2C_India_03_%28edit%29.jpg",
   },
   {
     id: "western-ghats", name: "Western Ghats", category: "Nature",
@@ -222,7 +222,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Endemism", value: "325+ globally threatened species" },
       { label: "UNESCO", value: "World Heritage Site (2012)" },
     ],
-    imageUrl: img("photo-1517816743773-6e0fd518b4a6"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/AnaimudiPeak_DSC_4834.jpg/1600px-AnaimudiPeak_DSC_4834.jpg",
   },
   {
     id: "keoladeo", name: "Keoladeo (Bharatpur)", category: "Nature",
@@ -237,7 +237,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Bird species", value: "370+" },
       { label: "UNESCO", value: "World Heritage Site (1985)" },
     ],
-    imageUrl: img("photo-1477586957327-847a0f3f4fe3"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/008_Eurasian_hoopoe_eating_in_Keoladeo_National_Park_Photo_by_Giles_Laurent.jpg/1600px-008_Eurasian_hoopoe_eating_in_Keoladeo_National_Park_Photo_by_Giles_Laurent.jpg",
   },
   {
     id: "great-himalayan", name: "Great Himalayan National Park", category: "Nature",
@@ -252,7 +252,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Altitude range", value: "1,500–6,110 m" },
       { label: "UNESCO", value: "World Heritage Site (2014)" },
     ],
-    imageUrl: img("photo-1532375810709-75b1da00537c"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Himalayn_National_Park_01.jpg/1600px-Himalayn_National_Park_01.jpg",
   },
   {
     id: "andaman-reef", name: "Andaman & Nicobar Coral Reefs", category: "Nature",
@@ -267,7 +267,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Marine NP", value: "Mahatma Gandhi (1983)" },
       { label: "Famous for", value: "Coral reefs & uncontacted peoples" },
     ],
-    imageUrl: img("photo-1518002171953-a080ee817e1f"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/The_Coral_Reef_at_the_Andaman_Islands.jpg/1600px-The_Coral_Reef_at_the_Andaman_Islands.jpg",
   },
   {
     id: "manas", name: "Manas National Park", category: "Nature",
@@ -282,7 +282,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Endemic to area", value: "Golden langur, pygmy hog" },
       { label: "UNESCO", value: "World Heritage Site (1985)" },
     ],
-    imageUrl: img("photo-1505881502353-a1986add3762"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Manas_landscape_rhino.jpg/1600px-Manas_landscape_rhino.jpg",
   },
 
   // ────────── ARCHITECTURE ──────────
@@ -299,7 +299,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Commissioned by", value: "Shah Jahan" },
       { label: "UNESCO", value: "World Heritage Site (1983)" },
     ],
-    imageUrl: img("photo-1564507592333-c60657eea523"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Taj_Mahal_%28Edited%29.jpeg/1600px-Taj_Mahal_%28Edited%29.jpeg",
   },
   {
     id: "qutub-minar", name: "Qutub Minar", category: "Architecture",
@@ -314,7 +314,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Height", value: "72.5 m" },
       { label: "UNESCO", value: "World Heritage Site (1993)" },
     ],
-    imageUrl: img("photo-1587135941948-670b381f08ce"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Qutb_Minar_2022.jpg/1600px-Qutb_Minar_2022.jpg",
   },
   {
     id: "red-fort", name: "Red Fort", category: "Architecture",
@@ -329,7 +329,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Patron", value: "Shah Jahan" },
       { label: "UNESCO", value: "World Heritage Site (2007)" },
     ],
-    imageUrl: img("photo-1599661046289-e31897846e41"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Delhi_fort.jpg/1600px-Delhi_fort.jpg",
   },
   {
     id: "meenakshi", name: "Meenakshi Temple", category: "Architecture",
@@ -344,7 +344,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Dynasty", value: "Madurai Nayakas" },
       { label: "Gopurams", value: "14" },
     ],
-    imageUrl: img("photo-1518998053901-5348d3961a04"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/An_aerial_view_of_Madurai_city_from_atop_of_Meenakshi_Amman_temple.jpg/1600px-An_aerial_view_of_Madurai_city_from_atop_of_Meenakshi_Amman_temple.jpg",
   },
   {
     id: "golden-temple", name: "Harmandir Sahib (Golden Temple)", category: "Architecture",
@@ -359,7 +359,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Tradition", value: "Sikhism" },
       { label: "Langar", value: "~100,000 meals/day" },
     ],
-    imageUrl: img("photo-1602002418082-a4443e081dd1"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/The_Golden_Temple_of_Amrithsar_7.jpg/1600px-The_Golden_Temple_of_Amrithsar_7.jpg",
   },
   {
     id: "mysore-palace", name: "Mysore Palace", category: "Architecture",
@@ -374,7 +374,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Dynasty", value: "Wadiyar" },
       { label: "Style", value: "Indo-Saracenic" },
     ],
-    imageUrl: img("photo-1567157577867-05ccb1388e66"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mysore_Palace_Morning.jpg/1600px-Mysore_Palace_Morning.jpg",
   },
   {
     id: "victoria-memorial", name: "Victoria Memorial", category: "Architecture",
@@ -389,7 +389,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Architect", value: "William Emerson" },
       { label: "Holdings", value: "28,000+ artefacts" },
     ],
-    imageUrl: img("photo-1542367592-8849eb950fd8"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Victoria_Memorial_situated_in_Kolkata.jpg/1600px-Victoria_Memorial_situated_in_Kolkata.jpg",
   },
   {
     id: "charminar", name: "Charminar", category: "Architecture",
@@ -404,7 +404,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Patron", value: "Muhammad Quli Qutb Shah" },
       { label: "Height", value: "56 m" },
     ],
-    imageUrl: img("photo-1610375229632-d8d9d2cf5d6e"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Charminar_Hyderabad_1.jpg/1600px-Charminar_Hyderabad_1.jpg",
   },
 
   // ────────── ART & CRAFTS ──────────
@@ -421,7 +421,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Dynasty", value: "Chandela" },
       { label: "UNESCO", value: "World Heritage Site (1986)" },
     ],
-    imageUrl: img("photo-1571536802807-30451e3955d8"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/1_Khajuraho.jpg/1600px-1_Khajuraho.jpg",
   },
   {
     id: "madhubani", name: "Madhubani Painting Villages", category: "Art & Crafts",
@@ -436,7 +436,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Recognised by GI", value: "2007" },
       { label: "Famous styles", value: "Bharni, Katchni, Kohbar" },
     ],
-    imageUrl: img("photo-1610030469983-98e550d6193c"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Madhubani_Mahavidyas.jpg/1600px-Madhubani_Mahavidyas.jpg",
   },
   {
     id: "raghurajpur", name: "Raghurajpur Pattachitra", category: "Art & Crafts",
@@ -451,7 +451,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Craft", value: "Pattachitra, Gotipua" },
       { label: "Pigments", value: "Natural minerals & shells" },
     ],
-    imageUrl: img("photo-1524613032530-449a5d94c285"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Entrance_of_Raghurajpur.jpg/1600px-Entrance_of_Raghurajpur.jpg",
   },
   {
     id: "channapatna", name: "Channapatna Toys", category: "Art & Crafts",
@@ -466,7 +466,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "GI tag", value: "2005" },
       { label: "Wood used", value: "Wrightia tinctoria (aale mara)" },
     ],
-    imageUrl: img("photo-1593693411515-c20261bcad6e"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Wooden_toys.JPG/1600px-Wooden_toys.JPG",
   },
   {
     id: "tanjore-paintings", name: "Tanjore Paintings", category: "Art & Crafts",
@@ -480,7 +480,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Patrons", value: "Maratha rulers of Thanjavur" },
       { label: "GI tag", value: "2007" },
     ],
-    imageUrl: img("photo-1514222134-b57cbb8ce073"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Thanjavur_art_from_south_India.jpg/1600px-Thanjavur_art_from_south_India.jpg",
   },
   {
     id: "kanchipuram-silk", name: "Kanchipuram Silk Weaving", category: "Art & Crafts",
@@ -495,7 +495,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "GI tag", value: "2005" },
       { label: "Technique", value: "Korvai (interlocked borders)" },
     ],
-    imageUrl: img("photo-1547036967-23d11aacaee0"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Kanchipuram_silk_sareer.JPG/1600px-Kanchipuram_silk_sareer.JPG",
   },
 
   // ────────── LIVING HERITAGE ──────────
@@ -512,7 +512,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Founder", value: "Rao Jaisal Bhati" },
       { label: "UNESCO", value: "Hill Forts of Rajasthan (2013)" },
     ],
-    imageUrl: img("photo-1564507004663-b6dfb3c824d5"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Jaisalmer_forteresse.jpg/1600px-Jaisalmer_forteresse.jpg",
   },
   {
     id: "varanasi", name: "Varanasi Ghats", category: "Living Heritage",
@@ -527,7 +527,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Ghats", value: "88" },
       { label: "River", value: "Ganga" },
     ],
-    imageUrl: img("photo-1596797038530-2c107229654b"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Ahilya_Ghat_by_the_Ganges%2C_Varanasi.jpg/1600px-Ahilya_Ghat_by_the_Ganges%2C_Varanasi.jpg",
   },
   {
     id: "kumbh-prayagraj", name: "Kumbh Mela at Prayagraj", category: "Living Heritage",
@@ -542,7 +542,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Cycle", value: "Every 12 years" },
       { label: "UNESCO", value: "Intangible Heritage (2017)" },
     ],
-    imageUrl: img("photo-1548013146-72479768bada"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Third_Shahi_Snan_in_Hari_Ki_Pauri.jpg/1600px-Third_Shahi_Snan_in_Hari_Ki_Pauri.jpg",
   },
   {
     id: "theyyam", name: "Theyyam of North Malabar", category: "Living Heritage",
@@ -557,7 +557,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Season", value: "October–May" },
       { label: "Distinct forms", value: "450+" },
     ],
-    imageUrl: img("photo-1477959858617-67f85cf4f1df"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Kathivanoor_Veeran_Chemmarathi_Thara-Eripuram.jpg/1600px-Kathivanoor_Veeran_Chemmarathi_Thara-Eripuram.jpg",
   },
   {
     id: "pushkar-fair", name: "Pushkar Camel Fair", category: "Living Heritage",
@@ -572,7 +572,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Held in", value: "Kartik (Oct–Nov)" },
       { label: "Footfall", value: "~200,000" },
     ],
-    imageUrl: img("photo-1488459716781-31db52582fe9"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/%28A%29_Camel_Pushkar_fair.jpg/1600px-%28A%29_Camel_Pushkar_fair.jpg",
   },
   {
     id: "majuli", name: "Majuli Satras", category: "Living Heritage",
@@ -587,7 +587,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Tradition", value: "Neo-Vaishnavism (Sankardev)" },
       { label: "Famous for", value: "Sattriya dance" },
     ],
-    imageUrl: img("photo-1609766857041-ed402ea8069a"),
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Doriya_River_of_Majuli.jpg/1600px-Doriya_River_of_Majuli.jpg",
   },
 ];
 
