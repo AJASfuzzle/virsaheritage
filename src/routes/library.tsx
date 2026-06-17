@@ -559,3 +559,78 @@ function StoryModal({ story, onClose }: { story: Story | null; onClose: () => vo
     </AnimatePresence>
   );
 }
+
+/* ---------------- contribute banner ---------------- */
+
+function ContributeBanner() {
+  const items = [
+    { icon: FileText, label: "Letters", hint: "Yellowed envelopes, faded ink." },
+    { icon: BookOpen, label: "Diaries", hint: "Margins full of weather." },
+    { icon: Mic, label: "Interviews", hint: "Grandparents, on tape." },
+    { icon: Heart, label: "Family stories", hint: "Recipes, weddings, exiles." },
+  ];
+  return (
+    <section className="mx-auto max-w-6xl px-6 pb-20">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        className="relative overflow-hidden rounded-3xl border border-[var(--glass-border)] bg-gradient-to-br from-[color-mix(in_oklab,var(--card)_88%,var(--accent)_12%)] to-[var(--card)] p-8 shadow-[var(--shadow-soft)] sm:p-12"
+      >
+        <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-[var(--accent)] opacity-10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-[color:var(--primary)] opacity-10 blur-3xl" />
+
+        <div className="relative grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-center">
+          <div>
+            <p className="mb-3 flex items-center gap-2 text-[11px] uppercase tracking-[0.28em] text-[color:var(--accent)]">
+              <Heart className="h-3.5 w-3.5" /> Your Family Heritage Archive
+            </p>
+            <h2 className="font-display text-3xl leading-[1.1] sm:text-5xl">
+              Bring your <span className="italic text-gradient-ember">grandmother's voice</span> into the Library.
+            </h2>
+            <p className="mt-5 max-w-xl text-pretty text-base text-muted-foreground sm:text-lg">
+              Upload old letters, faded diaries, family stories, and recordings of
+              your grandparents. VIRSA preserves them, transcribes them, and weaves
+              them into an interactive archive only your family can browse.
+            </p>
+            <p className="mt-4 max-w-xl text-pretty text-sm text-muted-foreground">
+              Then ask anything — <em className="text-foreground/80">"What was life like in Punjab during Partition?"</em>{" "}
+              — and receive answers drawn from your own family's preserved memory.
+              Heritage, made personal.
+            </p>
+
+            <div className="mt-7 flex flex-wrap gap-3">
+              <button
+                disabled
+                title="Coming soon"
+                className="btn-glossy inline-flex items-center gap-2 rounded-full bg-[var(--accent)] px-5 py-3 text-xs uppercase tracking-[0.22em] text-[color:var(--accent-foreground)] opacity-95"
+              >
+                <Upload className="h-4 w-4" /> Upload a memory
+              </button>
+              <span className="self-center text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                Coming soon · Private to your family
+              </span>
+            </div>
+          </div>
+
+          <ul className="grid grid-cols-2 gap-3 sm:gap-4">
+            {items.map((it) => (
+              <li
+                key={it.label}
+                className="rounded-2xl border border-[var(--glass-border)] bg-[var(--card)]/60 p-4 backdrop-blur"
+              >
+                <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-[var(--accent)]/15 text-[color:var(--accent)]">
+                  <it.icon className="h-4 w-4" />
+                </div>
+                <p className="font-display text-lg leading-tight">{it.label}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{it.hint}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
