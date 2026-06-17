@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { ArrowLeft, Send } from "lucide-react";
 import { getPost, listComments, addComment } from "@/lib/echoes.functions";
+import { getSeedPostById, isSeedId } from "@/lib/seed-echoes";
 import { PostCard, type EchoPost } from "@/components/echoes/PostCard";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
@@ -43,15 +44,17 @@ function PostPage() {
   const fetchComments = useServerFn(listComments);
   const addCommentFn = useServerFn(addComment);
 
-  const { data: post, isLoading } = useQuery({
+  const seed = isSeedId(postId) ? getSeedPostById(postId) : null;
+  const { data: postData, isLoading } = useQuery({
     queryKey: ["echo-post", postId],
     queryFn: () => fetchPost({ data: { postId } }),
-    enabled: !!user,
+    enabled: !!user && !seed,
   });
+  const post = (seed as any) ?? postData;
   const { data: comments } = useQuery({
     queryKey: ["echo-comments", postId],
     queryFn: () => fetchComments({ data: { postId } }),
-    enabled: !!user,
+    enabled: !!user && !seed,
   });
 
   const [content, setContent] = useState("");
@@ -79,7 +82,7 @@ function PostPage() {
         {post && <PostCard post={post as unknown as EchoPost} currentUserId={user?.id ?? null} />}
 
         {/* comments */}
-        {post && (
+        {post && !seed && (
           <section className="mt-6 rounded-3xl border border-[var(--glass-border)] bg-[var(--card)] p-5 shadow-[var(--shadow-soft)]">
             <h2 className="font-display text-lg">Comments</h2>
             {user ? (
