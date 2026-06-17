@@ -125,6 +125,7 @@ function RootComponent() {
           <Footer />
         </main>
         <FloatingAssistantButton />
+        <InterestsOnboarding />
         <Toaster richColors position="top-right" />
       </AuthProvider>
     </QueryClientProvider>
