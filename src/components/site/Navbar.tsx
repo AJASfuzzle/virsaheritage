@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { UserMenu } from "@/components/site/UserMenu";
 
 const links = [
+  { to: "/trails", label: "Trails" },
   { to: "/atlas", label: "Heritage Atlas" },
   { to: "/library", label: "Library" },
   { to: "/kitab", label: "kitab" },
