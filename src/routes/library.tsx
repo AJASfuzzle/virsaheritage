@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, Clock, Sparkles, X, ArrowRight, BookOpen } from "lucide-react";
+import { Search, Clock, Sparkles, X, ArrowRight, BookOpen, Upload, Heart, Mic, FileText } from "lucide-react";
+
 
 export const Route = createFileRoute("/library")({
   head: () => ({
@@ -36,6 +37,71 @@ type Shelf = {
 
 const SHELVES: Shelf[] = [
   {
+    id: "family-stories",
+    name: "Family Stories",
+    whisper: "Letters, diaries and voices preserved by those who lived them.",
+    stories: [
+      {
+        id: "partition-letter",
+        title: "A Letter from Lahore, August 1947",
+        blurb: "My grandfather's last letter from the city he was about to lose.",
+        minutes: 12,
+        tag: "Letter · Punjab",
+        curator: true,
+        body:
+          "My grandfather, Hardev Singh, was twenty-three when he wrote this letter. It was found folded inside a steel trunk in our family home in Ludhiana, tucked between a railway ticket and a black-and-white photograph of his mother. The paper is the colour of weak tea now. The ink has softened to brown.\n\n\"Pyaare Bhrata Ji,\" it begins. Dear elder brother. He is writing from Anarkali Bazaar, Lahore, on the 11th of August 1947. He says the trams are still running but no one is on them. The shop where he buys his cloth has been shuttered for nine days. The shopkeeper, a Muslim friend named Bashir, came in the middle of the night to leave him a bolt of green silk and said, 'Keep it. If anyone asks, you bought it from me last year.' My grandfather writes that he did not know whether the silk was a gift or a goodbye.\n\nHe describes a city already split in two. The Hindus and Sikhs are leaving by the Frontier Mail every evening. The platforms at Lahore Junction are stacked with brass utensils, sewing machines, and grandfather clocks that no one will ever wind again. He writes about an old Sikh tailor he met at the station who refused to leave his sewing machine behind and was carrying it on his head 'as if it were a child'. My grandfather tried to help him. The man said, 'Beta, this machine has fed my family for thirty-five years. If I leave it, what was my life for?'\n\nIn the second half of the letter, the handwriting changes. The ink is thicker, pressed harder into the page. He has heard rumours about Amritsar — that trains are arriving with everyone inside dead. He writes, 'I do not believe these stories. We are too old a people to do such things to each other.' Three days later, he himself boarded a train. He survived. The man with the sewing machine, we never learnt.\n\nHe wrote in Gurmukhi, in the careful schoolboy hand of someone who has been taught to honour the elder he is writing to. He signed it 'aap ka chhota bhai, Hardev'. Your younger brother. He never spoke about Lahore for the rest of his life. The letter spoke for him.\n\nMy grandmother showed me this letter when I was nineteen. She said, 'Read it twice. The first time for what it says. The second time for what he could not bring himself to write.' I have read it many times since. There is a sentence near the end that I think about often: 'The mangoes this year were good. We did not eat enough of them.'",
+      },
+      {
+        id: "nanima-wedding",
+        title: "Interview: My Nani's Wedding, Jaipur 1962",
+        blurb: "Recorded one monsoon afternoon on a kitchen stool, in three languages.",
+        minutes: 14,
+        tag: "Oral History · Rajasthan",
+        curator: true,
+        body:
+          "My nani — Pushpa Devi, born 1944 in a village outside Jaipur — agreed to be recorded only on the condition that I peel the peas while she spoke. 'Otherwise it is a performance,' she said. 'And I am not a performer.' The recording is forty-seven minutes long. She switches between Marwari, Hindi and a careful, embarrassed English that she learnt from her grandchildren.\n\nShe was eighteen when she was married. The wedding was arranged in three weeks — fast, by the standards of the time — because my grandfather had been offered a job at the railways in Ajmer and the family wanted everything settled before he left. She had seen his photograph once. He was standing beside a Royal Enfield motorcycle that did not belong to him, borrowed from a cousin for exactly this purpose.\n\n'I did not look at the photograph properly,' she tells me. 'It is bad luck to study too closely. I looked at the motorcycle. I thought, this man is going somewhere.'\n\nShe describes the haldi ceremony in the courtyard of her parents' house. Her aunts ground the turmeric on a flat stone with their bare hands, mixing it with mustard oil and sandalwood. The smell of that paste, she says, is the smell of her own girlhood ending. Her mother sang a song that I have never heard anywhere else — a lament in old Marwari about a daughter who becomes a guest in her own home. She sings four lines of it into the recorder. Her voice cracks on the third line. We pause for tea.\n\nShe arrived at her in-laws' house in a doli carried by four men. The doli was lined with marigolds and a strip of red velvet stitched by her grandmother. When she stepped down, her mother-in-law put a copper pot of rice at the threshold and asked her to kick it over with her right foot — a rite that says, abundance will follow you into this house. She kicked it harder than necessary. The pot dented. Her mother-in-law laughed and said, 'Good. She has strong legs. She will manage the kitchen.'\n\nIn the recording, she pauses for a long time after this. I can hear the pressure cooker whistling in the background. Then she says, in English: 'I did not love him on that day. I did not know him. But I respected the strangeness of what we were doing. We were trying to build a house out of two children who had never met.' She is quiet again. Then: 'It worked. Beta, it worked for fifty-one years. He died last March. The pressure cooker is whistling, please go and turn it off.'\n\nThe transcript is in our family archive now. So is the dented copper pot. My mother polished it once and stopped — she said the dent was the most important part.",
+      },
+      {
+        id: "sindh-migration",
+        title: "Diary of a Sindhi Tailor, Bombay 1948",
+        blurb: "Three pages from a coal-smudged notebook, written from a refugee camp.",
+        minutes: 11,
+        tag: "Diary · Sindh / Bombay",
+        body:
+          "These three pages belong to my great-grandfather, Naraindas Chandiramani. He kept a tailor's shop in Karachi before 1947. The diary is small, the size of a man's palm, with a maroon leather cover and an elastic band that has perished. He wrote in a mixture of Sindhi (in the Khudabadi script my grandmother had to teach me to read) and English, depending on what he was trying to say.\n\nThe first page is dated 'Pila Camp, Kalyan, 4 March 1948'. The camp was on the outskirts of Bombay, a stretch of military barracks repurposed for the Sindhi refugees who had arrived by ship over the previous five months. He writes about the heat — 'the heat of Bombay is a different heat, it has no honesty to it' — and about the food, which is mostly rice and a thin dal he describes as 'water with three lentils swimming in it'.\n\nThe second page is a list. It is a list of everything he left behind in his shop on Bunder Road. He writes:\n\n'• 14 bolts of fine wool, English and Italian\n• 1 Singer treadle machine, 1937 model, in good condition\n• 6 pairs of scissors, including the long pair from my father\n• A photograph of King George with my name printed below it, given by Mr Mountcastle\n• A drawer full of buttons, sorted by colour\n• My measuring tapes, 11 in number\n• My signboard, Naraindas & Sons, Tailors, painted by Hashmat Ali\n• My customers' measurements, in a black ledger, 22 years of them'\n\nThe last item is underlined twice. He writes underneath it, in English: 'Without these measurements I am a tailor in name only.'\n\nThe third page is about a Muslim friend named Hashmat — the same man who painted his signboard. Hashmat came to the docks at midnight on the day my great-grandfather was leaving and pressed a small package into his hand. Inside was a fold of yellow paper. On it Hashmat had written, in his own neat Urdu, every single measurement from the black ledger that he could remember by heart — fifty-two names, my great-grandfather counts. 'He told me, Naraindas bhai, when you open your shop in Hindustan, at least these fifty-two customers, you will still know.'\n\nMy great-grandfather did open a shop, in Ulhasnagar, in 1950. He used Hashmat's measurements for the first fifteen customers who walked in, even though most of them were strangers. He said, 'If a man comes in with the shoulders of an Anwar, I will cut him a coat for an Anwar. The measurements remember even when the men are gone.'\n\nHe died in 1981. We still have the diary, the yellow paper, and a single pair of long scissors that he eventually had shipped to him through a Parsi merchant in 1953. They are in our cupboard in Pune. They still cut cloth cleanly.",
+      },
+      {
+        id: "soldier-letter",
+        title: "Letters from a Soldier, NEFA 1962",
+        blurb: "Eleven envelopes, one of them never opened. He did not come home.",
+        minutes: 10,
+        tag: "Letters · Assam / Arunachal",
+        body:
+          "My great-uncle Captain Joginder Singh Sandhu of the 4 Sikh Regiment wrote eleven letters home between October and November 1962, during the war with China in the North-East Frontier Agency. We have all eleven of them, tied with a length of cotton tape that has gone yellow. The last one is still sealed. My great-grandmother could never bring herself to open it. None of us have either.\n\nThe earlier letters are cheerful in the way that all soldiers' letters home are cheerful. He writes about the cold — 'Mata Ji, please send the brown woollen socks, not the grey ones, the grey ones itch' — and about the height of the mountains, which he says are 'so tall they have made me a smaller man, in a good way'. He describes the local Monpa villagers who bring the soldiers buckwheat pancakes and butter tea. He says the butter tea tastes like 'a soup made by a person who has never eaten soup', and that he has come to love it.\n\nIn the sixth letter he writes about a young sepoy from a village near his own who has never seen snow. The boy stood outside the tent the entire first night it snowed, holding his hands out, until his fingers turned blue and the medic had to bring him in. Joginder writes, 'I scolded him. Then I went outside and did the same thing for ten minutes, secretly. Do not tell anyone.'\n\nThe ninth letter is shorter. He says they are being moved up to a place called Bumla. He cannot say more. He asks after his sister's pregnancy and tells his father that the buffalo named Heera must be sold before winter — 'she will not survive another one, and it is cruel to ask her to try'.\n\nThe tenth letter, dated 16th November 1962, is the one I have read the most. It is six lines long. He says he is well. He says the tea ration has been reduced but the rum has not. He says, 'If you do not hear from me for some weeks, do not worry. The post is slow here. The mountains do not believe in postmen.' He signs it 'your loving son, Jogi.'\n\nThe eleventh letter arrived on the 4th of December, two weeks after the family had received the telegram. It is still sealed. The stamp is a green one — the King George had been replaced by Ashoka's lions by then, and my great-grandmother had not yet got used to the change. She kept the envelope in her almirah, next to her wedding chunni, and would touch it on his birthday every year.\n\nMy mother thinks one day someone will open it. I am not sure. There is a kind of love that lives only in the not-knowing, and I am afraid of disturbing it.",
+      },
+      {
+        id: "recipe-diary",
+        title: "My Paati's Recipe Diary, Thanjavur 1958–1989",
+        blurb: "A hardback notebook with thirty-one years of marginalia.",
+        minutes: 9,
+        tag: "Diary · Tamil Nadu",
+        curator: true,
+        body:
+          "My paati — Lakshmi Ammal of Thanjavur — kept her recipes in a maroon hardback notebook with the words 'Bharath Stationers, Kumbakonam' embossed on the cover in fading gold. She began it in 1958, the year she was married, and stopped in 1989, the year my grandfather died. She wrote in Tamil, in a slanting, schoolmistress hand, with the occasional English word slipped in where the Tamil word seemed too plain.\n\nThe recipes themselves are not the point of the notebook. Anyone can find a recipe for rasam. The point is what she wrote in the margins.\n\nUnder her recipe for puli kuzhambu, dated June 1961: 'Made this for V's parents' first visit. His mother said the tamarind was too sour. I have not changed the recipe. She has changed her opinion.'\n\nUnder a recipe for adhirasam, dated November 1964: 'My mother taught me this when I was nine. The dough must rest for one full day. Patience is the first ingredient. My mother died this morning. I am writing this recipe so I do not forget her hands.'\n\nUnder a recipe for kara kozhukattai, dated August 1971: 'V is in Delhi this week. The children have asked me to make this five times. I have made it five times. There is something about a husband being away that makes the children hungrier. Perhaps they are eating his portion too, out of loyalty.'\n\nUnder her recipe for ven pongal, dated January 1979: 'My granddaughter — that is me — 'came to stay for Pongal. She is afraid of the cow. The cow is not afraid of her. I think they will learn to tolerate each other, like all good Tamil women.' I was four years old. I do not remember the cow. I remember the pongal.\n\nThe last entry, March 1989, is not a recipe. It is half a page, in pencil, dated four days after my grandfather's funeral. She writes:\n\n'V loved my morkozhambu more than any other thing I ever cooked. He used to say, eat it slowly, Lakshmi, do not eat it like it is dal, this is morkozhambu, it has a soul. I made it on Tuesday. I have eaten three meals of it now. I have not been able to taste anything since he left. I am writing it down anyway. The next person who reads this notebook will not know that. They will think it is a recipe like any other. Let them. Some sorrow is not for sharing.'\n\nMy mother keeps the notebook now, wrapped in muslin. I am the only grandchild who can still read Tamil. So once a year, on her death anniversary, I take it out and read one page aloud to whoever is in the kitchen with me. The kitchen is usually quiet afterwards. That is the right kind of quiet.",
+      },
+      {
+        id: "kashmiri-houseboat",
+        title: "Interview: Houseboat Owner, Dal Lake 1989",
+        blurb: "Recorded in 2019 by his great-grandson, on a phone propped against a samovar.",
+        minutes: 8,
+        tag: "Oral History · Kashmir",
+        body:
+          "Ghulam Mohammed Najar — 'Gama Saheb' to everyone on Dal Lake — was eighty-four when his great-grandson recorded him. The recording was made in the back room of the houseboat 'Young Prince of Kashmir', moored at the third ghat of Nageen, in October 2019. There is the sound of the kerosene heater. There is the sound of a samovar gurgling. Once, faintly, you can hear the call to prayer from a mosque across the water.\n\nHis family had owned houseboats since his grandfather's time. He describes the boats not as boats but as 'wooden houses that have learnt to float'. The 'Young Prince' was built in 1934 from cedar that his grandfather had bought from a contractor in Pahalgam. The walls of the dining room were carved by a single artisan over fourteen months. The artisan, a Hindu named Pyare Lal Kaul, signed his name in tiny letters inside the foot of one chair, so that you would only see it if you turned the chair over to repair it.\n\nGama Saheb's clearest memories are from the late 1980s. He talks about the foreign tourists — 'the Germans came every May, the Israelis after their army, the English at any time, you could never predict the English' — and the long evenings when guests would sit on the front deck and ask him to tell them about Kashmir. He says, 'I told them every story I knew. When I ran out, I told them stories my father told me. When I ran out of those, I made some up. They did not mind. They had paid for the tea.'\n\nThe tone of the recording changes when he reaches 1989. He says, quietly, 'After that winter, the tourists stopped. They did not come for many, many years. Some came back, but it was never the same. My boats sat empty. The wood does not like to sit empty. It cracks. It feels insulted.'\n\nHe describes patching the 'Young Prince' himself, year after year, with money he did not really have. His sons wanted him to sell. He refused. 'I told them, this boat has my grandfather's hands in it. If I sell it, I am selling a pair of hands. You cannot do that.'\n\nNear the end of the recording, his great-grandson asks him, in English, what he would say to a young Kashmiri who wanted to leave. There is a long pause. Then Gama Saheb says, in Kashmiri, very softly: 'I would say, go. But take the lake with you. Take it in here.' His great-grandson notes in the transcript that he touched the centre of his chest when he said this.\n\nGama Saheb passed away in March 2022. The 'Young Prince of Kashmir' is still moored at the third ghat of Nageen. The artisan's signature is still under the foot of the dining-room chair. We checked.",
+      },
+    ],
+  },
+  {
+
     id: "civilizations",
     name: "Civilizations",
     whisper: "Empires that drew the maps we still walk.",
@@ -294,12 +360,16 @@ function LibraryPage() {
         </div>
       </section>
 
+      {/* Contribute — Family Heritage Archive */}
+      <ContributeBanner />
+
       {/* Shelves */}
       <section className="mx-auto max-w-6xl space-y-20 px-6 pb-32">
         {SHELVES.map((shelf, i) => (
           <Shelf key={shelf.id} shelf={shelf} index={i} onOpen={setActive} />
         ))}
       </section>
+
 
       {/* Story modal */}
       <StoryModal story={active} onClose={() => setActive(null)} />
@@ -489,3 +559,78 @@ function StoryModal({ story, onClose }: { story: Story | null; onClose: () => vo
     </AnimatePresence>
   );
 }
+
+/* ---------------- contribute banner ---------------- */
+
+function ContributeBanner() {
+  const items = [
+    { icon: FileText, label: "Letters", hint: "Yellowed envelopes, faded ink." },
+    { icon: BookOpen, label: "Diaries", hint: "Margins full of weather." },
+    { icon: Mic, label: "Interviews", hint: "Grandparents, on tape." },
+    { icon: Heart, label: "Family stories", hint: "Recipes, weddings, exiles." },
+  ];
+  return (
+    <section className="mx-auto max-w-6xl px-6 pb-20">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        className="relative overflow-hidden rounded-3xl border border-[var(--glass-border)] bg-gradient-to-br from-[color-mix(in_oklab,var(--card)_88%,var(--accent)_12%)] to-[var(--card)] p-8 shadow-[var(--shadow-soft)] sm:p-12"
+      >
+        <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-[var(--accent)] opacity-10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-[color:var(--primary)] opacity-10 blur-3xl" />
+
+        <div className="relative grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-center">
+          <div>
+            <p className="mb-3 flex items-center gap-2 text-[11px] uppercase tracking-[0.28em] text-[color:var(--accent)]">
+              <Heart className="h-3.5 w-3.5" /> Your Family Heritage Archive
+            </p>
+            <h2 className="font-display text-3xl leading-[1.1] sm:text-5xl">
+              Bring your <span className="italic text-gradient-ember">grandmother's voice</span> into the Library.
+            </h2>
+            <p className="mt-5 max-w-xl text-pretty text-base text-muted-foreground sm:text-lg">
+              Upload old letters, faded diaries, family stories, and recordings of
+              your grandparents. VIRSA preserves them, transcribes them, and weaves
+              them into an interactive archive only your family can browse.
+            </p>
+            <p className="mt-4 max-w-xl text-pretty text-sm text-muted-foreground">
+              Then ask anything — <em className="text-foreground/80">"What was life like in Punjab during Partition?"</em>{" "}
+              — and receive answers drawn from your own family's preserved memory.
+              Heritage, made personal.
+            </p>
+
+            <div className="mt-7 flex flex-wrap gap-3">
+              <button
+                disabled
+                title="Coming soon"
+                className="btn-glossy inline-flex items-center gap-2 rounded-full bg-[var(--accent)] px-5 py-3 text-xs uppercase tracking-[0.22em] text-[color:var(--accent-foreground)] opacity-95"
+              >
+                <Upload className="h-4 w-4" /> Upload a memory
+              </button>
+              <span className="self-center text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                Coming soon · Private to your family
+              </span>
+            </div>
+          </div>
+
+          <ul className="grid grid-cols-2 gap-3 sm:gap-4">
+            {items.map((it) => (
+              <li
+                key={it.label}
+                className="rounded-2xl border border-[var(--glass-border)] bg-[var(--card)]/60 p-4 backdrop-blur"
+              >
+                <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-[var(--accent)]/15 text-[color:var(--accent)]">
+                  <it.icon className="h-4 w-4" />
+                </div>
+                <p className="font-display text-lg leading-tight">{it.label}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{it.hint}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
