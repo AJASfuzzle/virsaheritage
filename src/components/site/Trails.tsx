@@ -184,22 +184,7 @@ function TrailCard({
       onDragEnd={onDragEnd}
     >
       {/* Cinematic image */}
-      <div className="absolute inset-0">
-        <motion.img
-          src={trail.coverImage}
-          alt={trail.title}
-          className="h-full w-full object-cover"
-          draggable={false}
-          loading={offset === 0 ? "eager" : "lazy"}
-          style={isActive ? { y: useTransform(y, [-200, 200], [12, -12]) } : undefined}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background: `linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.85) 100%), linear-gradient(135deg, ${trail.accentFrom ?? "#7c2d12"}33, transparent 60%)`,
-          }}
-        />
-      </div>
+      <TrailCover trail={trail} y={y} isActive={isActive} offset={offset} />
 
       {/* Top row */}
       <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-5 sm:p-7">
