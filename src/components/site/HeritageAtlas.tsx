@@ -183,47 +183,52 @@ function MapCanvas({
   setSelected: (s: HeritageSite | null) => void;
 }) {
   return (
-    <div className="relative h-full w-full">
-      <svg
-        viewBox={indiaMap.viewBox}
-        preserveAspectRatio="xMidYMid meet"
-        className="absolute inset-0 h-full w-full"
+    <div className="absolute inset-0 grid place-items-center p-4 sm:p-6">
+      <div
+        className="relative h-full"
+        style={{ aspectRatio: `${indiaMap.width} / ${indiaMap.height}` }}
       >
-        {/* Land fill */}
-        <path d={indiaMap.outline} fill="#fafaf6" stroke="#c8bfa9" strokeWidth={1.4} />
-        {/* State borders */}
-        <path d={indiaMap.states} fill="none" stroke="#d8cfb8" strokeWidth={0.6} />
-        {/* Drop shadow under land */}
-        <path
-          d={indiaMap.outline}
-          fill="none"
-          stroke="rgba(80,60,30,0.08)"
-          strokeWidth={4}
-          transform="translate(0,2)"
-        />
-      </svg>
+        <svg
+          viewBox={indiaMap.viewBox}
+          preserveAspectRatio="xMidYMid meet"
+          className="absolute inset-0 h-full w-full"
+        >
+          {/* Soft shadow under land */}
+          <path
+            d={indiaMap.outline}
+            fill="none"
+            stroke="rgba(80,60,30,0.10)"
+            strokeWidth={6}
+            transform="translate(0,3)"
+          />
+          {/* Land fill */}
+          <path d={indiaMap.outline} fill="#fffdf7" stroke="#7c6f4f" strokeWidth={1.4} />
+          {/* State borders */}
+          <path d={indiaMap.states} fill="none" stroke="#c8bea0" strokeWidth={0.7} />
+        </svg>
 
-      {/* Pushpins layer */}
-      <div className="absolute inset-0">
-        {visible.map((site) => {
-          const { x, y } = project(site.lon, site.lat);
-          const color = categoryStyles[site.category].color;
-          const isHover = hover === site.id;
-          const isActive = selected?.id === site.id;
-          return (
-            <button
-              key={site.id}
-              onClick={() => setSelected(site)}
-              onMouseEnter={() => setHover(site.id)}
-              onMouseLeave={() => setHover(hover === site.id ? null : hover)}
-              title={site.name}
-              className="group absolute -translate-x-1/2 -translate-y-full focus:outline-none"
-              style={{ left: `${x}%`, top: `${y}%`, zIndex: isHover || isActive ? 50 : 10 }}
-            >
-              <Pushpin color={color} active={isHover || isActive} />
-            </button>
-          );
-        })}
+        {/* Pushpins layer — uses the SAME 0-100% coordinate space as the SVG */}
+        <div className="absolute inset-0">
+          {visible.map((site) => {
+            const { x, y } = project(site.lon, site.lat);
+            const color = categoryStyles[site.category].color;
+            const isHover = hover === site.id;
+            const isActive = selected?.id === site.id;
+            return (
+              <button
+                key={site.id}
+                onClick={() => setSelected(site)}
+                onMouseEnter={() => setHover(site.id)}
+                onMouseLeave={() => setHover(hover === site.id ? null : hover)}
+                title={site.name}
+                className="group absolute -translate-x-1/2 -translate-y-full focus:outline-none"
+                style={{ left: `${x}%`, top: `${y}%`, zIndex: isHover || isActive ? 50 : 10 }}
+              >
+                <Pushpin color={color} active={isHover || isActive} />
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
