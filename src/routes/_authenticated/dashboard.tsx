@@ -3,15 +3,15 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { Award, Coins, Compass, Map, Sparkles, Gift } from "lucide-react";
 import { motion } from "framer-motion";
-import { getMyState } from "@/lib/kaal.functions";
+import { getMyState } from "@/lib/virsa.functions";
 import { trails } from "@/lib/trails-data";
 import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
-      { title: "Dashboard — KAAL Heritage" },
-      { name: "description", content: "Your Kaal Coins, trails, and achievements." },
+      { title: "Dashboard — VIRSA Heritage" },
+      { name: "description", content: "Your Virsa Coins, trails, and achievements." },
     ],
   }),
   component: DashboardPage,
@@ -55,11 +55,11 @@ function DashboardPage() {
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <p className="text-xs uppercase tracking-[0.28em] text-primary/90">Welcome back</p>
           <h1 className="mt-2 font-display text-4xl sm:text-5xl">{userName}.</h1>
-          <p className="mt-2 text-muted-foreground">Here's where your journey through KAAL stands today.</p>
+          <p className="mt-2 text-muted-foreground">Here's where your journey through VIRSA stands today.</p>
         </motion.div>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard icon={Coins} label="Kaal Coins" value={data.balance.toString()} accent />
+          <StatCard icon={Coins} label="Virsa Coins" value={data.balance.toString()} accent />
           <StatCard icon={Map} label="Sites visited" value={data.progress.length.toString()} />
           <StatCard icon={Compass} label="Trails active" value={completedTrails.size.toString()} />
           <StatCard icon={Award} label="Trails completed" value={fullyDone.toString()} />

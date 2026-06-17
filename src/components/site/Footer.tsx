@@ -11,7 +11,7 @@ export function Footer() {
               <span className="grid h-9 w-9 place-items-center rounded-xl gradient-ember text-primary-foreground">
                 <Compass className="h-4.5 w-4.5" strokeWidth={2.4} />
               </span>
-              <span className="font-display text-2xl">KAAL</span>
+              <span className="font-display text-2xl">VIRSA</span>
             </div>
             <p className="mt-5 text-muted-foreground text-pretty">
               Knowledge Archive of Ancestral Legacy — a non-profit, AI-powered
@@ -44,7 +44,7 @@ export function Footer() {
         </div>
 
         <div className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-muted-foreground">
-          <span>© {new Date().getFullYear()} KAAL · Knowledge Archive of Ancestral Legacy</span>
+          <span>© {new Date().getFullYear()} VIRSA · Knowledge Archive of Ancestral Legacy</span>
           <span>Made with care, across 28 states.</span>
         </div>
       </div>

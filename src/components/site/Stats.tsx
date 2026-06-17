@@ -43,7 +43,7 @@ export function Stats() {
             </h2>
           </div>
           <p className="max-w-sm text-sm text-muted-foreground">
-            Every entry on KAAL is a thread in a vast cultural tapestry — woven
+            Every entry on VIRSA is a thread in a vast cultural tapestry — woven
             by elders, students, artists, and strangers across the subcontinent.
           </p>
         </div>

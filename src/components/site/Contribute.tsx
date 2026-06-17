@@ -29,7 +29,7 @@ type SavedContribution = {
   createdAt: string;
 };
 
-const STORE_KEY = "kaal:contributions:v1";
+const STORE_KEY = "virsa:contributions:v1";
 
 function saveContribution(c: SavedContribution) {
   try {
@@ -63,7 +63,7 @@ export function Contribute() {
               </h2>
               <p className="mt-6 max-w-xl text-foreground/80 text-lg text-pretty">
                 Upload a recording, a recipe, a photograph or a single sentence
-                in a tongue your village still speaks. KAAL transcribes,
+                in a tongue your village still speaks. VIRSA transcribes,
                 translates and tags it — and places it on India's living map.
               </p>
 
@@ -255,7 +255,7 @@ function VoicePanel({ onClose }: { onClose: () => void }) {
       durationSec: seconds,
       createdAt: new Date().toISOString(),
     });
-    toast.success("Voice memo saved to KAAL", { description: "Thanks for adding a memory." });
+    toast.success("Voice memo saved to VIRSA", { description: "Thanks for adding a memory." });
     onClose();
   };
 
@@ -320,7 +320,7 @@ function FilePanel({
       fileSize: file.size,
       createdAt: new Date().toISOString(),
     });
-    toast.success(`${kind === "photo" ? "Photo" : "Video"} saved to KAAL`, { description: "Thanks for adding a memory." });
+    toast.success(`${kind === "photo" ? "Photo" : "Video"} saved to VIRSA`, { description: "Thanks for adding a memory." });
     onClose();
   };
 
@@ -363,7 +363,7 @@ function TextPanel({ onClose }: { onClose: () => void }) {
       textBody: body.trim(),
       createdAt: new Date().toISOString(),
     });
-    toast.success("Story saved to KAAL", { description: "Thanks for adding a memory." });
+    toast.success("Story saved to VIRSA", { description: "Thanks for adding a memory." });
     onClose();
   };
 

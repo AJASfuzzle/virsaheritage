@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Bot, Loader2, Send, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { askKaal } from "@/lib/ai-chat.functions";
+import { askVirsa } from "@/lib/ai-chat.functions";
 import { toast } from "sonner";
 
 const examples = [
@@ -27,7 +27,7 @@ export function Assistant() {
   const [messages, setMessages] = useState<Msg[]>(seed);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const ask = useServerFn(askKaal);
+  const ask = useServerFn(askVirsa);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -70,7 +70,7 @@ export function Assistant() {
               <span className="italic text-gradient-ember">she remembers.</span>
             </h2>
             <p className="mt-5 max-w-lg text-muted-foreground text-pretty text-lg">
-              A research-grade assistant trained on KAAL's archive. Every answer
+              A research-grade assistant trained on VIRSA's archive. Every answer
               comes with maps, images, related memories and sources.
             </p>
             <div className="mt-7 flex flex-wrap gap-2">
@@ -95,7 +95,7 @@ export function Assistant() {
             className="rounded-[2rem] glass grain p-5 sm:p-7 shadow-[var(--shadow-soft)]"
           >
             <div className="flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-muted-foreground">
-              <span className="h-2 w-2 rounded-full bg-jade animate-pulse-pin" /> Live · KAAL Assistant
+              <span className="h-2 w-2 rounded-full bg-jade animate-pulse-pin" /> Live · VIRSA Assistant
             </div>
 
             <div ref={scrollRef} className="mt-5 space-y-4 max-h-[420px] overflow-y-auto pr-1">
@@ -131,7 +131,7 @@ export function Assistant() {
                     <Bot className="h-4 w-4" />
                   </div>
                   <div className="rounded-2xl rounded-tl-md bg-background/40 ring-1 ring-white/10 px-4 py-3 text-sm text-muted-foreground inline-flex items-center gap-2">
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" /> KAAL is remembering…
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" /> VIRSA is remembering…
                   </div>
                 </div>
               )}

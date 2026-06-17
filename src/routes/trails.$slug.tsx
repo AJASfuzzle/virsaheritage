@@ -6,7 +6,7 @@ import { ArrowLeft, CalendarRange, CheckCircle2, Clock, Coins, Footprints, Light
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { getTrail, trails, type Trail } from "@/lib/trails-data";
-import { listTrailSites, getMyState, checkInAtSite } from "@/lib/kaal.functions";
+import { listTrailSites, getMyState, checkInAtSite } from "@/lib/virsa.functions";
 import { useAuth } from "@/hooks/use-auth";
 import { AudioCompanion } from "@/components/site/AudioCompanion";
 
@@ -20,8 +20,8 @@ export const Route = createFileRoute("/trails/$slug")({
     const t = loaderData?.trail;
     return {
       meta: [
-        { title: t ? `${t.title} — Heritage Trail · KAAL` : "Trail — KAAL" },
-        { name: "description", content: t?.intro ?? "A KAAL heritage trail." },
+        { title: t ? `${t.title} — Heritage Trail · VIRSA` : "Trail — VIRSA" },
+        { name: "description", content: t?.intro ?? "A VIRSA heritage trail." },
         { property: "og:title", content: t?.title ?? "Heritage Trail" },
         { property: "og:description", content: t?.intro ?? "" },
       ],
@@ -102,7 +102,7 @@ function TrailDetail() {
 
   function attemptCheckIn(site: Site, force: boolean) {
     if (!user) {
-      toast.info("Sign in to check in and earn Kaal Coins.");
+      toast.info("Sign in to check in and earn Virsa Coins.");
       return;
     }
     setPendingId(site.id);
@@ -191,7 +191,7 @@ function TrailDetail() {
                 <CalendarRange className="h-3.5 w-3.5" /> {trail.bestSeason}
               </span>
               <span className="text-xs text-primary inline-flex items-center gap-1.5">
-                <Coins className="h-3.5 w-3.5" /> up to {totalCoinsAvailable} Kaal Coins
+                <Coins className="h-3.5 w-3.5" /> up to {totalCoinsAvailable} Virsa Coins
               </span>
               {trail.distance && (
                 <span className="text-xs text-muted-foreground inline-flex items-center gap-1.5">
@@ -365,7 +365,7 @@ function TrailDetail() {
               <h3 className="mt-6 font-display text-3xl text-balance">Heritage Site Discovered.</h3>
               <p className="mt-2 text-muted-foreground">{celebration.name}</p>
               <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary/15 px-4 py-2 text-sm text-primary ring-1 ring-primary/30">
-                <Coins className="h-4 w-4" /> +{celebration.earned} Kaal Coins
+                <Coins className="h-4 w-4" /> +{celebration.earned} Virsa Coins
               </div>
               {celebration.trailComplete && (
                 <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-jade/15 px-4 py-2 text-sm text-jade ring-1 ring-jade/30">

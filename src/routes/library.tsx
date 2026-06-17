@@ -6,9 +6,9 @@ import { Search, Clock, Sparkles, X, ArrowRight, BookOpen } from "lucide-react";
 export const Route = createFileRoute("/library")({
   head: () => ({
     meta: [
-      { title: "The Library of KAAL — A Curated Archive of Living History" },
+      { title: "The Library of VIRSA — A Curated Archive of Living History" },
       { name: "description", content: "Wander shelves of civilizations, languages, legends, architecture, art, and music. Every story opens another door through time." },
-      { property: "og:title", content: "The Library of KAAL" },
+      { property: "og:title", content: "The Library of VIRSA" },
       { property: "og:description", content: "A curated archive where every shelf whispers another forgotten story." },
     ],
   }),
@@ -187,7 +187,7 @@ function LibraryPage() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="font-display text-5xl leading-[1.02] tracking-tight sm:text-7xl"
         >
-          The Library of <span className="text-gradient-ember italic">KAAL</span>
+          The Library of <span className="text-gradient-ember italic">VIRSA</span>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 14 }}
@@ -264,7 +264,7 @@ function LibraryPage() {
             <p className="mb-2 flex items-center gap-2 text-xs uppercase tracking-[0.28em] text-[color:var(--accent)]">
               <Sparkles className="h-3.5 w-3.5" /> Curator’s Selections
             </p>
-            <h2 className="font-display text-3xl sm:text-4xl">Handpicked by KAAL</h2>
+            <h2 className="font-display text-3xl sm:text-4xl">Handpicked by VIRSA</h2>
           </div>
         </div>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

@@ -68,7 +68,7 @@ const items: Item[] = [
     contributor: "Lakshmi Amma",
     age: 78,
     story:
-      "In our tharavad in Alappuzha, the Onam sadhya was never just a meal — it was a calendar of the year laid out on a banana leaf. The leaf must be placed with the tip to the left; the parippu and ghee go first, because the ancestors taught us that lentils were the first cooked food humans ever made. Then olan, kaalan, avial, thoran — each curry in its place, each with its own season, its own soil, its own memory. The payasam at the end is poured slowly so that the elders can bless it before the children dip their fingers. My mother could make twenty-six dishes on a wood stove with one helper. I cook only sixteen now, and my daughters tease me, but each one I cook with the same prayer my mother whispered: that the harvest was kind, the rains were honest, and the table is full enough to invite a stranger.",
+      "In our tharavad in Alappuzha, the Onam sadhya was never just a meal — it was a calendar of the year laid out on a banana leaf. The leaf must be placed with the tip to the left; the parippu and ghee go first, because the ancestors taught us that lentils were the first cooked food humans ever made. Then olan, virsaan, avial, thoran — each curry in its place, each with its own season, its own soil, its own memory. The payasam at the end is poured slowly so that the elders can bless it before the children dip their fingers. My mother could make twenty-six dishes on a wood stove with one helper. I cook only sixteen now, and my daughters tease me, but each one I cook with the same prayer my mother whispered: that the harvest was kind, the rains were honest, and the table is full enough to invite a stranger.",
   },
   {
     img: dance,
@@ -182,7 +182,7 @@ export function Traditions() {
               </div>
 
               <p className="mt-2 text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-                Submitted to KAAL · transcribed & translated by AI
+                Submitted to VIRSA · transcribed & translated by AI
               </p>
             </>
           )}

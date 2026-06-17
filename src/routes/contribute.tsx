@@ -4,9 +4,9 @@ import { Contribute } from "@/components/site/Contribute";
 export const Route = createFileRoute("/contribute")({
   head: () => ({
     meta: [
-      { title: "Contribute a Memory — KAAL" },
-      { name: "description", content: "Upload a recording, recipe, photograph or sentence in a tongue your village still speaks. KAAL transcribes, translates and tags it." },
-      { property: "og:title", content: "Contribute a Memory — KAAL" },
+      { title: "Contribute a Memory — VIRSA" },
+      { name: "description", content: "Upload a recording, recipe, photograph or sentence in a tongue your village still speaks. VIRSA transcribes, translates and tags it." },
+      { property: "og:title", content: "Contribute a Memory — VIRSA" },
       { property: "og:description", content: "Your grandmother knows a story India must remember." },
     ],
   }),

@@ -24,7 +24,7 @@ export function Features() {
             Ten ways to <span className="italic text-gradient-ember">remember a country</span>
           </h2>
           <p className="mt-5 text-muted-foreground text-lg text-pretty">
-            KAAL pairs human stories with machine intelligence — translating,
+            VIRSA pairs human stories with machine intelligence — translating,
             transcribing, connecting and visualising the heritage that defines us.
           </p>
         </div>

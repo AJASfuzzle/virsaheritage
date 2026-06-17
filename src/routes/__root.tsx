@@ -82,9 +82,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "KAAL — India's Living Memory & Heritage Atlas" },
+      { title: "VIRSA — India's Living Memory & Heritage Atlas" },
       { name: "description", content: "An AI-powered atlas preserving India's languages, stories, recipes and traditions." },
-      { name: "author", content: "KAAL" },
+      { name: "author", content: "VIRSA" },
     ],
     links: [
       {

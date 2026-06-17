@@ -12,7 +12,7 @@ export function FloatingAssistantButton() {
         <Bot className="h-5 w-5" strokeWidth={2.2} />
       </span>
       <span className="hidden sm:block rounded-full glass px-3 py-1.5 text-xs font-medium text-foreground/90 opacity-0 -translate-x-2 transition-all duration-500 group-hover:opacity-100 group-hover:translate-x-0">
-        Ask KAAL
+        Ask VIRSA
       </span>
     </Link>
   );

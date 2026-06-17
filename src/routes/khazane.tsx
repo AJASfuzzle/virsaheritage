@@ -5,16 +5,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, CalendarRange, Clock, Coins, Gift, MapPin, Loader2, Sparkles, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { listRewards, getMyState, redeemReward } from "@/lib/kaal.functions";
+import { listRewards, getMyState, redeemReward } from "@/lib/virsa.functions";
 import { useAuth } from "@/hooks/use-auth";
 import { trails, type Trail } from "@/lib/trails-data";
 
 export const Route = createFileRoute("/khazane")({
   head: () => ({
     meta: [
-      { title: "Khazane — Treasures Beyond Time · KAAL" },
-      { name: "description", content: "Redeem Kaal Coins for heritage experiences, hand-bound journals, art prints and exclusive archives." },
-      { property: "og:title", content: "Khazane · KAAL" },
+      { title: "Khazane — Treasures Beyond Time · VIRSA" },
+      { name: "description", content: "Redeem Virsa Coins for heritage experiences, hand-bound journals, art prints and exclusive archives." },
+      { property: "og:title", content: "Khazane · VIRSA" },
       { property: "og:description", content: "Unlock treasures beyond time." },
     ],
   }),
@@ -110,14 +110,14 @@ function KhazanePage() {
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7, delay: 0.15 }}
           className="mt-5 mx-auto max-w-2xl text-muted-foreground text-pretty"
         >
-          Every check-in earns Kaal Coins. Trade them for guided experiences in the field, hand-bound objects for your shelf, and exclusive entries from the KAAL archive.
+          Every check-in earns Virsa Coins. Trade them for guided experiences in the field, hand-bound objects for your shelf, and exclusive entries from the VIRSA archive.
         </motion.p>
 
         {user ? (
           <div className="mt-7 inline-flex items-center gap-2 rounded-full glass px-4 py-2 text-sm">
             <Coins className="h-4 w-4 text-primary" />
             <span className="text-muted-foreground">Balance</span>
-            <span className="text-foreground font-medium">{state?.balance ?? 0} Kaal Coins</span>
+            <span className="text-foreground font-medium">{state?.balance ?? 0} Virsa Coins</span>
           </div>
         ) : (
           <div className="mt-7 inline-flex items-center gap-3 rounded-full glass px-4 py-2 text-sm">
@@ -351,7 +351,7 @@ function KhazanePage() {
               <div className="mx-auto h-20 w-20 rounded-full gradient-ember grid place-items-center shadow-[0_30px_60px_-15px_oklch(0.72_0.18_55/0.8)]">
                 <Sparkles className="h-9 w-9 text-primary-foreground" />
               </div>
-              <h3 className="mt-6 font-display text-3xl text-balance">You've unlocked a piece of KAAL.</h3>
+              <h3 className="mt-6 font-display text-3xl text-balance">You've unlocked a piece of VIRSA.</h3>
               <p className="mt-2 text-muted-foreground">{celebration}</p>
               <button onClick={() => setCelebration(null)} className="btn-glossy mt-6 inline-flex items-center rounded-full gradient-ember px-5 py-2 text-sm font-semibold text-primary-foreground">
                 Continue exploring

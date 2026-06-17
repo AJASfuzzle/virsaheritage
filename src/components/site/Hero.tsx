@@ -45,7 +45,7 @@ export function Hero() {
           transition={{ duration: 0.9, delay: 0.25 }}
           className="mt-7 max-w-2xl text-lg text-foreground/80 text-pretty sm:text-xl"
         >
-          KAAL is India's living archive — preserving the languages, stories,
+          VIRSA is India's living archive — preserving the languages, stories,
           recipes, songs and traditions that exist only in the memory of those
           who carry them. Explore a country, one whisper at a time.
         </motion.p>

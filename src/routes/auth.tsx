@@ -16,8 +16,8 @@ export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Sign in — KAAL Heritage" },
-      { name: "description", content: "Sign in to track your trails, earn Kaal Coins and redeem treasures from Khazane." },
+      { title: "Sign in — VIRSA Heritage" },
+      { name: "description", content: "Sign in to track your trails, earn Virsa Coins and redeem treasures from Khazane." },
     ],
   }),
   component: AuthPage,
@@ -77,7 +77,7 @@ function AuthPage() {
           toast.error(error.message);
           return;
         }
-        toast.success("Welcome to KAAL. Check your inbox to confirm.");
+        toast.success("Welcome to VIRSA. Check your inbox to confirm.");
         navigate({ to: redirectTo });
       } else {
         const parsed = signInSchema.safeParse({ email: form.email, password: form.password });
@@ -146,7 +146,7 @@ function AuthPage() {
           </h1>
           <p className="mt-6 max-w-md text-foreground/75 text-pretty leading-relaxed">
             Sign in to track heritage trails, earn{" "}
-            <span className="italic text-primary">Kaal Coins</span> for every site
+            <span className="italic text-primary">Virsa Coins</span> for every site
             you visit, and unlock treasures from the Khazane.
           </p>
           <ul className="mt-8 space-y-3 text-sm text-foreground/70">
@@ -295,7 +295,7 @@ function AuthPage() {
                   <button onClick={() => setMode("signup")} className="text-primary hover:underline">Create one</button>
                 </>
               ) : (
-                <>Already with KAAL?{" "}
+                <>Already with VIRSA?{" "}
                   <button onClick={() => setMode("signin")} className="text-primary hover:underline">Sign in</button>
                 </>
               )}
@@ -303,7 +303,7 @@ function AuthPage() {
           </div>
 
           <p className="mt-4 text-center text-[11px] text-muted-foreground">
-            <Link to="/" className="hover:text-foreground transition">← Back to KAAL</Link>
+            <Link to="/" className="hover:text-foreground transition">← Back to VIRSA</Link>
           </p>
         </motion.div>
       </div>

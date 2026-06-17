@@ -77,7 +77,7 @@ const eras: Era[] = [
     year: 2026,
     tag: "Living Atlas",
     title: "Twenty-eight states, a thousand crafts",
-    body: "GI tags, e-commerce and KAAL itself now help artisans reach the world. New states — Telangana, Uttarakhand, Jharkhand, Chhattisgarh — formalise crafts that had always been there. Memory becomes a map you can search.",
+    body: "GI tags, e-commerce and VIRSA itself now help artisans reach the world. New states — Telangana, Uttarakhand, Jharkhand, Chhattisgarh — formalise crafts that had always been there. Memory becomes a map you can search.",
     mapLabel: "Present-day states & union territories, 2026",
     crafts: [
       { region: "Telangana", craft: "Pochampally Ikat & Bidriware", note: "India's first GI-tagged handloom; double-ikat silk-cotton from Bhoodan Pochampally." },
