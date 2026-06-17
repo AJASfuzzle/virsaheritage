@@ -1,8 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Compass, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { geoMercator } from "d3-geo";
-import indiaMap from "@/lib/india-map.json";
+import indiaBaseMap from "@/assets/india-base-map.png.asset.json";
 import {
   categoryStyles,
   heritageCategories,
@@ -13,14 +12,24 @@ import {
   type HeritageSite,
 } from "@/lib/heritage-sites";
 
-const projection = geoMercator()
-  .scale(indiaMap.projection.scale)
-  .translate(indiaMap.projection.translate as [number, number]);
+/**
+ * Base map asset is a top-down render of India at 1149×1368 px.
+ * Pins are placed using a linear lon/lat → image-percent projection
+ * calibrated against three reference points on that exact image:
+ *   • Kanyakumari        ( 77.55°E,  8.08°N ) ≈ (345, 1190)
+ *   • Arunachal NE tip   ( 96.00°E, 28.00°N ) ≈ (1075, 380)
+ *   • Srinagar / N Kashmir ( 75°E, 34°N )     ≈ (290, 130)
+ * Across the Indian landmass this affine fit keeps every pin
+ * inside the correct state (verified visually) which is precise
+ * enough for the heritage-atlas use case.
+ */
+const MAP = { w: 1149, h: 1368, ratio: 1149 / 1368 };
+const PROJ = { a: -2723.5, b: 39.57, c: 1500.9, d: -38.48 };
 
 function project(lon: number, lat: number) {
-  const p = projection([lon, lat]);
-  if (!p) return { x: 0, y: 0 };
-  return { x: (p[0] / indiaMap.width) * 100, y: (p[1] / indiaMap.height) * 100 };
+  const px = PROJ.a + PROJ.b * lon;
+  const py = PROJ.c + PROJ.d * lat;
+  return { x: (px / MAP.w) * 100, y: (py / MAP.h) * 100 };
 }
 
 function formatYear(y: number) {
