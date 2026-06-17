@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useMotionValue, useTransform, type PanInfo } from "framer-motion";
-import { ArrowRight, Bookmark, Clock, Coins, Footprints, MapPin, MountainSnow, Share2, Sparkles } from "lucide-react";
+import { ArrowRight, Bookmark, ChevronDown, ChevronUp, Clock, Coins, Footprints, MapPin, MountainSnow, Share2, Sparkles } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
