@@ -116,7 +116,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Dynasty", value: "Pallava" },
       { label: "UNESCO", value: "World Heritage Site (1984)" },
     ],
-    imageUrl: img("photo-1605649487212-47bdab064df7"),
+    imageUrl: img("photo-1524492412937-b28074a5d7da"),
   },
   {
     id: "sanchi", name: "Sanchi Stupa", category: "Archaeology",
@@ -344,7 +344,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Dynasty", value: "Madurai Nayakas" },
       { label: "Gopurams", value: "14" },
     ],
-    imageUrl: img("photo-1561361513-2d000a50f0dc"),
+    imageUrl: img("photo-1518998053901-5348d3961a04"),
   },
   {
     id: "golden-temple", name: "Harmandir Sahib (Golden Temple)", category: "Architecture",
@@ -359,7 +359,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Tradition", value: "Sikhism" },
       { label: "Langar", value: "~100,000 meals/day" },
     ],
-    imageUrl: img("photo-1582510003544-4d00b7f74220"),
+    imageUrl: img("photo-1602002418082-a4443e081dd1"),
   },
   {
     id: "mysore-palace", name: "Mysore Palace", category: "Architecture",
@@ -421,7 +421,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Dynasty", value: "Chandela" },
       { label: "UNESCO", value: "World Heritage Site (1986)" },
     ],
-    imageUrl: img("photo-1473625247510-8ceb1760943f"),
+    imageUrl: img("photo-1571536802807-30451e3955d8"),
   },
   {
     id: "madhubani", name: "Madhubani Painting Villages", category: "Art & Crafts",
@@ -466,7 +466,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "GI tag", value: "2005" },
       { label: "Wood used", value: "Wrightia tinctoria (aale mara)" },
     ],
-    imageUrl: img("photo-1564507592333-c60657eea523"),
+    imageUrl: img("photo-1593693411515-c20261bcad6e"),
   },
   {
     id: "tanjore-paintings", name: "Tanjore Paintings", category: "Art & Crafts",
@@ -495,7 +495,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "GI tag", value: "2005" },
       { label: "Technique", value: "Korvai (interlocked borders)" },
     ],
-    imageUrl: img("photo-1610030469983-98e550d6193c"),
+    imageUrl: img("photo-1547036967-23d11aacaee0"),
   },
 
   // ────────── LIVING HERITAGE ──────────
@@ -512,7 +512,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Founder", value: "Rao Jaisal Bhati" },
       { label: "UNESCO", value: "Hill Forts of Rajasthan (2013)" },
     ],
-    imageUrl: img("photo-1599661046289-e31897846e41"),
+    imageUrl: img("photo-1564507004663-b6dfb3c824d5"),
   },
   {
     id: "varanasi", name: "Varanasi Ghats", category: "Living Heritage",
@@ -587,7 +587,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Tradition", value: "Neo-Vaishnavism (Sankardev)" },
       { label: "Famous for", value: "Sattriya dance" },
     ],
-    imageUrl: img("photo-1623059508779-2542c6e83753"),
+    imageUrl: img("photo-1609766857041-ed402ea8069a"),
   },
 ];
 
