@@ -360,12 +360,16 @@ function LibraryPage() {
         </div>
       </section>
 
+      {/* Contribute — Family Heritage Archive */}
+      <ContributeBanner />
+
       {/* Shelves */}
       <section className="mx-auto max-w-6xl space-y-20 px-6 pb-32">
         {SHELVES.map((shelf, i) => (
           <Shelf key={shelf.id} shelf={shelf} index={i} onOpen={setActive} />
         ))}
       </section>
+
 
       {/* Story modal */}
       <StoryModal story={active} onClose={() => setActive(null)} />
