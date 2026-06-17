@@ -13,6 +13,7 @@ import { Route as TrailsRouteImport } from './routes/trails'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as KitabRouteImport } from './routes/kitab'
 import { Route as KhazaneRouteImport } from './routes/khazane'
+import { Route as EchoesRouteImport } from './routes/echoes'
 import { Route as ContributeRouteImport } from './routes/contribute'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AtlasRouteImport } from './routes/atlas'
@@ -47,6 +48,11 @@ const KitabRoute = KitabRouteImport.update({
 const KhazaneRoute = KhazaneRouteImport.update({
   id: '/khazane',
   path: '/khazane',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EchoesRoute = EchoesRouteImport.update({
+  id: '/echoes',
+  path: '/echoes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContributeRoute = ContributeRouteImport.update({
@@ -84,9 +90,9 @@ const TrailsIndexRoute = TrailsIndexRouteImport.update({
   getParentRoute: () => TrailsRoute,
 } as any)
 const EchoesIndexRoute = EchoesIndexRouteImport.update({
-  id: '/echoes/',
-  path: '/echoes/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => EchoesRoute,
 } as any)
 const TrailsSlugRoute = TrailsSlugRouteImport.update({
   id: '/$slug',
@@ -132,6 +138,7 @@ export interface FileRoutesByFullPath {
   '/atlas': typeof AtlasRoute
   '/auth': typeof AuthRoute
   '/contribute': typeof ContributeRoute
+  '/echoes': typeof EchoesRouteWithChildren
   '/khazane': typeof KhazaneRoute
   '/kitab': typeof KitabRoute
   '/library': typeof LibraryRoute
@@ -173,6 +180,7 @@ export interface FileRoutesById {
   '/atlas': typeof AtlasRoute
   '/auth': typeof AuthRoute
   '/contribute': typeof ContributeRoute
+  '/echoes': typeof EchoesRouteWithChildren
   '/khazane': typeof KhazaneRoute
   '/kitab': typeof KitabRoute
   '/library': typeof LibraryRoute
@@ -195,6 +203,7 @@ export interface FileRouteTypes {
     | '/atlas'
     | '/auth'
     | '/contribute'
+    | '/echoes'
     | '/khazane'
     | '/kitab'
     | '/library'
@@ -235,6 +244,7 @@ export interface FileRouteTypes {
     | '/atlas'
     | '/auth'
     | '/contribute'
+    | '/echoes'
     | '/khazane'
     | '/kitab'
     | '/library'
@@ -257,11 +267,11 @@ export interface RootRouteChildren {
   AtlasRoute: typeof AtlasRoute
   AuthRoute: typeof AuthRoute
   ContributeRoute: typeof ContributeRoute
+  EchoesRoute: typeof EchoesRouteWithChildren
   KhazaneRoute: typeof KhazaneRoute
   KitabRoute: typeof KitabRoute
   LibraryRoute: typeof LibraryRoute
   TrailsRoute: typeof TrailsRouteWithChildren
-  EchoesIndexRoute: typeof EchoesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -292,6 +302,13 @@ declare module '@tanstack/react-router' {
       path: '/khazane'
       fullPath: '/khazane'
       preLoaderRoute: typeof KhazaneRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/echoes': {
+      id: '/echoes'
+      path: '/echoes'
+      fullPath: '/echoes'
+      preLoaderRoute: typeof EchoesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contribute': {
@@ -345,10 +362,10 @@ declare module '@tanstack/react-router' {
     }
     '/echoes/': {
       id: '/echoes/'
-      path: '/echoes'
+      path: '/'
       fullPath: '/echoes/'
       preLoaderRoute: typeof EchoesIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof EchoesRoute
     }
     '/trails/$slug': {
       id: '/trails/$slug'
@@ -419,6 +436,21 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface EchoesRouteChildren {
+  EchoesPostIdRoute: typeof EchoesPostIdRoute
+  EchoesIndexRoute: typeof EchoesIndexRoute
+  EchoesProfileUserIdRoute: typeof EchoesProfileUserIdRoute
+}
+
+const EchoesRouteChildren: EchoesRouteChildren = {
+  EchoesPostIdRoute: EchoesPostIdRoute,
+  EchoesIndexRoute: EchoesIndexRoute,
+  EchoesProfileUserIdRoute: EchoesProfileUserIdRoute,
+}
+
+const EchoesRouteWithChildren =
+  EchoesRoute._addFileChildren(EchoesRouteChildren)
+
 interface TrailsRouteChildren {
   TrailsSlugRoute: typeof TrailsSlugRoute
   TrailsIndexRoute: typeof TrailsIndexRoute
@@ -439,22 +471,12 @@ const rootRouteChildren: RootRouteChildren = {
   AtlasRoute: AtlasRoute,
   AuthRoute: AuthRoute,
   ContributeRoute: ContributeRoute,
+  EchoesRoute: EchoesRouteWithChildren,
   KhazaneRoute: KhazaneRoute,
   KitabRoute: KitabRoute,
   LibraryRoute: LibraryRoute,
   TrailsRoute: TrailsRouteWithChildren,
-  EchoesIndexRoute: EchoesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
