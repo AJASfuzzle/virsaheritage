@@ -255,51 +255,72 @@ function TrailDetail() {
                   <span className={`absolute -left-[42px] top-1 grid h-8 w-8 place-items-center rounded-full ${checked ? "bg-jade text-background" : "gradient-ember text-primary-foreground"} font-display text-sm shadow-[0_8px_22px_-8px_oklch(0.74_0.13_75/0.7)]`}>
                     {checked ? <CheckCircle2 className="h-4 w-4" /> : i + 1}
                   </span>
-                  <div className={`rounded-2xl glass p-5 ring-1 ${checked ? "ring-jade/40" : "ring-white/5"} transition`}>
-                    <div className="flex items-baseline justify-between gap-3 flex-wrap">
-                      <h3 className="font-display text-xl">{s.name}</h3>
-                      <span className="text-xs text-muted-foreground inline-flex items-center gap-1.5">
-                        <MapPin className="h-3 w-3 text-primary" /> {s.place}
-                      </span>
-                    </div>
-                    <p className="mt-2 text-sm text-foreground/80 leading-relaxed text-pretty">
-                      {s.blurb}
-                    </p>
-                    {site && (
-                      <div className="mt-4 flex items-center justify-between gap-3 flex-wrap">
-                        <div className="inline-flex items-center gap-3 text-xs text-muted-foreground">
-                          <span className="inline-flex items-center gap-1 text-primary"><Coins className="h-3 w-3" />{site.coin_reward}</span>
-                          <span>radius {site.radius_m}m</span>
-                        </div>
-                        {checked ? (
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-jade/15 text-jade ring-1 ring-jade/30 px-3 py-1 text-xs font-medium">
-                            <CheckCircle2 className="h-3.5 w-3.5" /> Visited
-                          </span>
-                        ) : (
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => attemptCheckIn(site, false)}
-                              disabled={isPending || !user}
-                              className="btn-glossy inline-flex items-center gap-1.5 rounded-full gradient-ember px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-[0_8px_22px_-8px_oklch(0.72_0.18_55/0.7)] disabled:opacity-50"
-                            >
-                              {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Navigation className="h-3.5 w-3.5" />}
-                              Check in here
-                            </button>
-                            {user && import.meta.env.DEV && (
-                              <button
-                                onClick={() => attemptCheckIn(site, true)}
-                                disabled={isPending}
-                                title="Demo check-in (dev only) — bypasses geolocation"
-                                className="rounded-full bg-white/5 text-foreground/60 hover:text-foreground px-2.5 py-1.5 text-[11px] ring-1 ring-white/10 transition"
-                              >
-                                Demo
-                              </button>
-                            )}
-                          </div>
-                        )}
+                  <div className={`overflow-hidden rounded-2xl glass ring-1 ${checked ? "ring-jade/40" : "ring-white/5"} transition`}>
+                    {s.imageUrl && (
+                      <div className="relative aspect-[16/7] w-full overflow-hidden">
+                        <img src={s.imageUrl} alt={s.name} className="h-full w-full object-cover" loading="lazy" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
                       </div>
                     )}
+                    <div className="p-5">
+                      <div className="flex items-baseline justify-between gap-3 flex-wrap">
+                        <h3 className="font-display text-xl">{s.name}</h3>
+                        <span className="text-xs text-muted-foreground inline-flex items-center gap-1.5">
+                          <MapPin className="h-3 w-3 text-primary" /> {s.place}
+                        </span>
+                      </div>
+                      <p className="mt-2 text-sm text-foreground/80 leading-relaxed text-pretty">
+                        {s.story ?? s.blurb}
+                      </p>
+
+                      {s.secret && (
+                        <div className="mt-4 rounded-xl bg-primary/5 ring-1 ring-primary/20 p-3.5">
+                          <div className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.18em] text-primary">
+                            <Lightbulb className="h-3 w-3" /> {s.secret.kind}
+                          </div>
+                          <p className="mt-1 text-sm text-foreground/85 italic leading-relaxed">
+                            {s.secret.text}
+                          </p>
+                        </div>
+                      )}
+
+                      {site && (
+                        <div className="mt-4 flex items-center justify-between gap-3 flex-wrap">
+                          <div className="inline-flex items-center gap-3 text-xs text-muted-foreground">
+                            <span className="inline-flex items-center gap-1 text-primary"><Coins className="h-3 w-3" />{site.coin_reward}</span>
+                            <span>radius {site.radius_m}m</span>
+                          </div>
+                          {checked ? (
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-jade/15 text-jade ring-1 ring-jade/30 px-3 py-1 text-xs font-medium">
+                              <CheckCircle2 className="h-3.5 w-3.5" /> Visited
+                            </span>
+                          ) : (
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => attemptCheckIn(site, false)}
+                                disabled={isPending || !user}
+                                className="btn-glossy inline-flex items-center gap-1.5 rounded-full gradient-ember px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-[0_8px_22px_-8px_oklch(0.72_0.18_55/0.7)] disabled:opacity-50"
+                              >
+                                {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Navigation className="h-3.5 w-3.5" />}
+                                Check in here
+                              </button>
+                              {user && import.meta.env.DEV && (
+                                <button
+                                  onClick={() => attemptCheckIn(site, true)}
+                                  disabled={isPending}
+                                  title="Demo check-in (dev only) — bypasses geolocation"
+                                  className="rounded-full bg-white/5 text-foreground/60 hover:text-foreground px-2.5 py-1.5 text-[11px] ring-1 ring-white/10 transition"
+                                >
+                                  Demo
+                                </button>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
+
                 </motion.li>
               );
             })}
