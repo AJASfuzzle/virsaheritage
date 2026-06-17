@@ -372,13 +372,21 @@ function TrailDetail() {
                   <Trophy className="h-4 w-4" /> Trail complete — Trail Master unlocked
                 </div>
               )}
-              <button onClick={() => setCelebration(null)} className="btn-glossy mt-6 inline-flex items-center rounded-full gradient-ember px-5 py-2 text-sm font-semibold text-primary-foreground">
-                Continue
-              </button>
+              <div className="mt-6 flex items-center justify-center gap-2 flex-wrap">
+                <button onClick={() => setCelebration(null)} className="btn-glossy inline-flex items-center rounded-full gradient-ember px-5 py-2 text-sm font-semibold text-primary-foreground">
+                  Continue
+                </button>
+                <Link to="/khazane" className="inline-flex items-center rounded-full bg-white/10 ring-1 ring-white/15 px-5 py-2 text-sm font-medium text-foreground hover:bg-white/15 transition">
+                  Redeem in Khazane →
+                </Link>
+              </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      <AudioCompanion trail={trail} />
     </article>
+
   );
 }
