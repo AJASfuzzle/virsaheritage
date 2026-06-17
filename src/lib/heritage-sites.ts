@@ -546,7 +546,7 @@ export const heritageSites: HeritageSite[] = [
   },
   {
     id: "theyyam", name: "Theyyam of North Malabar", category: "Living Heritage",
-    lat: 12.0, lon: 75.3, region: "Kannur & Kasaragod, Kerala", year: 1500,
+    lat: 11.87, lon: 75.37, region: "Kannur & Kasaragod, Kerala", year: 1500,
     shortDescription: "A ritual possession-dance in which the dancer becomes the deity for the duration of the performance.",
     fullDescription: [
       "Practised in over 400 shrines across North Malabar between October and May, Theyyam is one of South India's oldest surviving ritual art forms. The dancer dons towering headgear, full-body paint of natural pigments and a costume of fronds, then becomes the deity invoked — speaking with their voice and blessing devotees.",
