@@ -194,35 +194,33 @@ function MapCanvas({
   return (
     <div className="absolute inset-0 grid place-items-center p-4 sm:p-6">
       <div
-        className="relative h-full"
-        style={{ aspectRatio: `${indiaMap.width} / ${indiaMap.height}` }}
+        className="relative h-full max-h-full"
+        style={{ aspectRatio: `${MAP.w} / ${MAP.h}` }}
       >
-        <svg
-          viewBox={indiaMap.viewBox}
-          preserveAspectRatio="xMidYMid meet"
-          className="absolute inset-0 h-full w-full"
-        >
-          {/* Soft shadow under land for depth on cream background */}
-          <path
-            d={indiaMap.outline}
-            fill="none"
-            stroke="rgba(80,60,30,0.18)"
-            strokeWidth={8}
-            transform="translate(0,4)"
-          />
-          {/* White land fill with white outline */}
-          <path
-            d={indiaMap.outline}
-            fill="#ffffff"
-            stroke="#ffffff"
-            strokeWidth={2}
-            strokeLinejoin="round"
-          />
-          {/* State borders — soft grey on white */}
-          <path d={indiaMap.states} fill="none" stroke="#e7e2d2" strokeWidth={0.7} />
-        </svg>
+        {/* Ambient elevation shadow — Apple-style soft halo */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -inset-6 rounded-[2.5rem]"
+          style={{
+            background:
+              "radial-gradient(60% 55% at 50% 55%, rgba(80,60,30,0.18), transparent 70%)",
+            filter: "blur(18px)",
+          }}
+        />
+        {/* Base map image — the uploaded India asset, untouched */}
+        <img
+          src={indiaBaseMap.url}
+          alt="Map of India"
+          width={MAP.w}
+          height={MAP.h}
+          draggable={false}
+          loading="eager"
+          decoding="async"
+          className="absolute inset-0 h-full w-full select-none object-contain"
+          style={{ WebkitUserDrag: "none" } as React.CSSProperties}
+        />
 
-        {/* Pushpins layer — uses the SAME 0-100% coordinate space as the SVG */}
+        {/* Pushpins layer — aligned to the image's lon/lat calibration */}
         <div className="absolute inset-0">
           {visible.map((site) => {
             const { x, y } = project(site.lon, site.lat);
@@ -236,7 +234,8 @@ function MapCanvas({
                 onMouseEnter={() => setHover(site.id)}
                 onMouseLeave={() => setHover(hover === site.id ? null : hover)}
                 title={site.name}
-                className="group absolute -translate-x-1/2 -translate-y-full focus:outline-none"
+                aria-label={site.name}
+                className="group absolute -translate-x-1/2 -translate-y-full focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-900 focus-visible:ring-offset-2 rounded-full"
                 style={{ left: `${x}%`, top: `${y}%`, zIndex: isHover || isActive ? 50 : 10 }}
               >
                 <Pushpin color={color} active={isHover || isActive} />
