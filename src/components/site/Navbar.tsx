@@ -13,8 +13,8 @@ const links = [
   { to: "/contribute", label: "Contribute" },
 ] as const;
 
-
 export function Navbar() {
+
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [light, setLight] = useState(false);
@@ -23,8 +23,8 @@ export function Navbar() {
   const isHome = router.state.location.pathname === "/";
 
   useEffect(() => {
-
     const onScroll = () => setScrolled(window.scrollY > 24);
+
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
