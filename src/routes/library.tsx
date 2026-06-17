@@ -1,7 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, Clock, Sparkles, X, ArrowRight, BookOpen, Upload, Heart, Mic, FileText } from "lucide-react";
+import { Search, Clock, Sparkles, X, ArrowRight, BookOpen, Heart, Mic, FileText } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { listLibraryEchoes } from "@/lib/echoes.functions";
 import { RecommendationsRow } from "@/components/recs/RecommendationsRow";
 
 
@@ -372,8 +375,8 @@ function LibraryPage() {
         </div>
       </section>
 
-      {/* Contribute — Family Heritage Archive */}
-      <ContributeBanner />
+      {/* From Echoes — community-submitted archive */}
+      <EchoesFromCommunity />
 
       {/* Shelves */}
       <section className="mx-auto max-w-6xl space-y-20 px-6 pb-32">
@@ -572,15 +575,15 @@ function StoryModal({ story, onClose }: { story: Story | null; onClose: () => vo
   );
 }
 
-/* ---------------- contribute banner ---------------- */
+/* ---------------- echoes from community ---------------- */
 
-function ContributeBanner() {
-  const items = [
-    { icon: FileText, label: "Letters", hint: "Yellowed envelopes, faded ink." },
-    { icon: BookOpen, label: "Diaries", hint: "Margins full of weather." },
-    { icon: Mic, label: "Interviews", hint: "Grandparents, on tape." },
-    { icon: Heart, label: "Family stories", hint: "Recipes, weddings, exiles." },
-  ];
+function EchoesFromCommunity() {
+  const fetchEchoes = useServerFn(listLibraryEchoes);
+  const { data } = useQuery({
+    queryKey: ["library-echoes"],
+    queryFn: () => fetchEchoes({ data: { limit: 8 } }),
+  });
+
   return (
     <section className="mx-auto max-w-6xl px-6 pb-20">
       <motion.div
@@ -593,56 +596,68 @@ function ContributeBanner() {
         <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-[var(--accent)] opacity-10 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-[color:var(--primary)] opacity-10 blur-3xl" />
 
-        <div className="relative grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-center">
-          <div>
-            <p className="mb-3 flex items-center gap-2 text-[11px] uppercase tracking-[0.28em] text-[color:var(--accent)]">
-              <Heart className="h-3.5 w-3.5" /> Your Family Heritage Archive
-            </p>
-            <h2 className="font-display text-3xl leading-[1.1] sm:text-5xl">
-              Bring your <span className="italic text-gradient-ember">grandmother's voice</span> into the Library.
-            </h2>
-            <p className="mt-5 max-w-xl text-pretty text-base text-muted-foreground sm:text-lg">
-              Upload old letters, faded diaries, family stories, and recordings of
-              your grandparents. VIRSA preserves them, transcribes them, and weaves
-              them into an interactive archive only your family can browse.
-            </p>
-            <p className="mt-4 max-w-xl text-pretty text-sm text-muted-foreground">
-              Then ask anything — <em className="text-foreground/80">"What was life like in Punjab during Partition?"</em>{" "}
-              — and receive answers drawn from your own family's preserved memory.
-              Heritage, made personal.
-            </p>
-
-            <div className="mt-7 flex flex-wrap gap-3">
-              <button
-                disabled
-                title="Coming soon"
-                className="btn-glossy inline-flex items-center gap-2 rounded-full bg-[var(--accent)] px-5 py-3 text-xs uppercase tracking-[0.22em] text-[color:var(--accent-foreground)] opacity-95"
-              >
-                <Upload className="h-4 w-4" /> Upload a memory
-              </button>
-              <span className="self-center text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-                Coming soon · Private to your family
-              </span>
+        <div className="relative">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="mb-2 flex items-center gap-2 text-[11px] uppercase tracking-[0.28em] text-[color:var(--accent)]">
+                <Heart className="h-3.5 w-3.5" /> From Echoes
+              </p>
+              <h2 className="font-display text-3xl leading-[1.1] sm:text-4xl">
+                Memory, <span className="italic text-gradient-ember">contributed by keepers.</span>
+              </h2>
+              <p className="mt-3 max-w-xl text-pretty text-sm text-muted-foreground sm:text-base">
+                Stories, photographs and traditions that the community has added to the permanent archive.
+              </p>
             </div>
+            <Link
+              to="/echoes"
+              className="btn-glossy inline-flex items-center gap-2 rounded-full bg-[var(--accent)] px-5 py-2.5 text-xs uppercase tracking-[0.22em] text-[color:var(--accent-foreground)]"
+            >
+              Open Echoes <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
 
-          <ul className="grid grid-cols-2 gap-3 sm:gap-4">
-            {items.map((it) => (
-              <li
-                key={it.label}
-                className="rounded-2xl border border-[var(--glass-border)] bg-[var(--card)]/60 p-4 backdrop-blur"
-              >
-                <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-[var(--accent)]/15 text-[color:var(--accent)]">
-                  <it.icon className="h-4 w-4" />
-                </div>
-                <p className="font-display text-lg leading-tight">{it.label}</p>
-                <p className="mt-1 text-xs text-muted-foreground">{it.hint}</p>
-              </li>
-            ))}
-          </ul>
+          {data && data.length === 0 && (
+            <p className="mt-8 rounded-2xl border border-dashed border-white/15 bg-background/30 p-6 text-center text-sm text-muted-foreground">
+              No community echoes in the Library yet. Be the first to add one.
+            </p>
+          )}
+
+          {data && data.length > 0 && (
+            <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+              {data.map((p: any) => {
+                const m = p.media_signed?.[0];
+                return (
+                  <Link
+                    key={p.id}
+                    to="/echoes/$postId"
+                    params={{ postId: p.id }}
+                    className="group relative aspect-square overflow-hidden rounded-2xl bg-black/30 ring-1 ring-[var(--glass-border)] transition hover:ring-[color:var(--accent)]/40"
+                  >
+                    {m?.url ? (
+                      m.type === "video" ? (
+                        <video src={m.url} className="h-full w-full object-cover" muted />
+                      ) : (
+                        <img src={m.url} alt={p.title ?? "Echo"} loading="lazy" className="h-full w-full object-cover transition group-hover:scale-105" />
+                      )
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center p-4 text-center">
+                        <span className="font-display text-base leading-tight">{p.title ?? p.caption?.slice(0, 60) ?? "An echo"}</span>
+                      </div>
+                    )}
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-3">
+                      <p className="line-clamp-2 text-xs text-white">{p.title ?? p.caption ?? "Untitled"}</p>
+                      {p.category && <p className="mt-0.5 text-[10px] uppercase tracking-[0.2em] text-white/70">{p.category}</p>}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
       </motion.div>
     </section>
   );
 }
+
 
