@@ -2,12 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { Coins, Gift, Loader2, Sparkles, X } from "lucide-react";
+import { ArrowRight, CalendarRange, Clock, Coins, Gift, MapPin, Loader2, Sparkles, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { listRewards, getMyState, redeemReward } from "@/lib/kaal.functions";
 import { useAuth } from "@/hooks/use-auth";
-import { Trails } from "@/components/site/Trails";
+import { trails, type Trail } from "@/lib/trails-data";
 
 export const Route = createFileRoute("/khazane")({
   head: () => ({
@@ -23,6 +23,8 @@ export const Route = createFileRoute("/khazane")({
 
 type Category = "all" | "trails" | "travel" | "merch" | "digital";
 
+type Reward = Awaited<ReturnType<ReturnType<typeof useServerFn<typeof listRewards>>>>[number];
+
 const CATEGORIES: { key: Category; label: string; tagline: string }[] = [
   { key: "all", label: "All treasures", tagline: "Every door." },
   { key: "trails", label: "Trails", tagline: "Walk the living archive." },
@@ -30,6 +32,12 @@ const CATEGORIES: { key: Category; label: string; tagline: string }[] = [
   { key: "merch", label: "Merchandise", tagline: "Heirlooms for your shelf." },
   { key: "digital", label: "Digital", tagline: "Archives, stories, scenes." },
 ];
+
+function getTrailForReward(reward: Pick<Reward, "title" | "code" | "category">): Trail | null {
+  if (reward.category !== "trails") return null;
+  const normalized = `${reward.title} ${reward.code}`.toLowerCase();
+  return trails.find((trail) => normalized.includes(trail.slug.replaceAll("-", " ")) || normalized.includes(trail.title.toLowerCase())) ?? null;
+}
 
 function KhazanePage() {
   const { user } = useAuth();
@@ -41,6 +49,7 @@ function KhazanePage() {
   const [cat, setCat] = useState<Category>("all");
   const [confirm, setConfirm] = useState<{ id: string; title: string; coins: number } | null>(null);
   const [celebration, setCelebration] = useState<string | null>(null);
+  const [openTrail, setOpenTrail] = useState<Trail | null>(null);
 
   const { data: rewards = [], isLoading } = useQuery({
     queryKey: ["rewards"],
@@ -141,6 +150,7 @@ function KhazanePage() {
             {filtered.map((r, i) => {
               const balance = state?.balance ?? 0;
               const enough = balance >= r.coins_required;
+              const rewardTrail = getTrailForReward(r);
               return (
                 <motion.div
                   key={r.id}
@@ -148,12 +158,24 @@ function KhazanePage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-40px" }}
                   transition={{ duration: 0.5, delay: i * 0.05 }}
-                  className="group relative overflow-hidden rounded-3xl glass p-6 ring-1 ring-white/5 hover:ring-primary/30 transition"
+                  onClick={() => rewardTrail && setOpenTrail(rewardTrail)}
+                  className={`group relative overflow-hidden rounded-3xl glass p-6 ring-1 ring-white/5 hover:ring-primary/30 transition ${rewardTrail ? "cursor-pointer" : ""}`}
                 >
                   <div className="absolute -right-12 -top-12 h-32 w-32 rounded-full bg-primary/15 blur-3xl opacity-0 group-hover:opacity-100 transition" />
                   <div className="relative">
                     <div className="flex items-start justify-between">
-                      <span className="text-5xl" aria-hidden>{r.image_emoji ?? "✨"}</span>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          rewardTrail && setOpenTrail(rewardTrail);
+                        }}
+                        disabled={!rewardTrail}
+                        aria-label={rewardTrail ? `Preview ${rewardTrail.title}` : undefined}
+                        className={`text-5xl transition ${rewardTrail ? "hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 rounded-2xl" : "cursor-default"}`}
+                      >
+                        <span aria-hidden>{r.image_emoji ?? rewardTrail?.hero ?? "✨"}</span>
+                      </button>
                       <span className="rounded-full bg-primary/15 text-primary ring-1 ring-primary/30 px-2.5 py-1 text-[10px] uppercase tracking-[0.2em]">
                         {r.category}
                       </span>
@@ -169,24 +191,28 @@ function KhazanePage() {
                       </div>
                       <button
                         disabled={!user || !enough || mutation.isPending}
-                        onClick={() => setConfirm({ id: r.id, title: r.title, coins: r.coins_required })}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setConfirm({ id: r.id, title: r.title, coins: r.coins_required });
+                        }}
                         className="btn-glossy inline-flex items-center gap-1.5 rounded-full gradient-ember px-4 py-1.5 text-xs font-semibold text-primary-foreground shadow-[0_10px_30px_-10px_oklch(0.72_0.18_55/0.7)] disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <Gift className="h-3.5 w-3.5" />
                         {!user ? "Sign in" : !enough ? `Need ${r.coins_required - balance} more` : "Redeem"}
                       </button>
                     </div>
+
+                    {rewardTrail && (
+                      <div className="mt-5 inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-primary/90">
+                        Preview trail <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-1" />
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               );
             })}
           </div>
         )}
-      </section>
-
-      {/* Trails — the full Heritage Trails page, now part of Khazane */}
-      <section id="trails" className="mt-10">
-        <Trails />
       </section>
 
       {/* Confirm modal */}
