@@ -90,7 +90,7 @@ export const heritageSites: HeritageSite[] = [
   },
   {
     id: "konark", name: "Konark Sun Temple", category: "Archaeology",
-    lat: 19.8876, lon: 85.55, region: "Konark, Odisha", year: 1250,
+    lat: 19.8876, lon: 86.0945, region: "Konark, Odisha", year: 1250,
     shortDescription: "A 13th-century chariot of the Sun God hewn from sandstone — wheels, horses and all.",
     fullDescription: [
       "Built around 1250 by King Narasimhadeva I of the Eastern Ganga dynasty, the Konark Sun Temple is conceived as a colossal stone chariot of Surya — 24 carved wheels, seven straining horses and a now-collapsed sanctum that once held the deity.",
@@ -211,7 +211,7 @@ export const heritageSites: HeritageSite[] = [
   },
   {
     id: "western-ghats", name: "Western Ghats", category: "Nature",
-    lat: 13.4, lon: 75.6, region: "Six states along India's western seaboard", year: 1986,
+    lat: 12.5, lon: 75.5, region: "Six states along India's western seaboard", year: 1986,
     shortDescription: "An older-than-the-Himalayas mountain chain — one of eight 'hottest hotspots' of biodiversity on Earth.",
     fullDescription: [
       "Running 1,600 km from Gujarat to Kanyakumari, the Western Ghats predate the Himalayas. Their cloud forests, shola grasslands and laterite plateaux harbour more than 7,400 species of plants, 139 mammals, 508 birds and 179 amphibians — most found nowhere else.",
@@ -440,7 +440,7 @@ export const heritageSites: HeritageSite[] = [
   },
   {
     id: "raghurajpur", name: "Raghurajpur Pattachitra", category: "Art & Crafts",
-    lat: 19.95, lon: 85.30, region: "Puri, Odisha", year: 1100,
+    lat: 19.8975, lon: 85.7833, region: "Puri, Odisha", year: 1100,
     shortDescription: "A heritage village where every household paints scrolls of Jagannath in egg-tempera technique.",
     fullDescription: [
       "Tucked into a coconut grove near Puri, Raghurajpur was declared India's first heritage village in 2000. Every one of its ~120 houses produces Pattachitra — narrative cloth paintings of Jagannath, Krishna and Ramayana scenes — using pigments from conch, lamp black, hingula and shell lime.",
@@ -546,7 +546,7 @@ export const heritageSites: HeritageSite[] = [
   },
   {
     id: "theyyam", name: "Theyyam of North Malabar", category: "Living Heritage",
-    lat: 11.87, lon: 75.85, region: "Kannur & Kasaragod, Kerala", year: 1500,
+    lat: 11.87, lon: 75.37, region: "Kannur & Kasaragod, Kerala", year: 1500,
     shortDescription: "A ritual possession-dance in which the dancer becomes the deity for the duration of the performance.",
     fullDescription: [
       "Practised in over 400 shrines across North Malabar between October and May, Theyyam is one of South India's oldest surviving ritual art forms. The dancer dons towering headgear, full-body paint of natural pigments and a costume of fronds, then becomes the deity invoked — speaking with their voice and blessing devotees.",

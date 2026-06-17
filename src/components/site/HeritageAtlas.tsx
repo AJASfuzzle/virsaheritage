@@ -14,21 +14,20 @@ import {
 
 /**
  * Base map asset is a top-down render of India at 1149×1368 px.
- * Pins use a 6-parameter affine lon/lat → image-px projection fit
- * to three landmark pixels detected directly on this exact asset:
+ * 6-parameter affine lon/lat → image-px projection least-squares-fit
+ * to four landmark pixels on this exact asset:
  *   • Kanyakumari (south tip)      77.55°E  8.08°N → (353, 1302)
  *   • Arunachal Pradesh (east tip) 97.40°E 28.20°N → (1131, 410)
  *   • Sir Creek / Kutch (west tip) 68.20°E 23.70°N → ( 21, 598)
- * Verified visually for all states/UTs incl. Andaman & Nicobar.
- *
- *   px = -2589.65 + 37.802·lon + 1.373·lat
- *   py =  1627.89 +  0.465·lon - 44.792·lat
+ *   • Chennai (east coast anchor)  80.27°E 13.08°N → (530, 1020)
+ * The 4th anchor corrects a westward bias the 3-point fit had over
+ * the southern peninsula (Kerala / TN / Karnataka / Odisha coast).
  */
 const MAP = { w: 1149, h: 1368, ratio: 1149 / 1368 };
 
 function project(lon: number, lat: number) {
-  const px = -2589.65 + 37.802 * lon + 1.373 * lat;
-  const py = 1627.89 + 0.465 * lon - 44.792 * lat;
+  const px = -2574.521 + 38.1702 * lon - 0.16319 * lat;
+  const py = 1614.569 + 0.14026 * lon - 43.4388 * lat;
   return { x: (px / MAP.w) * 100, y: (py / MAP.h) * 100 };
 }
 
