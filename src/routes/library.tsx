@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, Clock, Sparkles, X, ArrowRight, BookOpen } from "lucide-react";
+import { Search, Clock, Sparkles, X, ArrowRight, BookOpen, Upload, Heart, Mic, FileText } from "lucide-react";
+
 
 export const Route = createFileRoute("/library")({
   head: () => ({
