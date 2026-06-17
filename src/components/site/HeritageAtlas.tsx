@@ -215,7 +215,7 @@ function MapCanvas({
               key={site.id}
               onClick={() => setSelected(site)}
               onMouseEnter={() => setHover(site.id)}
-              onMouseLeave={() => setHover((h) => (h === site.id ? null : h))}
+              onMouseLeave={() => setHover(hover === site.id ? null : hover)}
               title={site.name}
               className="group absolute -translate-x-1/2 -translate-y-full focus:outline-none"
               style={{ left: `${x}%`, top: `${y}%`, zIndex: isHover || isActive ? 50 : 10 }}
