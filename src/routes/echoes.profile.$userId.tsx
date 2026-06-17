@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { MapPin, Globe, Pencil } from "lucide-react";
 import { getProfile, listFeed } from "@/lib/echoes.functions";
+import { getSeedCreatorById, getSeedPostsByCreator, isSeedId } from "@/lib/seed-echoes";
 import { PostCard, type EchoPost } from "@/components/echoes/PostCard";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -23,19 +24,39 @@ function ProfilePage() {
   const fetchProfile = useServerFn(getProfile);
   const fetchFeed = useServerFn(listFeed);
 
+  const seedCreator = isSeedId(userId) ? getSeedCreatorById(userId) : null;
+  const seedPosts = isSeedId(userId) ? getSeedPostsByCreator(userId) : [];
+
   const { data: prof } = useQuery({
     queryKey: ["echo-profile", userId],
     queryFn: () => fetchProfile({ data: { userId } }),
-    enabled: !!user,
+    enabled: !!user && !seedCreator,
   });
-  const { data: posts } = useQuery({
+  const { data: realPosts } = useQuery({
     queryKey: ["echoes-feed", "author", userId],
     queryFn: () => fetchFeed({ data: { limit: 30, authorId: userId } }),
-    enabled: !!user,
+    enabled: !!user && !seedCreator,
   });
 
-  const p = prof?.profile;
-  const isMe = user?.id === userId;
+  const p: any = seedCreator
+    ? {
+        full_name: seedCreator.full_name,
+        username: seedCreator.username,
+        avatar_signed_url: seedCreator.avatar_url,
+        banner_signed_url: null,
+        bio: seedCreator.bio,
+        location: seedCreator.location,
+        interests: seedCreator.interests,
+        heritage_origins: seedCreator.heritage_origins,
+        languages: seedCreator.languages,
+        website: null,
+      }
+    : prof?.profile;
+  const posts = seedCreator ? seedPosts : realPosts;
+  const stats = seedCreator
+    ? { postsCount: seedPosts.length, followers: Math.floor(seedPosts.length * 47 + 312), following: 184 }
+    : { postsCount: prof?.postsCount ?? 0, followers: prof?.followers ?? 0, following: prof?.following ?? 0 };
+  const isMe = !seedCreator && user?.id === userId;
 
   return (
     <div className="pt-20 sm:pt-24">
@@ -56,7 +77,7 @@ function ProfilePage() {
             )}
           </div>
           {isMe && (
-            <Link to="/echoes/settings" className="inline-flex items-center gap-1.5 rounded-full glass px-4 py-2 text-xs hover:bg-white/10">
+            <Link to="/dashboard" className="inline-flex items-center gap-1.5 rounded-full glass px-4 py-2 text-xs hover:bg-white/10">
               <Pencil className="h-3.5 w-3.5" /> Edit profile
             </Link>
           )}
@@ -92,9 +113,9 @@ function ProfilePage() {
           )}
 
           <div className="mt-5 flex gap-6 border-y border-[var(--glass-border)] py-3 text-sm">
-            <span><strong className="font-display text-lg">{prof?.postsCount ?? 0}</strong> <span className="text-muted-foreground">Echoes</span></span>
-            <span><strong className="font-display text-lg">{prof?.followers ?? 0}</strong> <span className="text-muted-foreground">Followers</span></span>
-            <span><strong className="font-display text-lg">{prof?.following ?? 0}</strong> <span className="text-muted-foreground">Following</span></span>
+            <span><strong className="font-display text-lg">{stats.postsCount}</strong> <span className="text-muted-foreground">Echoes</span></span>
+            <span><strong className="font-display text-lg">{stats.followers}</strong> <span className="text-muted-foreground">Followers</span></span>
+            <span><strong className="font-display text-lg">{stats.following}</strong> <span className="text-muted-foreground">Following</span></span>
           </div>
         </div>
 

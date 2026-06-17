@@ -53,13 +53,17 @@ export function PostCard({ post, currentUserId }: { post: EchoPost; currentUserI
   const likeFn = useServerFn(toggleLike);
   const saveFn = useServerFn(toggleSave);
   const libFn = useServerFn(submitToLibrary);
+  const isSeed = post.id.startsWith("seed-");
   const [liked, setLiked] = useState(post.liked_by_me);
   const [likeCount, setLikeCount] = useState(post.likes_count);
   const [saved, setSaved] = useState(post.saved_by_me);
   const [inLibrary, setInLibrary] = useState(post.submitted_to_library);
 
   const like = useMutation({
-    mutationFn: () => likeFn({ data: { postId: post.id } }),
+    mutationFn: async () => {
+      if (isSeed) return { ok: true };
+      return likeFn({ data: { postId: post.id } });
+    },
     onMutate: () => {
       setLiked((v) => !v);
       setLikeCount((c) => (liked ? c - 1 : c + 1));
@@ -72,7 +76,10 @@ export function PostCard({ post, currentUserId }: { post: EchoPost; currentUserI
   });
 
   const save = useMutation({
-    mutationFn: () => saveFn({ data: { postId: post.id } }),
+    mutationFn: async () => {
+      if (isSeed) return { saved: !saved };
+      return saveFn({ data: { postId: post.id } });
+    },
     onMutate: () => setSaved((v) => !v),
     onError: () => {
       setSaved(post.saved_by_me);
