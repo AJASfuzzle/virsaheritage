@@ -324,6 +324,17 @@ function LibraryPage() {
         </motion.div>
       </section>
 
+      {/* Personalised AI recommendations */}
+      <RecommendationsRow
+        surface="library"
+        title="Stories for you"
+        subtitle="Virsa AI picks stories from your saved items, interests and recent reads."
+        onStoryClick={(id) => {
+          const found = allStories.find((s) => s.id === id);
+          if (found) setActive(found);
+        }}
+      />
+
       {/* Curator's Picks */}
       <section className="mx-auto max-w-6xl px-6 pb-20">
         <div className="mb-8 flex items-end justify-between gap-6">
