@@ -193,18 +193,24 @@ function MapCanvas({
           preserveAspectRatio="xMidYMid meet"
           className="absolute inset-0 h-full w-full"
         >
-          {/* Soft shadow under land */}
+          {/* Soft shadow under land for depth on cream background */}
           <path
             d={indiaMap.outline}
             fill="none"
-            stroke="rgba(80,60,30,0.10)"
-            strokeWidth={6}
-            transform="translate(0,3)"
+            stroke="rgba(80,60,30,0.18)"
+            strokeWidth={8}
+            transform="translate(0,4)"
           />
-          {/* Land fill */}
-          <path d={indiaMap.outline} fill="#fffdf7" stroke="#7c6f4f" strokeWidth={1.4} />
-          {/* State borders */}
-          <path d={indiaMap.states} fill="none" stroke="#c8bea0" strokeWidth={0.7} />
+          {/* White land fill with white outline */}
+          <path
+            d={indiaMap.outline}
+            fill="#ffffff"
+            stroke="#ffffff"
+            strokeWidth={2}
+            strokeLinejoin="round"
+          />
+          {/* State borders — soft grey on white */}
+          <path d={indiaMap.states} fill="none" stroke="#e7e2d2" strokeWidth={0.7} />
         </svg>
 
         {/* Pushpins layer — uses the SAME 0-100% coordinate space as the SVG */}
