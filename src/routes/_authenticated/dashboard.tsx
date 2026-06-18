@@ -79,6 +79,7 @@ function DashboardPage() {
           {tab === "posts" && <PostsTab />}
           {tab === "saved" && <SavedTab />}
           {tab === "library" && <LibraryTab />}
+          {tab === "liked" && <LikedByYouTab />}
         </div>
       </div>
     </div>
