@@ -81,7 +81,11 @@ export const toggleSave = createServerFn({ method: "POST" })
     const { error } = await supabase
       .from("user_saves")
       .insert({ user_id: userId, item_type: data.itemType, item_id: data.itemId });
-    if (error) throw new Error(error.message);
+    if (error) {
+      // Race / double-click → already saved is fine.
+      if ((error as any).code === "23505") return { saved: true };
+      throw new Error(error.message);
+    }
     return { saved: true };
   });
 
