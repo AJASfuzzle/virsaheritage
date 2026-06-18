@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useTheme } from "@/hooks/use-theme";
 import { UserMenu } from "@/components/site/UserMenu";
 import { getMyState } from "@/lib/virsa.functions";
+import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
 
 const links = [
   { to: "/trails", label: "Trails" },
@@ -73,6 +74,8 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2 shrink-0">
+
+          <LanguageSwitcher />
 
           <button
             onClick={toggle}

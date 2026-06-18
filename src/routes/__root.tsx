@@ -18,6 +18,8 @@ import { FloatingAssistantButton } from "@/components/site/FloatingAssistantButt
 import { AuthProvider } from "@/hooks/use-auth";
 import { ThemeProvider, themeBootstrapScript } from "@/hooks/use-theme";
 import { InterestsOnboarding } from "@/components/recs/InterestsOnboarding";
+import { LanguageProvider } from "@/i18n/LanguageProvider";
+import { AutoTranslator } from "@/i18n/AutoTranslator";
 
 function NotFoundComponent() {
   return (
@@ -133,14 +135,17 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
-          <main className="relative min-h-screen overflow-x-hidden">
-            <Navbar />
-            <Outlet />
-            <Footer />
-          </main>
-          <FloatingAssistantButton />
-          <InterestsOnboarding />
-          <Toaster richColors position="top-right" />
+          <LanguageProvider>
+            <main className="relative min-h-screen overflow-x-hidden">
+              <Navbar />
+              <Outlet />
+              <Footer />
+            </main>
+            <FloatingAssistantButton />
+            <InterestsOnboarding />
+            <Toaster richColors position="top-right" />
+            <AutoTranslator />
+          </LanguageProvider>
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>

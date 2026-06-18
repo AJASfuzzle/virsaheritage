@@ -1,21 +1,53 @@
 ## Goal
-Use the uploaded VIRSA logos (light + dark variants) as the brand mark across the site, replacing the current Compass-icon + "VIRSA / Heritage Atlas" text lockup.
 
-## Steps
+Add a language switcher that translates the entire Virsa website (UI labels + dynamic content like stories, trails, descriptions) into popular Indian languages.
 
-1. **Upload both logos to the CDN** via `lovable-assets`:
-   - `src/assets/virsa-logo-light.png.asset.json` (dark wordmark, for light backgrounds)
-   - `src/assets/virsa-logo-dark.png.asset.json` (white wordmark, for dark backgrounds)
-   No binaries kept in repo.
+## Supported languages
 
-2. **Create `src/components/site/BrandLogo.tsx`** — a small component that reads `useTheme()` and renders the correct `<img>` with proper `alt="VIRSA"`, fixed height (e.g. `h-7` in navbar, `h-8` in footer), and `width`/`height` set to avoid CLS.
+English (default), Hindi, Punjabi, Bengali, Tamil, Telugu, Marathi, Gujarati, Kannada, Malayalam, Urdu.
 
-3. **Navbar (`src/components/site/Navbar.tsx`)** — replace the Compass tile + the `VIRSA` + `Heritage Atlas` text spans inside the home `<Link>` with `<BrandLogo />`. Keep the link, aria-label, and hover scale.
+## Approach
 
-4. **Footer (`src/components/site/Footer.tsx`)** — replace the Compass + VIRSA wordmark in the footer brand block with `<BrandLogo />` (slightly larger). Leave the tagline + copyright untouched.
+A two-layer system:
 
-5. No other components touched. Mobile menu, theme toggle, auth controls all stay the same.
+1. **Static UI strings** — a translation dictionary in `src/i18n/strings.ts` covering navbar, footer, buttons, headings, dashboard tabs, etc. Strings are looked up via a `t(key)` helper. Initial translations generated via Lovable AI Gateway and committed to the repo so they load instantly.
 
-## Notes
-- The dark-mode logo file is mostly transparent/white pixels with just the pin visible on a white preview; on the actual dark theme background it will render correctly as the white wordmark + brown pin.
-- No design tokens, routes, or business logic change.
+2. **Dynamic content** — text coming from the database (story titles, trail descriptions, voice descriptions, etc.) is translated at runtime via a server function that calls Lovable AI Gateway (`google/gemini-2.5-flash`). Results are cached:
+   - In-memory cache (Map) for the session
+   - `localStorage` cache keyed by `${lang}:${hash(text)}` so repeat visits are instant
+   - Server-side cache table `translations_cache` (text_hash, lang, translated) to share across users
+
+## Pieces to build
+
+```text
+src/i18n/
+  strings.ts            ← static UI dictionary, all 11 languages
+  LanguageProvider.tsx  ← React context, persists selection to localStorage
+  useT.ts               ← t(key) hook for static strings
+  useTranslate.ts       ← async hook for dynamic strings, with cache
+src/lib/
+  translate.functions.ts ← createServerFn, batched translate via Lovable AI + DB cache
+src/components/site/
+  LanguageSwitcher.tsx  ← globe dropdown in Navbar with native language names
+```
+
+DB migration adds a `translations_cache` table (text_hash, lang, source, translated, created_at) with RLS allowing public read and authenticated insert.
+
+## Integration points
+
+- Wrap app in `<LanguageProvider>` inside `src/routes/__root.tsx`.
+- Add `<LanguageSwitcher />` to `Navbar` (desktop + mobile menu).
+- Replace hard-coded UI strings in Navbar, Footer, Hero, Dashboard tabs, FloatingAssistantButton, common CTAs with `t("key")` calls.
+- Wrap dynamic content rendering (story cards, trail cards, dashboard lists) with a `<TranslatedText>` component that uses `useTranslate` so the text re-renders when language changes. Falls back to the original string while the async translation resolves.
+
+## Caveats called out for the user
+
+- First load in a new language may take ~1–3s per page section while the AI translates uncached text; subsequent visits are instant.
+- AI translations are best-effort and may not be 100% idiomatic — committed static dictionary covers the most-seen strings precisely.
+- Right-to-left (Urdu) gets `dir="rtl"` on `<html>`.
+
+## Out of scope
+
+- Translating images / PDFs.
+- SEO hreflang per-language (can be added later).
+- Voice TTS in regional languages (ElevenLabs voices stay as-is unless you want me to wire multilingual voices next).
