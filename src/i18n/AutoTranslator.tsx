@@ -66,8 +66,12 @@ function collectAttrs(root: ParentNode, pending: Set<string>, items: Array<{ el:
       const v = el.getAttribute(attr);
       if (!v) continue;
       const trimmed = v.trim();
-      if (trimmed.length < 2 || !/[a-zA-Z]/.test(trimmed)) continue;
+      if (trimmed.length < 2) continue;
       const origKey = `${ORIG_ATTR}-${attr}`;
+      const hasOrig = el.hasAttribute(origKey);
+      // Same logic as text nodes: keep tracking attrs we've translated before
+      // even if the current value is no longer Latin.
+      if (!hasOrig && !/[a-zA-Z]/.test(trimmed)) continue;
       const original = el.getAttribute(origKey) ?? trimmed;
       items.push({ el, attr, original });
       pending.add(original);
