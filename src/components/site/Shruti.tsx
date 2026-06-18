@@ -12,15 +12,28 @@ type Lang = {
   phrase: string;
   bcp47?: string;
   meaning: string;
+  voiceId: string;
 };
 
+// Each language is paired with a distinct ElevenLabs voice so every
+// keeper sounds unique. IDs from the curated Top Voice list.
 const languages: Lang[] = [
-  { name: "Toda", region: "Nilgiris, Tamil Nadu", speakers: "~1,600", status: "Endangered", phrase: "Mox vey kox", meaning: "May the hills bless you.", bcp47: "ta-IN" },
-  { name: "Sanketi", region: "Karnataka", speakers: "~15,000", status: "Vulnerable", phrase: "Tān ennāva sollū", meaning: "Tell me what you mean.", bcp47: "kn-IN" },
-  { name: "Kurukh", region: "Jharkhand · Odisha", speakers: "~2.2 M", status: "Stable", phrase: "Niu kanḍ joka", meaning: "Where are you going?", bcp47: "hi-IN" },
-  { name: "Kodava", region: "Coorg, Karnataka", speakers: "~166,000", status: "Vulnerable", phrase: "Nin enyaa ulla", meaning: "How are you keeping?", bcp47: "kn-IN" },
-  { name: "Mising", region: "Assam · Arunachal", speakers: "~600,000", status: "Vulnerable", phrase: "No yumké do", meaning: "Are you well?", bcp47: "as-IN" },
-  { name: "Khasi", region: "Meghalaya", speakers: "~1.4 M", status: "Stable", phrase: "Khublei shibun", meaning: "Thank you, deeply.", bcp47: "en-IN" },
+  { name: "Toda", region: "Nilgiris, Tamil Nadu", speakers: "~1,600", status: "Endangered", phrase: "Mox vey kox", meaning: "May the hills bless you.", bcp47: "ta-IN", voiceId: "EXAVITQu4vr4xnSDxMaL" /* Sarah */ },
+  { name: "Sanketi", region: "Karnataka", speakers: "~15,000", status: "Vulnerable", phrase: "Tān ennāva sollū", meaning: "Tell me what you mean.", bcp47: "kn-IN", voiceId: "XrExE9yKIg1WjnnlVkGX" /* Matilda */ },
+  { name: "Kurukh", region: "Jharkhand · Odisha", speakers: "~2.2 M", status: "Stable", phrase: "Niu kanḍ joka", meaning: "Where are you going?", bcp47: "hi-IN", voiceId: "onwK4e9ZLuTAKqWW03F9" /* Daniel */ },
+  { name: "Kodava", region: "Coorg, Karnataka", speakers: "~166,000", status: "Vulnerable", phrase: "Nin enyaa ulla", meaning: "How are you keeping?", bcp47: "kn-IN", voiceId: "Xb7hH8MSUJpSbSDYk0k2" /* Alice */ },
+  { name: "Mising", region: "Assam · Arunachal", speakers: "~600,000", status: "Vulnerable", phrase: "No yumké do", meaning: "Are you well?", bcp47: "as-IN", voiceId: "IKne3meq5aSn9XLyUdCD" /* Charlie */ },
+  { name: "Khasi", region: "Meghalaya", speakers: "~1.4 M", status: "Stable", phrase: "Khublei shibun", meaning: "Thank you, deeply.", bcp47: "en-IN", voiceId: "FGY2WhTYpPnrIDTdsKH5" /* Laura */ },
+  { name: "Bhili", region: "Madhya Pradesh · Rajasthan", speakers: "~10 M", status: "Stable", phrase: "Tu kasa che", meaning: "How are you, friend?", bcp47: "hi-IN", voiceId: "JBFqnCBsd6RMkjVDRZzb" /* George */ },
+  { name: "Gondi", region: "Central India", speakers: "~3 M", status: "Vulnerable", phrase: "Niwa kana mantor", meaning: "What is your name?", bcp47: "hi-IN", voiceId: "nPczCjzI2devNBz1zQrb" /* Brian */ },
+  { name: "Santali", region: "Jharkhand · Bengal · Odisha", speakers: "~7.6 M", status: "Stable", phrase: "Johar, ape do banchaw", meaning: "Greetings, may you live long.", bcp47: "hi-IN", voiceId: "cgSgspJ2msm6clMCkdW9" /* Jessica */ },
+  { name: "Apatani", region: "Arunachal Pradesh", speakers: "~45,000", status: "Endangered", phrase: "Inkun nyibo dula", meaning: "Walk gently with the spirits.", bcp47: "en-IN", voiceId: "pFZP5JQG7iQjIQuC4Bku" /* Lily */ },
+  { name: "Mizo", region: "Mizoram", speakers: "~830,000", status: "Stable", phrase: "I dam em?", meaning: "Are you well?", bcp47: "en-IN", voiceId: "TX3LPaxmHKxFdv7VOQHJ" /* Liam */ },
+  { name: "Konyak", region: "Nagaland", speakers: "~250,000", status: "Vulnerable", phrase: "Hayem aboi", meaning: "Peace be with you.", bcp47: "en-IN", voiceId: "N2lVS1w4EtoT3dr4eOWO" /* Callum */ },
+  { name: "Saurashtra", region: "Tamil Nadu", speakers: "~250,000", status: "Vulnerable", phrase: "Tu kashe che", meaning: "How do you fare today?", bcp47: "ta-IN", voiceId: "cjVigY5qzO86Huf0OWal" /* Eric */ },
+  { name: "Tulu", region: "Karnataka · Kerala", speakers: "~1.8 M", status: "Vulnerable", phrase: "Encha ullar", meaning: "How are you keeping?", bcp47: "kn-IN", voiceId: "pqHfZKP75CvOlQylNhV4" /* Bill */ },
+  { name: "Ho", region: "Jharkhand · Odisha", speakers: "~1.4 M", status: "Stable", phrase: "Johar, am chiloka menaiya", meaning: "Greetings, how are you?", bcp47: "hi-IN", voiceId: "CwhRBWXzGAHq8TQ4Fs17" /* Roger */ },
+  { name: "Ladakhi", region: "Ladakh", speakers: "~110,000", status: "Vulnerable", phrase: "Julley, kham zang-a", meaning: "Hello, are you well?", bcp47: "hi-IN", voiceId: "SAz9YHcvj6GT2YYXdXww" /* River */ },
 ];
 
 const statusClass: Record<Lang["status"], string> = {
