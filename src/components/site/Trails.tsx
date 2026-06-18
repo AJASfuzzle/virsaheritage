@@ -48,16 +48,10 @@ export function Trails() {
 function TrailCard({
   trail,
   index,
-  isSaved,
-  onSave,
-  onShare,
   onOpen,
 }: {
   trail: Trail;
   index: number;
-  isSaved: boolean;
-  onSave: () => void;
-  onShare: () => void;
   onOpen: () => void;
 }) {
   return (
