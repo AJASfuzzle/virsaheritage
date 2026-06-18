@@ -269,9 +269,11 @@
     transition-duration: 120ms;
   }
 
-  /* Soft blur seam to blend adjacent sections */
+  /* Soft blur seam to blend adjacent sections.
+     Skip the seam when the previous section is the hero — the hero already
+     provides a long mask-based fade into transparency. */
   main > section { position: relative; }
-  main > section + section::before {
+  main > section + section:not(:nth-child(2))::before {
     content: "";
     position: absolute;
     left: 0;
