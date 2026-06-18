@@ -586,7 +586,7 @@ const RAW: Seed[] = [
 ];
 
 export function getSeedPosts(): EchoPost[] {
-  return RAW.map((s) => {
+  return RAW.filter(() => false).map((s) => {
     const creator = SEED_CREATORS[s.author_key];
     const { media_url, author_key, is_seed: _is, ...rest } = s;
     return {
