@@ -522,3 +522,108 @@ function EmptyState({ icon: Icon, title, body, ctaLabel, ctaTo }: { icon: typeof
     </div>
   );
 }
+
+/* ---------------- Liked by you ---------------- */
+
+function LikedByYouTab() {
+  const { useSaves, useToggleSave } = require("@/hooks/use-recommendations") as typeof import("@/hooks/use-recommendations");
+  const { buildCatalog, indexCatalog } = require("@/lib/recommendation-catalog") as typeof import("@/lib/recommendation-catalog");
+
+  const { data: saves, isLoading } = useSaves();
+  const toggleSave = useToggleSave();
+  const catalogMap = indexCatalog(buildCatalog());
+
+  if (isLoading) return <div className="h-64 animate-pulse rounded-3xl bg-white/5" />;
+
+  const items = (saves ?? [])
+    .map((s) => ({ s, item: catalogMap.get(`${s.itemType}:${s.itemId}`) }))
+    .filter((x) => !!x.item);
+
+  const groups = {
+    trail: items.filter((x) => x.s.itemType === "trail"),
+    story: items.filter((x) => x.s.itemType === "story"),
+    site: items.filter((x) => x.s.itemType === "site"),
+  };
+
+  if (items.length === 0) {
+    return (
+      <EmptyState
+        icon={Heart}
+        title="Nothing liked yet."
+        body="Tap the heart on any story, trail or site and it will be saved here for you to come back to."
+        ctaLabel="Discover for you"
+        ctaTo="/"
+      />
+    );
+  }
+
+  return (
+    <div className="space-y-10">
+      <LikedSection title="Trails you love" icon={RouteIcon} items={groups.trail} onUnlike={(s) => toggleSave.mutate({ itemType: s.itemType, itemId: s.itemId })} />
+      <LikedSection title="Stories you love" icon={BookOpen} items={groups.story} onUnlike={(s) => toggleSave.mutate({ itemType: s.itemType, itemId: s.itemId })} />
+      <LikedSection title="Heritage sites you love" icon={MapPin} items={groups.site} onUnlike={(s) => toggleSave.mutate({ itemType: s.itemType, itemId: s.itemId })} />
+      <div className="rounded-3xl border border-dashed border-white/15 bg-background/30 p-6 text-sm text-muted-foreground">
+        <Heart className="mb-1 inline h-4 w-4 text-rose-400" /> Voices you've played in <span className="text-foreground">Kitab</span> are saved automatically inside the language player. Open <Link to="/kitab" className="text-primary hover:underline">Kitab</Link> to revisit them.
+      </div>
+    </div>
+  );
+}
+
+function LikedSection({
+  title, icon: Icon, items, onUnlike,
+}: {
+  title: string;
+  icon: typeof Coins;
+  items: Array<{ s: { itemType: "story" | "trail" | "site"; itemId: string }; item: any }>;
+  onUnlike: (s: { itemType: "story" | "trail" | "site"; itemId: string }) => void;
+}) {
+  if (items.length === 0) return null;
+  return (
+    <section>
+      <div className="mb-4 flex items-center gap-2">
+        <Icon className="h-4 w-4 text-primary" />
+        <h2 className="font-display text-xl">{title}</h2>
+        <span className="text-xs text-muted-foreground">· {items.length}</span>
+      </div>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {items.map(({ s, item }) => (
+          <div
+            key={`${s.itemType}:${s.itemId}`}
+            className="group relative rounded-2xl glass p-5 ring-1 ring-white/5 transition hover:ring-primary/30"
+          >
+            <LikedLink item={item} type={s.itemType}>
+              <p className="text-[10px] uppercase tracking-[0.22em] text-[color:var(--accent)]">
+                {s.itemType === "story" ? "Story" : s.itemType === "trail" ? "Trail" : "Heritage Site"}
+              </p>
+              <h3 className="mt-1 font-display text-lg leading-tight">{item.title}</h3>
+              {item.blurb && <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{item.blurb}</p>}
+              {(item.region ?? item.category) && (
+                <p className="mt-3 text-xs text-muted-foreground">{item.region ?? item.category}</p>
+              )}
+            </LikedLink>
+            <button
+              type="button"
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); onUnlike(s); }}
+              aria-label="Remove from liked"
+              title="Liked by you — click to remove"
+              className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-[color:var(--accent)] px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-[color:var(--accent-foreground)] shadow-[0_6px_18px_-8px_var(--accent)] transition hover:opacity-90"
+            >
+              <Heart className="h-3 w-3 fill-current" /> Liked
+            </button>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function LikedLink({ item, type, children }: { item: any; type: "story" | "trail" | "site"; children: React.ReactNode }) {
+  if (type === "trail") {
+    return <Link to="/trails/$slug" params={{ slug: item.id }} className="block">{children}</Link>;
+  }
+  if (type === "site") {
+    return <Link to="/atlas" search={{ site: item.id, view: "curated" } as any} className="block">{children}</Link>;
+  }
+  return <Link to="/library" search={{ story: item.id } as any} className="block">{children}</Link>;
+}
+
