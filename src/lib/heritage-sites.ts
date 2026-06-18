@@ -18,6 +18,16 @@ import sanchiImg from "@/assets/sanchi.png.asset.json";
 import lothalImg from "@/assets/lothal.png.asset.json";
 import dholaviraImg from "@/assets/dholavira.png.asset.json";
 import ajantaElloraImg from "@/assets/ajanta-ellora.png.asset.json";
+import victoriaMemorialImg from "@/assets/victoria-memorial.png.asset.json";
+import sundarbansImg from "@/assets/sundarbans.png.asset.json";
+import raghurajpurImg from "@/assets/raghurajpur.png.asset.json";
+import konarkImg from "@/assets/konark.png.asset.json";
+import charminarImg from "@/assets/charminar.png.asset.json";
+import hampiImg from "@/assets/hampi.png.asset.json";
+import pattadakalImg from "@/assets/pattadakal.png.asset.json";
+import theyyamImg from "@/assets/theyyam.png.asset.json";
+import westernGhatsImg from "@/assets/western-ghats.png.asset.json";
+import channapatnaImg from "@/assets/channapatna.png.asset.json";
 
 export type HeritageCategory =
   | "Archaeology"
