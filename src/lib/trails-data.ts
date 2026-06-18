@@ -248,3 +248,7 @@ export const trails: Trail[] = [
     ],
   },
 ];
+
+export function getTrail(slug: string): Trail | undefined {
+  return trails.find((t) => t.slug === slug);
+}
