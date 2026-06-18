@@ -58,7 +58,13 @@ export function RecommendationsRow({
 
   return (
     <section className="mx-auto max-w-6xl px-6 py-10">
-      <div className="mb-6 flex items-end justify-between gap-6">
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 0.7 }}
+        className="mb-6 flex items-end justify-between gap-6"
+      >
         <div>
           <p className="mb-2 flex items-center gap-2 text-xs uppercase tracking-[0.28em] text-[color:var(--accent)]">
             <Sparkles className="h-3.5 w-3.5" /> Virsa AI
@@ -66,7 +72,7 @@ export function RecommendationsRow({
           <h2 className="font-display text-3xl sm:text-4xl">{title}</h2>
           <p className="mt-1 max-w-xl text-sm text-muted-foreground">{subtitle}</p>
         </div>
-      </div>
+      </motion.div>
 
       {isLoading ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
