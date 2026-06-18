@@ -629,35 +629,85 @@ function EchoesFromCommunity() {
 
           {data && data.length > 0 && (
             <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-              {data.map((p: any) => {
-                const m = p.media_signed?.[0];
-                return (
-                  <Link
-                    key={p.id}
-                    to="/echoes/$postId"
-                    params={{ postId: p.id }}
-                    className="group relative aspect-square overflow-hidden rounded-2xl bg-black/30 ring-1 ring-[var(--glass-border)] transition hover:ring-[color:var(--accent)]/40"
-                  >
-                    {m?.url ? (
-                      m.type === "video" ? (
-                        <video src={m.url} className="h-full w-full object-cover" muted />
-                      ) : (
-                        <img src={m.url} alt={p.title ?? "Echo"} loading="lazy" className="h-full w-full object-cover transition group-hover:scale-105" />
-                      )
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center p-4 text-center">
-                        <span className="font-display text-base leading-tight">{p.title ?? p.caption?.slice(0, 60) ?? "An echo"}</span>
-                      </div>
-                    )}
-                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-3">
-                      <p className="line-clamp-2 text-xs text-white">{p.title ?? p.caption ?? "Untitled"}</p>
-                      {p.category && <p className="mt-0.5 text-[10px] uppercase tracking-[0.2em] text-white/70">{p.category}</p>}
-                    </div>
-                  </Link>
-                );
-              })}
+              {data.map((p: any) => (
+                <LibraryEchoCard key={p.id} post={p} />
+              ))}
             </div>
           )}
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
+function LibraryEchoCard({ post }: { post: any }) {
+  const { user } = useAuth();
+  const router = useRouter();
+  const likeFn = useServerFn(toggleLike);
+  const m = post.media_signed?.[0];
+  const [liked, setLiked] = useState(false);
+  const [count, setCount] = useState<number>(post.likes_count ?? 0);
+
+  const like = useMutation({
+    mutationFn: () => likeFn({ data: { postId: post.id } }),
+    onMutate: () => {
+      setLiked((v) => !v);
+      setCount((c) => (liked ? Math.max(0, c - 1) : c + 1));
+    },
+    onError: () => {
+      setLiked((v) => !v);
+      setCount((c) => (liked ? c + 1 : Math.max(0, c - 1)));
+      toast.error("Couldn't update like");
+    },
+  });
+
+  const onLike = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user) {
+      router.navigate({ to: "/auth", search: { mode: "signin" } });
+      return;
+    }
+    like.mutate();
+  };
+
+  return (
+    <Link
+      to="/echoes/$postId"
+      params={{ postId: post.id }}
+      className="group relative aspect-square overflow-hidden rounded-2xl bg-black/30 ring-1 ring-[var(--glass-border)] transition hover:ring-[color:var(--accent)]/40"
+    >
+      {m?.url ? (
+        m.type === "video" ? (
+          <video src={m.url} className="h-full w-full object-cover" muted />
+        ) : (
+          <img src={m.url} alt={post.title ?? "Echo"} loading="lazy" className="h-full w-full object-cover transition group-hover:scale-105" />
+        )
+      ) : (
+        <div className="flex h-full w-full items-center justify-center p-4 text-center">
+          <span className="font-display text-base leading-tight">{post.title ?? post.caption?.slice(0, 60) ?? "An echo"}</span>
+        </div>
+      )}
+      <button
+        type="button"
+        onClick={onLike}
+        aria-label={liked ? "Unlike" : "Like"}
+        aria-pressed={liked}
+        className={cn(
+          "absolute right-2 top-2 z-10 inline-flex items-center gap-1 rounded-full bg-black/55 px-2.5 py-1 text-[11px] text-white backdrop-blur transition hover:bg-black/75",
+          liked && "text-rose-300"
+        )}
+      >
+        <Heart className={cn("h-3.5 w-3.5", liked && "fill-rose-400 text-rose-400")} />
+        <span className="tabular-nums">{count}</span>
+      </button>
+      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-3">
+        <p className="line-clamp-2 text-xs text-white">{post.title ?? post.caption ?? "Untitled"}</p>
+        {post.category && <p className="mt-0.5 text-[10px] uppercase tracking-[0.2em] text-white/70">{post.category}</p>}
+      </div>
+    </Link>
+  );
+}
         </div>
       </motion.div>
     </section>
