@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
-import { Pause, Play, Volume2, Waves } from "lucide-react";
+import { Loader2, Pause, Play, Volume2, Waves } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import kitabVoice from "@/assets/kitab-voice.mp3.asset.json";
+import { useServerFn } from "@tanstack/react-start";
+import { synthesizePhrase } from "@/lib/tts.functions";
 
 type Lang = {
   name: string;
@@ -9,7 +10,6 @@ type Lang = {
   speakers: string;
   status: "Endangered" | "Vulnerable" | "Stable";
   phrase: string;
-  /** BCP-47 hint (unused now that we play a real recording, kept for data shape). */
   bcp47?: string;
   meaning: string;
 };
@@ -31,15 +31,19 @@ const statusClass: Record<Lang["status"], string> = {
 
 function useVoice() {
   const [playing, setPlaying] = useState<string | null>(null);
+  const [loading, setLoading] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const cacheRef = useRef<Map<string, string>>(new Map());
+  const synth = useServerFn(synthesizePhrase);
 
   useEffect(() => () => {
     audioRef.current?.pause();
     audioRef.current = null;
   }, []);
 
-  const speak = (id: string) => {
+  const speak = async (lang: Lang) => {
     if (typeof window === "undefined") return;
+    const id = lang.name;
     if (audioRef.current && playing === id) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
@@ -50,15 +54,35 @@ function useVoice() {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
     }
-    const audio = new Audio(kitabVoice.url);
-    audio.onended = () => setPlaying((p) => (p === id ? null : p));
-    audio.onerror = () => setPlaying(null);
-    audioRef.current = audio;
-    setPlaying(id);
-    void audio.play().catch(() => setPlaying(null));
+
+    try {
+      let src = cacheRef.current.get(id);
+      if (!src) {
+        setLoading(id);
+        const res = await synth({
+          data: {
+            text: lang.phrase,
+            instructions: `Speak the phrase "${lang.phrase}" — a greeting in ${lang.name}, an indigenous Indian language from ${lang.region}. Pronounce it slowly, warmly and reverently, as an elder keeper of the language would. Say only the phrase itself, no translation, no English.`,
+          },
+        });
+        src = res.audio;
+        cacheRef.current.set(id, src);
+        setLoading(null);
+      }
+      const audio = new Audio(src);
+      audio.onended = () => setPlaying((p) => (p === id ? null : p));
+      audio.onerror = () => setPlaying(null);
+      audioRef.current = audio;
+      setPlaying(id);
+      void audio.play().catch(() => setPlaying(null));
+    } catch (e) {
+      console.error(e);
+      setLoading(null);
+      setPlaying(null);
+    }
   };
 
-  return { playing, speak };
+  return { playing, loading, speak };
 }
 
 export function Shruti() {
