@@ -67,7 +67,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<LangCode>("en");
   const [version, setVersion] = useState(0);
   const translate = useServerFn(translateBatch);
-  console.log("[i18n] LanguageProvider render lang=", lang);
+
 
 
   // Queue + debounce timer
