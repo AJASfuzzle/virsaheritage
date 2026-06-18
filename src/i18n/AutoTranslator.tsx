@@ -80,6 +80,7 @@ export function AutoTranslator() {
   const { lang, t, ensure, version } = useLanguage();
   const routerState = useRouterState();
   const pathname = routerState.location.pathname;
+  console.log("[i18n] AutoTranslator render lang=", lang);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const apply = () => {
