@@ -133,14 +133,18 @@ function TrailDetail() {
   return (
     <article className="relative pb-24">
       {/* Cinematic hero */}
-      <div ref={heroRef} className="relative h-[72vh] min-h-[520px] w-full overflow-hidden">
-        <motion.img
-          src={trail.coverImage}
-          alt={trail.title}
-          className="absolute inset-0 h-full w-full object-cover"
-          style={{ y: heroY, scale: heroScale }}
+      <div ref={heroRef} className="relative h-[62vh] min-h-[460px] w-full overflow-hidden">
+        <motion.div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            y: heroY,
+            scale: heroScale,
+            background: `radial-gradient(ellipse at 30% 20%, ${trail.accentFrom ?? "#7c2d12"}55, transparent 60%), radial-gradient(ellipse at 70% 80%, ${trail.accentTo ?? "#c2410c"}55, transparent 65%), linear-gradient(135deg, var(--background), color-mix(in oklab, var(--background) 75%, ${trail.accentFrom ?? "#7c2d12"} 25%))`,
+          }}
         />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 30%, rgba(0,0,0,0.2) 60%, var(--background) 100%)" }} />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.2) 60%, var(--background) 100%)" }} />
+
 
         <div className="absolute inset-x-0 top-0 z-10 pt-24">
           <div className="mx-auto max-w-5xl px-5">
@@ -256,12 +260,8 @@ function TrailDetail() {
                     {checked ? <CheckCircle2 className="h-4 w-4" /> : i + 1}
                   </span>
                   <div className={`overflow-hidden rounded-2xl glass ring-1 ${checked ? "ring-jade/40" : "ring-white/5"} transition`}>
-                    {s.imageUrl && (
-                      <div className="relative aspect-[16/7] w-full overflow-hidden">
-                        <img src={s.imageUrl} alt={s.name} className="h-full w-full object-cover" loading="lazy" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-                      </div>
-                    )}
+                    {/* Stop photos removed for a cleaner reading experience */}
+
                     <div className="p-5">
                       <div className="flex items-baseline justify-between gap-3 flex-wrap">
                         <h3 className="font-display text-xl">{s.name}</h3>

@@ -63,11 +63,26 @@ export function useSaves() {
 }
 
 export function useToggleSave() {
+  const { user } = useAuth();
   const fn = useServerFn(toggleSave);
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (data: { itemType: ItemType; itemId: string }) => fn({ data }),
-    onSuccess: () => {
+    onMutate: async (data) => {
+      const key = ["saves", user?.id ?? "anon"];
+      await qc.cancelQueries({ queryKey: key });
+      const prev = qc.getQueryData<Array<{ itemType: ItemType; itemId: string }>>(key) ?? [];
+      const exists = prev.some((s) => s.itemType === data.itemType && s.itemId === data.itemId);
+      const next = exists
+        ? prev.filter((s) => !(s.itemType === data.itemType && s.itemId === data.itemId))
+        : [...prev, { itemType: data.itemType, itemId: data.itemId }];
+      qc.setQueryData(key, next);
+      return { prev, key };
+    },
+    onError: (_e, _d, ctx) => {
+      if (ctx) qc.setQueryData(ctx.key, ctx.prev);
+    },
+    onSettled: () => {
       qc.invalidateQueries({ queryKey: ["saves"] });
       qc.invalidateQueries({ queryKey: ["recommendations"] });
     },

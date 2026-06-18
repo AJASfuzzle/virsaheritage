@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useRecommendations, useSaves, useToggleSave } from "@/hooks/use-recommendations";
 import { buildCatalog, indexCatalog, type CatalogItem, type ItemType } from "@/lib/recommendation-catalog";
 
+
 export type RecommendationsRowProps = {
   surface: "library" | "trails" | "home";
   title?: string;
@@ -192,15 +193,22 @@ function RecCard({
         {cardBody}
       </Link>
     );
-  } else {
+  } else if (onStoryClick) {
     inner = (
       <button
         type="button"
-        onClick={() => onStoryClick?.(item.id)}
+        onClick={() => onStoryClick(item.id)}
         className="block h-full w-full text-left"
       >
         {cardBody}
       </button>
+    );
+  } else {
+    // No handler (e.g. on the home page) → open the story inside the Library.
+    inner = (
+      <Link to="/library" search={{ story: item.id } as any} className="block h-full">
+        {cardBody}
+      </Link>
     );
   }
 
