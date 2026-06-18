@@ -260,12 +260,8 @@ function TrailDetail() {
                     {checked ? <CheckCircle2 className="h-4 w-4" /> : i + 1}
                   </span>
                   <div className={`overflow-hidden rounded-2xl glass ring-1 ${checked ? "ring-jade/40" : "ring-white/5"} transition`}>
-                    {s.imageUrl && (
-                      <div className="relative aspect-[16/7] w-full overflow-hidden">
-                        <img src={s.imageUrl} alt={s.name} className="h-full w-full object-cover" loading="lazy" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-                      </div>
-                    )}
+                    {/* Stop photos removed for a cleaner reading experience */}
+
                     <div className="p-5">
                       <div className="flex items-baseline justify-between gap-3 flex-wrap">
                         <h3 className="font-display text-xl">{s.name}</h3>
