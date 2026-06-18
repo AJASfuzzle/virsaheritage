@@ -16,6 +16,7 @@ import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
 import { FloatingAssistantButton } from "@/components/site/FloatingAssistantButton";
 import { AuthProvider } from "@/hooks/use-auth";
+import { ThemeProvider, themeBootstrapScript } from "@/hooks/use-theme";
 import { InterestsOnboarding } from "@/components/recs/InterestsOnboarding";
 
 function NotFoundComponent() {
@@ -93,6 +94,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
     ],
+    scripts: [
+      { children: themeBootstrapScript },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -102,8 +106,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
-      <head>
+    <html lang="en" suppressHydrationWarning>
+      <head suppressHydrationWarning>
         <HeadContent />
       </head>
       <body>
@@ -119,16 +123,18 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <main className="relative min-h-screen overflow-x-hidden">
-          <Navbar />
-          <Outlet />
-          <Footer />
-        </main>
-        <FloatingAssistantButton />
-        <InterestsOnboarding />
-        <Toaster richColors position="top-right" />
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <main className="relative min-h-screen overflow-x-hidden">
+            <Navbar />
+            <Outlet />
+            <Footer />
+          </main>
+          <FloatingAssistantButton />
+          <InterestsOnboarding />
+          <Toaster richColors position="top-right" />
+        </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

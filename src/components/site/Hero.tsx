@@ -4,7 +4,17 @@ import hero from "@/assets/hero-heritage.jpg";
 
 export function Hero() {
   return (
-    <section id="top" className="dark relative min-h-[100svh] w-full overflow-hidden grain bg-background text-foreground">
+    <section
+      id="top"
+      className="dark relative min-h-[100svh] w-full overflow-hidden grain bg-background text-foreground"
+      style={{
+        // Bottom 28% of the hero fades to transparent so the next section blends in.
+        WebkitMaskImage:
+          "linear-gradient(180deg, #000 0%, #000 72%, rgba(0,0,0,0.85) 86%, rgba(0,0,0,0) 100%)",
+        maskImage:
+          "linear-gradient(180deg, #000 0%, #000 72%, rgba(0,0,0,0.85) 86%, rgba(0,0,0,0) 100%)",
+      }}
+    >
       <div className="absolute inset-0">
         <img
           src={hero}
@@ -13,11 +23,12 @@ export function Hero() {
           width={1920}
           height={1080}
         />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.14_0.04_50/0.55)_0%,oklch(0.14_0.04_50/0.35)_40%,oklch(0.14_0.04_50/0.92)_100%)]" />
+        {/* Tonal wash */}
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.14_0.04_50/0.55)_0%,oklch(0.14_0.04_50/0.30)_40%,oklch(0.14_0.04_50/0.65)_78%,oklch(0.14_0.04_50/0.95)_100%)]" />
         <div className="absolute inset-0 [background:var(--gradient-aurora)]" />
       </div>
 
-      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-5 pb-20 pt-40 sm:pb-28">
+      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-5 pb-32 pt-40 sm:pb-40">
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
