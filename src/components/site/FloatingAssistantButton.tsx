@@ -11,7 +11,7 @@ const SEED: Msg[] = [
   {
     role: "assistant",
     content:
-      "Namaste — I'm **VIRSA**. Ask me anything about India's traditions, regions, family histories or the stories preserved in the archive.",
+      "Namaste, I am Virsa AI.",
   },
 ];
 
