@@ -48,6 +48,7 @@ function passwordStrength(p: string): { score: number; label: string } {
 function AuthPage() {
   const search = useSearch({ from: "/auth" });
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
   const [mode, setMode] = useState<"signin" | "signup">(search.mode ?? "signin");
   const [showPwd, setShowPwd] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -55,6 +56,12 @@ function AuthPage() {
 
   const strength = passwordStrength(form.password);
   const redirectTo = search.redirect && search.redirect.startsWith("/") ? search.redirect : "/dashboard";
+
+  useEffect(() => {
+    if (!loading && user) {
+      navigate({ to: redirectTo, replace: true });
+    }
+  }, [loading, user, redirectTo, navigate]);
 
   async function handleEmail(e: React.FormEvent) {
     e.preventDefault();
