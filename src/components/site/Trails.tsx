@@ -4,36 +4,8 @@ import { useNavigate } from "@tanstack/react-router";
 import { trails, type Trail } from "@/lib/trails-data";
 
 
-function useSaved() {
-  const [saved, setSaved] = useState<string[]>([]);
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(SAVED_KEY);
-      if (raw) setSaved(JSON.parse(raw));
-    } catch {}
-  }, []);
-  const toggle = (slug: string) => {
-    setSaved((prev) => {
-      const next = prev.includes(slug) ? prev.filter((s) => s !== slug) : [slug, ...prev];
-      try { localStorage.setItem(SAVED_KEY, JSON.stringify(next)); } catch {}
-      return next;
-    });
-  };
-  return { saved, toggle };
-}
-
 export function Trails() {
   const navigate = useNavigate();
-  const { saved, toggle } = useSaved();
-
-  const handleShare = async (t: Trail) => {
-    const url = `${window.location.origin}/trails/${t.slug}`;
-    const text = t.hook ? `${t.title} — ${t.hook}` : t.title;
-    try {
-      if (navigator.share) await navigator.share({ title: t.title, text, url });
-      else { await navigator.clipboard.writeText(url); toast.success("Link copied"); }
-    } catch {}
-  };
 
   return (
     <section id="trails" className="relative">
@@ -64,9 +36,6 @@ export function Trails() {
               key={trail.slug}
               trail={trail}
               index={i}
-              isSaved={saved.includes(trail.slug)}
-              onSave={() => toggle(trail.slug)}
-              onShare={() => handleShare(trail)}
               onOpen={() => navigate({ to: "/trails/$slug", params: { slug: trail.slug } })}
             />
           ))}
