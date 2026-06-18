@@ -528,8 +528,6 @@ function EmptyState({ icon: Icon, title, body, ctaLabel, ctaTo }: { icon: typeof
 /* ---------------- Liked by you ---------------- */
 
 function LikedByYouTab() {
-  const { useSaves, useToggleSave } = require("@/hooks/use-recommendations") as typeof import("@/hooks/use-recommendations");
-  const { buildCatalog, indexCatalog } = require("@/lib/recommendation-catalog") as typeof import("@/lib/recommendation-catalog");
 
   const { data: saves, isLoading } = useSaves();
   const toggleSave = useToggleSave();
