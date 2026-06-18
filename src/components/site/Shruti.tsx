@@ -113,6 +113,7 @@ export function Shruti() {
           {languages.map((l, i) => {
             const id = l.name;
             const isPlaying = playing === id;
+            const isLoading = loading === id;
             return (
               <motion.div
                 key={l.name}
@@ -136,11 +137,12 @@ export function Shruti() {
 
                 <div className="mt-6 flex items-center gap-3 rounded-2xl bg-background/40 p-3 ring-1 ring-white/5">
                   <button
-                    onClick={() => speak(id)}
+                    onClick={() => speak(l)}
                     aria-label={isPlaying ? `Pause ${l.name}` : `Play ${l.name}`}
-                    className="btn-glossy relative grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full gradient-ember text-primary-foreground shadow-[0_8px_22px_-8px_oklch(0.74_0.13_75/0.7)]"
+                    disabled={isLoading}
+                    className="btn-glossy relative grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full gradient-ember text-primary-foreground shadow-[0_8px_22px_-8px_oklch(0.74_0.13_75/0.7)] disabled:opacity-70"
                   >
-                    {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 ml-0.5" />}
+                    {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 ml-0.5" />}
                     {isPlaying && (
                       <span className="absolute inset-0 rounded-full ring-2 ring-primary/40 animate-pulse-pin" />
                     )}
