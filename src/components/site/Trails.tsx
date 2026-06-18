@@ -105,18 +105,16 @@ function TrailCard({
       <div className="relative flex flex-col md:flex-row md:min-h-[340px]">
         {/* Cover image */}
         <div className="relative aspect-[16/10] md:aspect-auto md:w-[45%] overflow-hidden">
-          <img
-            src={trail.coverImage}
-            alt={trail.title}
-            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-            loading={index < 2 ? "eager" : "lazy"}
-          />
           <div
+            aria-hidden
             className="absolute inset-0"
             style={{
-              background: `linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.65) 100%), linear-gradient(135deg, ${trail.accentFrom ?? "#7c2d12"}33, transparent 60%)`,
+              background: `radial-gradient(ellipse at 30% 25%, ${trail.accentFrom ?? "#7c2d12"}66, transparent 65%), radial-gradient(ellipse at 75% 80%, ${trail.accentTo ?? "#c2410c"}66, transparent 65%), linear-gradient(135deg, color-mix(in oklab, var(--background) 70%, ${trail.accentFrom ?? "#7c2d12"} 30%), var(--background))`,
             }}
           />
+          <div className="absolute inset-0 grid place-items-center">
+            <span className="text-7xl drop-shadow-lg" aria-hidden>{trail.hero}</span>
+          </div>
           <div className="absolute left-4 top-4 flex flex-wrap items-center gap-2">
             <span className="rounded-full bg-white/15 text-white ring-1 ring-white/25 backdrop-blur px-3 py-1 text-[11px] uppercase tracking-[0.22em]">
               {trail.kind}
@@ -126,6 +124,7 @@ function TrailCard({
             </span>
           </div>
         </div>
+
 
         {/* Content */}
         <div className="flex flex-1 flex-col justify-between p-5 sm:p-7">
