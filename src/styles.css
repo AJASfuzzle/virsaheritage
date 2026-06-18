@@ -269,23 +269,8 @@
     transition-duration: 120ms;
   }
 
-  /* Soft blur seam to blend adjacent sections.
-     Skip the seam when the previous section is the hero — the hero already
-     provides a long mask-based fade into transparency. */
+  /* Section seam removed — hero owns its own clean fade-to-background. */
   main > section { position: relative; }
-  main > section + section:not(:nth-child(2))::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: -80px;
-    height: 160px;
-    pointer-events: none;
-    z-index: 2;
-    backdrop-filter: blur(18px) saturate(115%);
-    mask-image: linear-gradient(180deg, transparent, black 50%, transparent);
-    background: linear-gradient(180deg, transparent, color-mix(in oklab, var(--background) 60%, transparent), transparent);
-  }
 }
 
 @keyframes float-slow {
