@@ -21,6 +21,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { useSaves, useToggleSave } from "@/hooks/use-recommendations";
+import { buildCatalog, indexCatalog } from "@/lib/recommendation-catalog";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
