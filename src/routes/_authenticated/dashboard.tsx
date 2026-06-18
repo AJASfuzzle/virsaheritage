@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   Award, Coins, Compass, Map, Sparkles, Gift,
   LayoutDashboard, UserRound, Images, Bookmark, Library as LibraryIcon,
-  Upload, Save, Trash2, ArrowUpRight, Pencil, FileText,
+  Upload, Save, Trash2, ArrowUpRight, Pencil, FileText, Heart, MapPin, BookOpen, Route as RouteIcon,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { getMyState } from "@/lib/virsa.functions";
