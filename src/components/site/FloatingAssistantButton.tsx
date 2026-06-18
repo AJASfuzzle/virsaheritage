@@ -216,7 +216,7 @@ export function FloatingAssistantButton() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   disabled={loading}
-                  className="flex-1 bg-background/50 ring-1 ring-white/10 rounded to rounded-full px-4 py-2 text-sm outline-none placeholder:text-muted-foreground disabled:opacity-60 focus:ring-primary/40"
+                  className="flex-1 bg-background/50 ring-1 ring-white/10 rounded-full px-4 py-2 text-sm outline-none placeholder:text-muted-foreground disabled:opacity-60 focus:ring-primary/40"
                   placeholder="Ask about a tradition, region, dish…"
                 />
                 <button
