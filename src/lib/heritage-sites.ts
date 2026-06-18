@@ -8,6 +8,16 @@ import keoladeoImg from "@/assets/keoladeo.png.asset.json";
 import pushkarImg from "@/assets/pushkar.png.asset.json";
 import jaisalmerImg from "@/assets/jaisalmer.png.asset.json";
 import kumbhImg from "@/assets/kumbh.png.asset.json";
+import varanasiImg from "@/assets/varanasi.png.asset.json";
+import madhubaniImg from "@/assets/madhubani.png.asset.json";
+import manasImg from "@/assets/manas.png.asset.json";
+import kazirangaImg from "@/assets/kaziranga.png.asset.json";
+import majuliImg from "@/assets/majuli.png.asset.json";
+import khajurahoImg from "@/assets/khajuraho.png.asset.json";
+import sanchiImg from "@/assets/sanchi.png.asset.json";
+import lothalImg from "@/assets/lothal.png.asset.json";
+import dholaviraImg from "@/assets/dholavira.png.asset.json";
+import ajantaElloraImg from "@/assets/ajanta-ellora.png.asset.json";
 
 export type HeritageCategory =
   | "Archaeology"
