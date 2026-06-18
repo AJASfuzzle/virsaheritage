@@ -105,7 +105,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     try {
       const res = await translate({ data: { targetLang: lang, texts: batch } });
       const translations = res?.translations ?? batch;
-      console.log("[i18n] got translations", translations.slice(0, 3));
+      
       batch.forEach((src, i) => {
         const out = translations[i];
         if (typeof out === "string" && out) c.set(src, out);
