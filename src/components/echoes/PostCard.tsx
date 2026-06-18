@@ -165,6 +165,8 @@ export function PostCard({ post, currentUserId }: { post: EchoPost; currentUserI
         <Link
           to="/echoes/$postId"
           params={{ postId: post.id }}
+          aria-label="View and add comments"
+          title="View comments"
           className="inline-flex h-10 items-center gap-1.5 rounded-full px-3 text-sm hover:bg-white/5"
         >
           <MessageCircle className="h-5 w-5" />
