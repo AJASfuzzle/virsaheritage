@@ -1,7 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { generateText } from "ai";
-import { createLovableAiGatewayProvider } from "@/lib/ai-gateway.server";
 
 /**
  * Language config: native name + the Unicode script range its output must contain.
@@ -51,69 +49,53 @@ export const translateBatch = createServerFn({ method: "POST" })
       return { translations: texts };
     }
 
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("Missing LOVABLE_API_KEY");
+    const apiKey = process.env.GOOGLE_TRANSLATE_API_KEY;
+    if (!apiKey) {
+      console.error("[translateBatch] Missing GOOGLE_TRANSLATE_API_KEY");
+      return { translations: texts };
+    }
 
-    const gateway = createLovableAiGatewayProvider(apiKey);
+    // Google Cloud Translation v2 — supports batched `q` params.
+    const url = `https://translation.googleapis.com/language/translate/v2?key=${encodeURIComponent(apiKey)}`;
 
-    const numbered = texts
-      .map((t, i) => `${i + 1}. ${t.replace(/\s+/g, " ").trim()}`)
-      .join("\n");
-
-    const prompt = `You are a professional translator. Translate each English string below into ${cfg.name}.
-
-CRITICAL RULES:
-- Output MUST be written in the ${cfg.script} script (the native script of ${cfg.name}). Never use Roman/Latin transliteration. Never use English letters except for proper nouns that have no widely-accepted native form.
-- Preserve meaning, tone, and brevity. This is a cultural heritage website called VIRSA about India.
-- Keep brand names ("VIRSA"), well-known place names without an established native spelling, and English UI shortcuts (e.g. "AI") as-is.
-- Do NOT add any explanation, romanization, parenthetical English glosses, or prefixes.
-- Return ONLY a JSON array of strings, same order, same length as the input. No prose, no markdown, no code fences.
-
-Strings (${texts.length} total):
-${numbered}
-
-Return: a JSON array of exactly ${texts.length} strings written in ${cfg.script} script.`;
-
-    let raw = "";
+    let translated: string[] = [];
     try {
-      const result = await generateText({
-        model: gateway("google/gemini-2.5-flash"),
-        prompt,
-        temperature: 0.1,
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          q: texts,
+          source: "en",
+          target: targetLang,
+          format: "text",
+        }),
       });
-      raw = result.text.trim();
-    } catch (err) {
-      console.error("[translateBatch] gateway error", err);
-      return { translations: texts };
-    }
 
-    raw = raw.replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/i, "").trim();
-
-    let parsed: unknown;
-    try {
-      parsed = JSON.parse(raw);
-    } catch {
-      const m = raw.match(/\[[\s\S]*\]/);
-      if (m) {
-        try { parsed = JSON.parse(m[0]); } catch { parsed = null; }
+      if (!res.ok) {
+        const errText = await res.text();
+        console.error("[translateBatch] Google API error", res.status, errText);
+        return { translations: texts };
       }
-    }
 
-    if (!Array.isArray(parsed) || parsed.length !== texts.length) {
-      console.warn("[translateBatch] bad shape; returning originals");
+      const json = (await res.json()) as {
+        data?: { translations?: Array<{ translatedText: string }> };
+      };
+      const arr = json.data?.translations;
+      if (!Array.isArray(arr) || arr.length !== texts.length) {
+        console.warn("[translateBatch] unexpected response shape");
+        return { translations: texts };
+      }
+      translated = arr.map((t) => decodeHtmlEntities(t.translatedText));
+    } catch (err) {
+      console.error("[translateBatch] fetch failed", err);
       return { translations: texts };
     }
 
-    // Per-string script validation: if the translation contains NO character
-    // in the expected script for this language, the model failed (returned
-    // English / romanization / refusal). Fall back to the original.
-    const translations = parsed.map((v, i) => {
+    // Script safety: if a translation contains no characters in the expected
+    // script (e.g. an unexpected romanization), keep the original English.
+    const translations = translated.map((out, i) => {
       const original = texts[i];
-      if (typeof v !== "string" || !v.trim()) return original;
-      const out = v.trim();
-      // English strings that are just proper nouns / brand names may legitimately
-      // come back identical. Only enforce script when the source clearly contains
-      // translatable words (>= 3 letters of alphabetic text).
+      if (!out || !out.trim()) return original;
       const hasTranslatableWords = /[A-Za-z]{3,}/.test(original);
       if (hasTranslatableWords && !cfg.scriptTest.test(out)) {
         return original;
@@ -123,3 +105,15 @@ Return: a JSON array of exactly ${texts.length} strings written in ${cfg.script}
 
     return { translations };
   });
+
+function decodeHtmlEntities(s: string): string {
+  return s
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, h) => String.fromCharCode(parseInt(h, 16)))
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&");
+}
+
