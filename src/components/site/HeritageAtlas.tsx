@@ -68,14 +68,14 @@ export function HeritageAtlas() {
   }, [selected]);
 
   return (
-    <section className="relative w-full bg-background text-foreground">
-      {/* Subtle paper texture */}
+    <section className="relative w-full bg-[var(--background)] text-foreground">
+      {/* Subtle paper texture — warm cream in light, muted in dark */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.25] mix-blend-multiply dark:opacity-[0.08] dark:mix-blend-screen"
+        className="pointer-events-none absolute inset-0 opacity-[0.18] mix-blend-multiply dark:opacity-[0.08] dark:mix-blend-screen"
         style={{
           backgroundImage:
-            "radial-gradient(rgba(120,90,50,0.18) 1px, transparent 1px)",
+            "radial-gradient(rgba(160,120,70,0.22) 1px, transparent 1px)",
           backgroundSize: "3px 3px",
         }}
       />
@@ -133,7 +133,7 @@ export function HeritageAtlas() {
         </header>
 
         {/* Map canvas — fills the rest of the viewport */}
-        <div className="relative flex-1 min-h-[640px] rounded-3xl bg-card/60 ring-1 ring-border/60 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.45)] overflow-hidden">
+        <div className="relative flex-1 min-h-[640px] rounded-3xl bg-[color-mix(in_oklab,var(--background)_82%,var(--parchment)_18%)] ring-1 ring-border/60 shadow-[0_30px_60px_-30px_rgba(80,55,20,0.25)] dark:shadow-[0_30px_60px_-30px_rgba(0,0,0,0.5)] overflow-hidden">
           <MapCanvas
             visible={visible}
             hover={hover}
