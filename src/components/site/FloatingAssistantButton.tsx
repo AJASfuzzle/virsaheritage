@@ -39,7 +39,7 @@ export function FloatingAssistantButton() {
 
   useEffect(() => {
     if (!open) return;
-    inputRef.current?.focus();
+    inputRef.current?.focus({ preventScroll: true });
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -107,131 +107,133 @@ export function FloatingAssistantButton() {
 
       <AnimatePresence>
         {open && (
-          <motion.div
-            initial={{ opacity: 0, y: 16, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 16, scale: 0.96 }}
-            transition={{ type: "spring", stiffness: 320, damping: 28 }}
-            role="dialog"
-            aria-label="VIRSA Assistant"
-            className="fixed left-4 right-4 bottom-24 z-[60] sm:left-auto sm:right-5 sm:bottom-24 sm:w-[400px] glass grain rounded-2xl shadow-[var(--shadow-soft)] ring-1 ring-white/10 overflow-hidden flex flex-col max-h-[min(640px,calc(100vh-7rem))]"
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-white/10 bg-background/30">
-              <div className="flex items-center gap-2.5">
-                <span className="grid h-8 w-8 place-items-center rounded-full gradient-ember text-primary-foreground shrink-0">
-                  <Bot className="h-4 w-4" />
-                </span>
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold leading-tight">VIRSA</p>
-                  <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground flex items-center gap-1.5">
-                    <span className="h-1.5 w-1.5 rounded-full bg-jade animate-pulse-pin" />
-                    Heritage Assistant
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => setOpen(false)}
-                aria-label="Close"
-                className="grid h-8 w-8 place-items-center rounded-full hover:bg-white/10 text-muted-foreground hover:text-foreground transition"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-
-            {/* Messages */}
-            <div
-              ref={scrollRef}
-              className="flex-1 overflow-y-auto px-4 py-4 space-y-3"
+          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0, y: 16, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 16, scale: 0.96 }}
+              transition={{ type: "spring", stiffness: 320, damping: 28 }}
+              role="dialog"
+              aria-label="VIRSA Assistant"
+              className="w-full max-w-[400px] max-h-[min(640px,calc(100vh-2rem))] glass grain rounded-2xl shadow-[var(--shadow-soft)] ring-1 ring-white/10 overflow-hidden flex flex-col"
             >
-              {messages.map((m, i) => (
-                <div
-                  key={i}
-                  className={m.role === "user" ? "flex justify-end" : "flex gap-2"}
+              {/* Header */}
+              <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-white/10 bg-background/30">
+                <div className="flex items-center gap-2.5">
+                  <span className="grid h-8 w-8 place-items-center rounded-full gradient-ember text-primary-foreground shrink-0">
+                    <Bot className="h-4 w-4" />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold leading-tight">VIRSA</p>
+                    <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-jade animate-pulse-pin" />
+                      Heritage Assistant
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setOpen(false)}
+                  aria-label="Close"
+                  className="grid h-8 w-8 place-items-center rounded-full hover:bg-white/10 text-muted-foreground hover:text-foreground transition"
                 >
-                  {m.role === "assistant" && (
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              {/* Messages */}
+              <div
+                ref={scrollRef}
+                className="flex-1 overflow-y-auto px-4 py-4 space-y-3"
+              >
+                {messages.map((m, i) => (
+                  <div
+                    key={i}
+                    className={m.role === "user" ? "flex justify-end" : "flex gap-2"}
+                  >
+                    {m.role === "assistant" && (
+                      <div className="grid h-7 w-7 place-items-center rounded-full gradient-ember text-primary-foreground shrink-0">
+                        <Bot className="h-3.5 w-3.5" />
+                      </div>
+                    )}
+                    <div
+                      className={
+                        m.role === "user"
+                          ? "max-w-[82%] rounded-2xl rounded-tr-md bg-primary/15 ring-1 ring-primary/25 px-3.5 py-2 text-sm whitespace-pre-wrap"
+                          : "max-w-[88%] rounded-2xl rounded-tl-md bg-background/40 ring-1 ring-white/10 px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-wrap"
+                      }
+                      dangerouslySetInnerHTML={
+                        m.role === "assistant"
+                          ? { __html: renderMd(m.content) }
+                          : undefined
+                      }
+                    >
+                      {m.role === "user" ? m.content : null}
+                    </div>
+                    {m.role === "user" && (
+                      <div className="grid h-7 w-7 place-items-center rounded-full bg-white/10 ring-1 ring-white/15 shrink-0 ml-1">
+                        <User className="h-3.5 w-3.5 text-foreground/80" />
+                      </div>
+                    )}
+                  </div>
+                ))}
+                {loading && (
+                  <div className="flex gap-2">
                     <div className="grid h-7 w-7 place-items-center rounded-full gradient-ember text-primary-foreground shrink-0">
                       <Bot className="h-3.5 w-3.5" />
                     </div>
-                  )}
-                  <div
-                    className={
-                      m.role === "user"
-                        ? "max-w-[82%] rounded-2xl rounded-tr-md bg-primary/15 ring-1 ring-primary/25 px-3.5 py-2 text-sm whitespace-pre-wrap"
-                        : "max-w-[88%] rounded-2xl rounded-tl-md bg-background/40 ring-1 ring-white/10 px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-wrap"
-                    }
-                    dangerouslySetInnerHTML={
-                      m.role === "assistant"
-                        ? { __html: renderMd(m.content) }
-                        : undefined
-                    }
-                  >
-                    {m.role === "user" ? m.content : null}
-                  </div>
-                  {m.role === "user" && (
-                    <div className="grid h-7 w-7 place-items-center rounded-full bg-white/10 ring-1 ring-white/15 shrink-0 ml-1">
-                      <User className="h-3.5 w-3.5 text-foreground/80" />
+                    <div className="rounded-2xl rounded-tl-md bg-background/40 ring-1 ring-white/10 px-3.5 py-2.5 text-sm text-muted-foreground inline-flex items-center gap-2">
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" /> VIRSA is
+                      remembering…
                     </div>
-                  )}
-                </div>
-              ))}
-              {loading && (
-                <div className="flex gap-2">
-                  <div className="grid h-7 w-7 place-items-center rounded-full gradient-ember text-primary-foreground shrink-0">
-                    <Bot className="h-3.5 w-3.5" />
                   </div>
-                  <div className="rounded-2xl rounded-tl-md bg-background/40 ring-1 ring-white/10 px-3.5 py-2.5 text-sm text-muted-foreground inline-flex items-center gap-2">
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" /> VIRSA is
-                    remembering…
-                  </div>
-                </div>
-              )}
-
-              {messages.length <= 1 && !loading && (
-                <div className="pt-2 flex flex-wrap gap-1.5">
-                  {QUICK.map((q) => (
-                    <button
-                      key={q}
-                      onClick={() => send(q)}
-                      className="rounded-full glass px-3 py-1.5 text-[11px] text-foreground/80 hover:bg-white/10 transition text-left"
-                    >
-                      {q}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Composer */}
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                send(input);
-              }}
-              className="border-t border-white/10 bg-background/30 px-3 py-3 flex items-center gap-2"
-            >
-              <input
-                ref={inputRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                disabled={loading}
-                className="flex-1 bg-background/50 ring-1 ring-white/10 rounded-full px-4 py-2 text-sm outline-none placeholder:text-muted-foreground disabled:opacity-60 focus:ring-primary/40"
-                placeholder="Ask about a tradition, region, dish…"
-              />
-              <button
-                type="submit"
-                disabled={loading || !input.trim()}
-                aria-label="Send"
-                className="grid h-9 w-9 place-items-center rounded-full gradient-ember text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-110 transition shrink-0"
-              >
-                {loading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Send className="h-4 w-4" />
                 )}
-              </button>
-            </form>
-          </motion.div>
+
+                {messages.length <= 1 && !loading && (
+                  <div className="pt-2 flex flex-wrap gap-1.5">
+                    {QUICK.map((q) => (
+                      <button
+                        key={q}
+                        onClick={() => send(q)}
+                        className="rounded-full glass px-3 py-1.5 text-[11px] text-foreground/80 hover:bg-white/10 transition text-left"
+                      >
+                        {q}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Composer */}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  send(input);
+                }}
+                className="border-t border-white/10 bg-background/30 px-3 py-3 flex items-center gap-2"
+              >
+                <input
+                  ref={inputRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  disabled={loading}
+                  className="flex-1 bg-background/50 ring-1 ring-white/10 rounded-full px-4 py-2 text-sm outline-none placeholder:text-muted-foreground disabled:opacity-60 focus:ring-primary/40"
+                  placeholder="Ask about a tradition, region, dish…"
+                />
+                <button
+                  type="submit"
+                  disabled={loading || !input.trim()}
+                  aria-label="Send"
+                  className="grid h-9 w-9 place-items-center rounded-full gradient-ember text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-110 transition shrink-0"
+                >
+                  {loading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Send className="h-4 w-4" />
+                  )}
+                </button>
+              </form>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </>
