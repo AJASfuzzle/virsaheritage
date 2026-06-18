@@ -218,6 +218,11 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    /* Prevent descenders/italic glyphs from being clipped by background-clip:text */
+    display: inline-block;
+    padding-right: 0.12em;
+    padding-bottom: 0.12em;
+    line-height: 1.15;
   }
   .ring-ember {
     box-shadow: 0 0 0 1px oklch(0.72 0.18 55 / 0.4), 0 20px 60px -20px oklch(0.72 0.18 55 / 0.4);
