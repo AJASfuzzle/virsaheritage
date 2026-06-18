@@ -100,7 +100,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     if (batch.length === 0) { queueRef.pending.clear(); return; }
     batch.forEach((t) => queueRef.pending.delete(t));
 
-    console.log("[i18n] flushing", lang, "batch size", batch.length, batch.slice(0, 3));
+    
     queueRef.inflight = true;
     try {
       const res = await translate({ data: { targetLang: lang, texts: batch } });
