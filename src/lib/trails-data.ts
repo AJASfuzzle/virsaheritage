@@ -43,7 +43,7 @@ export const trails: Trail[] = [
     hook: "Follow the scent of cardamom through merchant palaces.",
     distance: "~120 km loop",
     difficulty: "Easy",
-    coverImage: img("photo-1599661046289-e31897846e41"),
+    coverImage: "/__l5e/assets-v1/113052d1-6474-4c6a-a941-ea31ceed6073/trail-chettinad.png",
     accentFrom: "#c2410c",
     accentTo: "#7c2d12",
     intro:
@@ -78,7 +78,7 @@ export const trails: Trail[] = [
     hook: "Two empires, one chariot ride through stone.",
     distance: "~640 km",
     difficulty: "Moderate",
-    coverImage: img("photo-1605649487212-47bdab064df7"),
+    coverImage: "/__l5e/assets-v1/8e8d6f49-aa23-453b-bc4b-9faadf0bd1db/trail-brihadeeswarar.png",
     accentFrom: "#b45309",
     accentTo: "#451a03",
     intro:
@@ -109,7 +109,7 @@ export const trails: Trail[] = [
     hook: "Sixteen embroideries, one desert horizon.",
     distance: "~180 km loop",
     difficulty: "Easy",
-    coverImage: "/__l5e/assets-v1/1ff845aa-4da2-4860-ba73-833e9a379cbb/bhuj-rann.jpg",
+    coverImage: "/__l5e/assets-v1/cdaad5db-4b06-4838-963c-0bd955266160/trail-bhuj.png",
     accentFrom: "#a16207",
     accentTo: "#422006",
     intro:
@@ -136,7 +136,7 @@ export const trails: Trail[] = [
     hook: "Climb into a parallel calendar of mountain gods.",
     distance: "~340 km",
     difficulty: "Challenging",
-    coverImage: img("photo-1464822759023-fed622ff2c3b"),
+    coverImage: "/__l5e/assets-v1/99df1815-60eb-4f43-adf4-46ba121a79c8/trail-kumaoni.png",
     accentFrom: "#7c2d12",
     accentTo: "#1c1917",
     intro:

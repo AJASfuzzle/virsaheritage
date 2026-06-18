@@ -1,42 +1,11 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Bookmark, Clock, Coins, Footprints, MapPin, MountainSnow, Share2, Sparkles } from "lucide-react";
+import { ArrowRight, Clock, Coins, Footprints, MapPin, MountainSnow, Sparkles } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import { trails, type Trail } from "@/lib/trails-data";
 
-const SAVED_KEY = "virsa:trails:saved";
-
-function useSaved() {
-  const [saved, setSaved] = useState<string[]>([]);
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(SAVED_KEY);
-      if (raw) setSaved(JSON.parse(raw));
-    } catch {}
-  }, []);
-  const toggle = (slug: string) => {
-    setSaved((prev) => {
-      const next = prev.includes(slug) ? prev.filter((s) => s !== slug) : [slug, ...prev];
-      try { localStorage.setItem(SAVED_KEY, JSON.stringify(next)); } catch {}
-      return next;
-    });
-  };
-  return { saved, toggle };
-}
 
 export function Trails() {
   const navigate = useNavigate();
-  const { saved, toggle } = useSaved();
-
-  const handleShare = async (t: Trail) => {
-    const url = `${window.location.origin}/trails/${t.slug}`;
-    const text = t.hook ? `${t.title} — ${t.hook}` : t.title;
-    try {
-      if (navigator.share) await navigator.share({ title: t.title, text, url });
-      else { await navigator.clipboard.writeText(url); toast.success("Link copied"); }
-    } catch {}
-  };
 
   return (
     <section id="trails" className="relative">
@@ -67,9 +36,6 @@ export function Trails() {
               key={trail.slug}
               trail={trail}
               index={i}
-              isSaved={saved.includes(trail.slug)}
-              onSave={() => toggle(trail.slug)}
-              onShare={() => handleShare(trail)}
               onOpen={() => navigate({ to: "/trails/$slug", params: { slug: trail.slug } })}
             />
           ))}
@@ -82,16 +48,10 @@ export function Trails() {
 function TrailCard({
   trail,
   index,
-  isSaved,
-  onSave,
-  onShare,
   onOpen,
 }: {
   trail: Trail;
   index: number;
-  isSaved: boolean;
-  onSave: () => void;
-  onShare: () => void;
   onOpen: () => void;
 }) {
   return (
@@ -129,29 +89,9 @@ function TrailCard({
         {/* Content */}
         <div className="flex flex-1 flex-col justify-between p-5 sm:p-7">
           <div>
-            <div className="mb-3 flex items-center justify-between gap-3">
+            <div className="mb-3 flex items-center gap-3">
               <div className="text-foreground/70 text-xs inline-flex items-center gap-1.5">
                 <MapPin className="h-3.5 w-3.5" /> {trail.region}
-              </div>
-              <div className="flex items-center gap-1.5">
-                <button
-                  onClick={(e) => { e.stopPropagation(); onSave(); }}
-                  aria-label={isSaved ? "Unsave trail" : "Save trail"}
-                  className={`grid h-9 w-9 place-items-center rounded-full backdrop-blur ring-1 transition ${
-                    isSaved
-                      ? "bg-primary text-primary-foreground ring-primary/40"
-                      : "bg-foreground/10 text-foreground ring-foreground/15 hover:bg-foreground/20"
-                  }`}
-                >
-                  <Bookmark className={`h-4 w-4 ${isSaved ? "fill-current" : ""}`} />
-                </button>
-                <button
-                  onClick={(e) => { e.stopPropagation(); onShare(); }}
-                  aria-label="Share trail"
-                  className="grid h-9 w-9 place-items-center rounded-full bg-foreground/10 text-foreground ring-1 ring-foreground/15 backdrop-blur hover:bg-foreground/20 transition"
-                >
-                  <Share2 className="h-4 w-4" />
-                </button>
               </div>
             </div>
 
