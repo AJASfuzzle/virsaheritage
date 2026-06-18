@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Sparkles, ArrowRight, Heart, Lock } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
