@@ -516,7 +516,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Patrons", value: "Maratha rulers of Thanjavur" },
       { label: "GI tag", value: "2007" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Thanjavur_art_from_south_India.jpg/1600px-Thanjavur_art_from_south_India.jpg",
+    imageUrl: tanjorePaintingsImg.url,
   },
   {
     id: "kanchipuram-silk", name: "Kanchipuram Silk Weaving", category: "Art & Crafts",
