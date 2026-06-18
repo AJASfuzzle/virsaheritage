@@ -2,10 +2,14 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, Clock, Sparkles, X, ArrowRight, BookOpen, Heart, Mic, FileText } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { listLibraryEchoes } from "@/lib/echoes.functions";
+import { listLibraryEchoes, toggleLike } from "@/lib/echoes.functions";
 import { RecommendationsRow } from "@/components/recs/RecommendationsRow";
+import { useAuth } from "@/hooks/use-auth";
+import { useRouter } from "@tanstack/react-router";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 
 export const Route = createFileRoute("/library")({
@@ -375,15 +379,15 @@ function LibraryPage() {
         </div>
       </section>
 
-      {/* From Echoes — community-submitted archive */}
-      <EchoesFromCommunity />
-
       {/* Shelves */}
-      <section className="mx-auto max-w-6xl space-y-20 px-6 pb-32">
+      <section className="mx-auto max-w-6xl space-y-20 px-6 pb-20">
         {SHELVES.map((shelf, i) => (
           <Shelf key={shelf.id} shelf={shelf} index={i} onOpen={setActive} />
         ))}
       </section>
+
+      {/* From Echoes — community-submitted archive (below the shelves) */}
+      <EchoesFromCommunity />
 
 
       {/* Story modal */}
