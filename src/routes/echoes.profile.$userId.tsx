@@ -67,7 +67,7 @@ function ProfilePage() {
       </div>
 
       {/* header */}
-      <div className="mx-auto -mt-12 max-w-3xl px-5">
+      <div className="relative z-10 mx-auto -mt-12 max-w-3xl px-5">
         <div className="flex items-end justify-between gap-4">
           <div className="grid h-24 w-24 place-items-center overflow-hidden rounded-full border-4 border-background bg-gradient-to-br from-primary/40 to-accent/30 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.6)] sm:h-28 sm:w-28">
             {p?.avatar_signed_url ? (
