@@ -708,10 +708,5 @@ function LibraryEchoCard({ post }: { post: any }) {
     </Link>
   );
 }
-        </div>
-      </motion.div>
-    </section>
-  );
-}
 
 
