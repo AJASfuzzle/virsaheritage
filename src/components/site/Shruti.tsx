@@ -84,6 +84,18 @@ function useVoice() {
         setLoading(null);
       }
       const audio = new Audio(src);
+      audio.volume = 1;
+      // WebAudio gain lets us push past 1.0 for a louder, fuller voice.
+      try {
+        const AC = (window.AudioContext || (window as any).webkitAudioContext) as typeof AudioContext;
+        const ctx = new AC();
+        const source = ctx.createMediaElementSource(audio);
+        const gain = ctx.createGain();
+        gain.gain.value = 1.8;
+        source.connect(gain).connect(ctx.destination);
+      } catch {
+        // If WebAudio isn't available, fall back to the default element output.
+      }
       audio.onended = () => setPlaying((p) => (p === id ? null : p));
       audio.onerror = () => setPlaying(null);
       audioRef.current = audio;
