@@ -24,7 +24,7 @@ export function Hero() {
           height={1080}
         />
         {/* Tonal wash */}
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.14_0.04_50/0.55)_0%,oklch(0.14_0.04_50/0.30)_40%,oklch(0.14_0.04_50/0.65)_78%,oklch(0.14_0.04_50/0.95)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.14_0.04_50/0.55)_0%,oklch(0.14_0.04_50/0.30)_40%,oklch(0.14_0.04_50/0.20)_100%)]" />
         <div className="absolute inset-0 [background:var(--gradient-aurora)]" />
       </div>
 
