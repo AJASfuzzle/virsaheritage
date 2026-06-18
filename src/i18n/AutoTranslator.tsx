@@ -34,9 +34,15 @@ function collectTexts(root: ParentNode, pending: Set<string>, nodes: Array<{ nod
       if (!text) return NodeFilter.FILTER_REJECT;
       const trimmed = text.trim();
       if (trimmed.length < 2) return NodeFilter.FILTER_REJECT;
-      // Skip pure numbers / symbols
-      if (!/[a-zA-Z]/.test(trimmed)) return NodeFilter.FILTER_REJECT;
       if (shouldSkip(n)) return NodeFilter.FILTER_REJECT;
+      // Accept if the parent already has a stored English original (we've
+      // translated this node before) OR if the current text contains Latin
+      // letters (fresh English source). Without the first branch, switching
+      // from one non-English language to another would skip already-translated
+      // nodes and leave them in the previous language.
+      const parent = (n as Text).parentElement;
+      const hasOrig = !!parent && parent.hasAttribute(ORIG_ATTR);
+      if (!hasOrig && !/[a-zA-Z]/.test(trimmed)) return NodeFilter.FILTER_REJECT;
       return NodeFilter.FILTER_ACCEPT;
     },
   });
@@ -45,13 +51,6 @@ function collectTexts(root: ParentNode, pending: Set<string>, nodes: Array<{ nod
     const tn = n as Text;
     const parent = tn.parentElement;
     if (!parent) continue;
-    // Use stored original if present (in case we already translated this node once)
-    let original = parent.getAttribute(ORIG_ATTR);
-    if (original == null) {
-      original = tn.nodeValue ?? "";
-      // Only stash if this parent has just this single text node (common case),
-      // otherwise stash on the text node via a wrapper-free convention: skip.
-    }
     const sourceText = (parent.getAttribute(ORIG_ATTR) ?? tn.nodeValue ?? "").trim();
     if (!sourceText || sourceText.length < 2) continue;
     nodes.push({ node: tn, original: sourceText });
@@ -67,8 +66,12 @@ function collectAttrs(root: ParentNode, pending: Set<string>, items: Array<{ el:
       const v = el.getAttribute(attr);
       if (!v) continue;
       const trimmed = v.trim();
-      if (trimmed.length < 2 || !/[a-zA-Z]/.test(trimmed)) continue;
+      if (trimmed.length < 2) continue;
       const origKey = `${ORIG_ATTR}-${attr}`;
+      const hasOrig = el.hasAttribute(origKey);
+      // Same logic as text nodes: keep tracking attrs we've translated before
+      // even if the current value is no longer Latin.
+      if (!hasOrig && !/[a-zA-Z]/.test(trimmed)) continue;
       const original = el.getAttribute(origKey) ?? trimmed;
       items.push({ el, attr, original });
       pending.add(original);
