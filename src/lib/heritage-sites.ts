@@ -380,7 +380,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Dynasty", value: "Madurai Nayakas" },
       { label: "Gopurams", value: "14" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/An_aerial_view_of_Madurai_city_from_atop_of_Meenakshi_Amman_temple.jpg/1600px-An_aerial_view_of_Madurai_city_from_atop_of_Meenakshi_Amman_temple.jpg",
+    imageUrl: meenakshiImg.url,
   },
   {
     id: "golden-temple", name: "Harmandir Sahib (Golden Temple)", category: "Architecture",
