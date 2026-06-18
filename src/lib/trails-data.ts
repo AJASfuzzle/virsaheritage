@@ -78,7 +78,7 @@ export const trails: Trail[] = [
     hook: "Two empires, one chariot ride through stone.",
     distance: "~640 km",
     difficulty: "Moderate",
-    coverImage: "",
+    coverImage: "/__l5e/assets-v1/8e8d6f49-aa23-453b-bc4b-9faadf0bd1db/trail-brihadeeswarar.png",
     accentFrom: "#b45309",
     accentTo: "#451a03",
     intro:
@@ -109,7 +109,7 @@ export const trails: Trail[] = [
     hook: "Sixteen embroideries, one desert horizon.",
     distance: "~180 km loop",
     difficulty: "Easy",
-    coverImage: "",
+    coverImage: "/__l5e/assets-v1/cdaad5db-4b06-4838-963c-0bd955266160/trail-bhuj.png",
     accentFrom: "#a16207",
     accentTo: "#422006",
     intro:
@@ -136,7 +136,7 @@ export const trails: Trail[] = [
     hook: "Climb into a parallel calendar of mountain gods.",
     distance: "~340 km",
     difficulty: "Challenging",
-    coverImage: "",
+    coverImage: "/__l5e/assets-v1/99df1815-60eb-4f43-adf4-46ba121a79c8/trail-kumaoni.png",
     accentFrom: "#7c2d12",
     accentTo: "#1c1917",
     intro:
