@@ -4,13 +4,14 @@ import { motion } from "framer-motion";
 import { Sparkles, ArrowRight, Heart, Lock } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useRecommendations, useSaves, useToggleSave } from "@/hooks/use-recommendations";
-import { buildCatalog, indexCatalog, type CatalogItem } from "@/lib/recommendation-catalog";
+import { buildCatalog, indexCatalog, type CatalogItem, type ItemType } from "@/lib/recommendation-catalog";
 
 export type RecommendationsRowProps = {
   surface: "library" | "trails" | "home";
   title?: string;
   subtitle?: string;
   onStoryClick?: (storyId: string) => void;
+  filterType?: ItemType;
 };
 
 export function RecommendationsRow({
@@ -18,6 +19,7 @@ export function RecommendationsRow({
   title = "For you",
   subtitle = "Picked by Virsa AI from your interests, saves and trail check-ins.",
   onStoryClick,
+  filterType,
 }: RecommendationsRowProps) {
   const { user } = useAuth();
   const { data, isLoading } = useRecommendations(surface);
@@ -50,7 +52,8 @@ export function RecommendationsRow({
     );
   }
 
-  const recs = data?.recommendations ?? [];
+  const allRecs = data?.recommendations ?? [];
+  const recs = filterType ? allRecs.filter((r) => r.itemType === filterType) : allRecs;
 
   return (
     <section className="mx-auto max-w-6xl px-6 py-10">
@@ -116,14 +119,14 @@ function RecCard({
   onStoryClick?: (storyId: string) => void;
   index: number;
 }) {
-  const inner = (
+  const cardBody = (
     <motion.div
       initial={{ opacity: 0, y: 14 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.5, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -3 }}
-      className="group relative flex w-[78vw] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-[var(--glass-border)] bg-gradient-to-br from-[color-mix(in_oklab,var(--card)_92%,var(--accent)_8%)] to-[var(--card)] p-5 text-left shadow-[var(--shadow-soft)] transition-all hover:border-[color:var(--accent)]/40 hover:shadow-[var(--shadow-glow)] sm:w-auto"
+      className="group relative flex h-full w-[78vw] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-[var(--glass-border)] bg-gradient-to-br from-[color-mix(in_oklab,var(--card)_92%,var(--accent)_8%)] to-[var(--card)] p-5 text-left shadow-[var(--shadow-soft)] transition-all hover:border-[color:var(--accent)]/40 hover:shadow-[var(--shadow-glow)] sm:w-auto"
     >
       <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-[var(--accent)] opacity-10 blur-3xl transition-opacity group-hover:opacity-20" />
 
@@ -131,22 +134,8 @@ function RecCard({
         <span className="rounded-full bg-[color:var(--accent)]/15 px-2.5 py-1 text-[10px] uppercase tracking-[0.22em] text-[color:var(--accent)]">
           {item.type === "story" ? "Story" : item.type === "trail" ? "Trail" : "Heritage Site"}
         </span>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onToggleSave();
-          }}
-          aria-label={isSaved ? "Unsave" : "Save"}
-          className={`grid h-8 w-8 place-items-center rounded-full transition ${
-            isSaved
-              ? "bg-[color:var(--accent)] text-[color:var(--accent-foreground)]"
-              : "bg-foreground/5 text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <Heart className={`h-3.5 w-3.5 ${isSaved ? "fill-current" : ""}`} />
-        </button>
+        {/* spacer for absolute-positioned like button */}
+        <span className="h-8 w-8" aria-hidden />
       </div>
 
       <h3 className="font-display text-xl leading-tight">{item.title}</h3>
@@ -168,28 +157,57 @@ function RecCard({
     </motion.div>
   );
 
-  if (item.type === "trail") {
-    return (
-      <Link to="/trails/$slug" params={{ slug: item.id }} className="contents">
-        {inner}
-      </Link>
-    );
-  }
-  if (item.type === "site") {
-    return (
-      <Link to="/atlas" className="contents">
-        {inner}
-      </Link>
-    );
-  }
-  // story
-  return (
+  const likeButton = (
     <button
       type="button"
-      onClick={() => onStoryClick?.(item.id)}
-      className="contents text-left"
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onToggleSave();
+      }}
+      aria-label={isSaved ? "Liked by you" : "Like"}
+      title={isSaved ? "Liked by you" : "Like"}
+      className={`absolute right-4 top-4 z-20 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[10px] font-medium uppercase tracking-[0.18em] transition ${
+        isSaved
+          ? "bg-[color:var(--accent)] text-[color:var(--accent-foreground)] shadow-[0_6px_18px_-8px_var(--accent)]"
+          : "bg-foreground/5 text-muted-foreground hover:bg-foreground/10 hover:text-foreground"
+      }`}
     >
-      {inner}
+      <Heart className={`h-3.5 w-3.5 ${isSaved ? "fill-current" : ""}`} />
+      {isSaved && <span className="hidden sm:inline">Liked by you</span>}
     </button>
+  );
+
+  // Wrap card in a relative container, then layer the like button above the link/button.
+  let inner: React.ReactNode;
+  if (item.type === "trail") {
+    inner = (
+      <Link to="/trails/$slug" params={{ slug: item.id }} className="block h-full">
+        {cardBody}
+      </Link>
+    );
+  } else if (item.type === "site") {
+    inner = (
+      <Link to="/atlas" search={{ site: item.id, view: "curated" } as any} className="block h-full">
+        {cardBody}
+      </Link>
+    );
+  } else {
+    inner = (
+      <button
+        type="button"
+        onClick={() => onStoryClick?.(item.id)}
+        className="block h-full w-full text-left"
+      >
+        {cardBody}
+      </button>
+    );
+  }
+
+  return (
+    <div className="relative w-[78vw] shrink-0 snap-start sm:w-auto">
+      {inner}
+      {likeButton}
+    </div>
   );
 }
