@@ -218,10 +218,12 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    /* Prevent descenders/italic glyphs from being clipped by background-clip:text */
+    /* Prevent descenders/italic glyphs from being clipped by background-clip:text
+       and keep clear breathing room from the preceding non-gradient text. */
     display: inline-block;
-    padding-right: 0.12em;
-    padding-bottom: 0.12em;
+    margin-left: 0.28em;
+    padding-right: 0.18em;
+    padding-bottom: 0.14em;
     line-height: 1.15;
   }
   .ring-ember {
