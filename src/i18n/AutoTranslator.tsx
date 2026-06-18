@@ -82,10 +82,24 @@ export function AutoTranslator() {
   const pathname = routerState.location.pathname;
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const apply = () => {
+  // Refs so the MutationObserver (mounted once) always reads the latest values
+  // rather than the stale closures from the first render.
+  const langRef = useRef(lang);
+  const tRef = useRef(t);
+  const ensureRef = useRef(ensure);
+  langRef.current = lang;
+  tRef.current = t;
+  ensureRef.current = ensure;
+
+  const applyRef = useRef<() => void>(() => {});
+  applyRef.current = () => {
     if (typeof document === "undefined") return;
     const body = document.body;
     if (!body) return;
+
+    const curLang = langRef.current;
+    const curT = tRef.current;
+    const curEnsure = ensureRef.current;
 
     const pending = new Set<string>();
     const textNodes: Array<{ node: Text; original: string }> = [];
@@ -93,27 +107,25 @@ export function AutoTranslator() {
     collectTexts(body, pending, textNodes);
     collectAttrs(body, pending, attrItems);
 
-    // Queue everything for translation
-    ensure(Array.from(pending));
+    curEnsure(Array.from(pending));
 
-    // Apply current translations (cached hits replace immediately; misses keep original)
     for (const { node, original } of textNodes) {
       const parent = node.parentElement;
       if (parent && !parent.hasAttribute(ORIG_ATTR)) parent.setAttribute(ORIG_ATTR, original);
-      const translated = lang === "en" ? original : t(original);
+      const translated = curLang === "en" ? original : curT(original);
       if (node.nodeValue !== translated) node.nodeValue = translated;
     }
     for (const { el, attr, original } of attrItems) {
       const origKey = `${ORIG_ATTR}-${attr}`;
       if (!el.hasAttribute(origKey)) el.setAttribute(origKey, original);
-      const translated = lang === "en" ? original : t(original);
+      const translated = curLang === "en" ? original : curT(original);
       if (el.getAttribute(attr) !== translated) el.setAttribute(attr, translated);
     }
   };
 
   const scheduleApply = () => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(apply, 80);
+    debounceRef.current = setTimeout(() => applyRef.current(), 80);
   };
 
   // Re-run on lang / route / translations-version changes
@@ -126,7 +138,6 @@ export function AutoTranslator() {
   useEffect(() => {
     if (typeof document === "undefined") return;
     const obs = new MutationObserver((mutations) => {
-      // Ignore mutations we caused (text node value changes) by checking if anything structural changed
       let structural = false;
       for (const m of mutations) {
         if (m.type === "childList" && (m.addedNodes.length || m.removedNodes.length)) {
@@ -134,12 +145,15 @@ export function AutoTranslator() {
         }
         if (m.type === "attributes") { structural = true; break; }
       }
-      if (structural) scheduleApply();
+      if (structural) {
+        if (debounceRef.current) clearTimeout(debounceRef.current);
+        debounceRef.current = setTimeout(() => applyRef.current(), 80);
+      }
     });
     obs.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: TRANSLATABLE_PLACEHOLDER_ATTRS });
     return () => obs.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return null;
 }
+

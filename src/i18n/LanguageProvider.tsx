@@ -68,6 +68,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [version, setVersion] = useState(0);
   const translate = useServerFn(translateBatch);
 
+
+
   // Queue + debounce timer
   const queueRef = useMemo(() => ({ pending: new Set<string>(), timer: null as ReturnType<typeof setTimeout> | null, inflight: false }), []);
 
@@ -98,10 +100,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     if (batch.length === 0) { queueRef.pending.clear(); return; }
     batch.forEach((t) => queueRef.pending.delete(t));
 
+    
     queueRef.inflight = true;
     try {
       const res = await translate({ data: { targetLang: lang, texts: batch } });
       const translations = res?.translations ?? batch;
+      
       batch.forEach((src, i) => {
         const out = translations[i];
         if (typeof out === "string" && out) c.set(src, out);
@@ -118,6 +122,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       }
     }
   }, [lang, translate, queueRef]);
+
 
   const scheduleFlush = useCallback(() => {
     if (queueRef.timer) clearTimeout(queueRef.timer);
