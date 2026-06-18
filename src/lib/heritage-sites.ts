@@ -72,7 +72,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Empire", value: "Vijayanagara" },
       { label: "UNESCO", value: "World Heritage Site (1986)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Wide_angle_of_Galigopuram_of_Virupaksha_Temple%2C_Hampi_%2804%29_%28cropped%29.jpg/1600px-Wide_angle_of_Galigopuram_of_Virupaksha_Temple%2C_Hampi_%2804%29_%28cropped%29.jpg",
+    imageUrl: hampiImg.url,
   },
   {
     id: "ajanta-ellora", name: "Ajanta & Ellora Caves", category: "Archaeology",
