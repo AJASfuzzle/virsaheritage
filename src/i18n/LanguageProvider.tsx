@@ -98,10 +98,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     if (batch.length === 0) { queueRef.pending.clear(); return; }
     batch.forEach((t) => queueRef.pending.delete(t));
 
+    console.log("[i18n] flushing", lang, "batch size", batch.length, batch.slice(0, 3));
     queueRef.inflight = true;
     try {
       const res = await translate({ data: { targetLang: lang, texts: batch } });
       const translations = res?.translations ?? batch;
+      console.log("[i18n] got translations", translations.slice(0, 3));
       batch.forEach((src, i) => {
         const out = translations[i];
         if (typeof out === "string" && out) c.set(src, out);
@@ -118,6 +120,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       }
     }
   }, [lang, translate, queueRef]);
+
 
   const scheduleFlush = useCallback(() => {
     if (queueRef.timer) clearTimeout(queueRef.timer);
