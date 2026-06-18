@@ -29,12 +29,16 @@ export const synthesizePhrase = createServerFn({ method: "POST" })
         body: JSON.stringify({
           text: data.text,
           model_id: "eleven_multilingual_v2",
+          // Tuned for a human, lived-in delivery — low stability lets the
+          // voice breathe and inflect, high similarity keeps it anchored
+          // to the speaker's real timbre, a touch of style adds warmth,
+          // and a slightly slower pace reads as reverent rather than rushed.
           voice_settings: {
-            stability: 0.45,
-            similarity_boost: 0.8,
-            style: 0.35,
+            stability: 0.28,
+            similarity_boost: 0.92,
+            style: 0.55,
             use_speaker_boost: true,
-            speed: 0.92,
+            speed: 0.88,
           },
         }),
       }
