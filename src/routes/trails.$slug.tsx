@@ -133,14 +133,18 @@ function TrailDetail() {
   return (
     <article className="relative pb-24">
       {/* Cinematic hero */}
-      <div ref={heroRef} className="relative h-[72vh] min-h-[520px] w-full overflow-hidden">
-        <motion.img
-          src={trail.coverImage}
-          alt={trail.title}
-          className="absolute inset-0 h-full w-full object-cover"
-          style={{ y: heroY, scale: heroScale }}
+      <div ref={heroRef} className="relative h-[62vh] min-h-[460px] w-full overflow-hidden">
+        <motion.div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            y: heroY,
+            scale: heroScale,
+            background: `radial-gradient(ellipse at 30% 20%, ${trail.accentFrom ?? "#7c2d12"}55, transparent 60%), radial-gradient(ellipse at 70% 80%, ${trail.accentTo ?? "#c2410c"}55, transparent 65%), linear-gradient(135deg, var(--background), color-mix(in oklab, var(--background) 75%, ${trail.accentFrom ?? "#7c2d12"} 25%))`,
+          }}
         />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 30%, rgba(0,0,0,0.2) 60%, var(--background) 100%)" }} />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.2) 60%, var(--background) 100%)" }} />
+
 
         <div className="absolute inset-x-0 top-0 z-10 pt-24">
           <div className="mx-auto max-w-5xl px-5">
