@@ -107,7 +107,6 @@ export function FloatingAssistantButton() {
 
       <AnimatePresence>
         {open && (
-          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0, y: 16, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -115,7 +114,8 @@ export function FloatingAssistantButton() {
               transition={{ type: "spring", stiffness: 320, damping: 28 }}
               role="dialog"
               aria-label="VIRSA Assistant"
-              className="w-full max-w-[400px] max-h-[min(640px,calc(100vh-2rem))] glass grain rounded-2xl shadow-[var(--shadow-soft)] ring-1 ring-white/10 overflow-hidden flex flex-col"
+              style={{ transformOrigin: "bottom right" }}
+              className="fixed right-5 bottom-24 z-[60] w-[calc(100vw-2.5rem)] max-w-[380px] h-[min(560px,calc(100vh-8rem))] glass grain rounded-2xl shadow-[var(--shadow-soft)] ring-1 ring-white/10 overflow-hidden flex flex-col"
             >
               {/* Header */}
               <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-white/10 bg-background/30">
@@ -233,7 +233,6 @@ export function FloatingAssistantButton() {
                 </button>
               </form>
             </motion.div>
-          </div>
         )}
       </AnimatePresence>
     </>
