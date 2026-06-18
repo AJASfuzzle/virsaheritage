@@ -93,8 +93,11 @@ export function AutoTranslator() {
     collectTexts(body, pending, textNodes);
     collectAttrs(body, pending, attrItems);
 
+    console.log("[i18n] apply lang=", lang, "pending size=", pending.size, "first=", Array.from(pending).slice(0, 3));
+
     // Queue everything for translation
     ensure(Array.from(pending));
+
 
     // Apply current translations (cached hits replace immediately; misses keep original)
     for (const { node, original } of textNodes) {
