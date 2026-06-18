@@ -13,6 +13,9 @@ import { toast } from "sonner";
 
 
 export const Route = createFileRoute("/library")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    story: typeof search.story === "string" ? (search.story as string) : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "The Library of VIRSA — A Curated Archive of Living History" },
