@@ -410,7 +410,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Dynasty", value: "Wadiyar" },
       { label: "Style", value: "Indo-Saracenic" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mysore_Palace_Morning.jpg/1600px-Mysore_Palace_Morning.jpg",
+    imageUrl: mysorePalaceImg.url,
   },
   {
     id: "victoria-memorial", name: "Victoria Memorial", category: "Architecture",
