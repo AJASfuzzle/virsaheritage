@@ -7,13 +7,6 @@ export function Hero() {
     <section
       id="top"
       className="dark relative min-h-[100svh] w-full overflow-hidden grain bg-background text-foreground"
-      style={{
-        // Bottom 28% of the hero fades to transparent so the next section blends in.
-        WebkitMaskImage:
-          "linear-gradient(180deg, #000 0%, #000 72%, rgba(0,0,0,0.85) 86%, rgba(0,0,0,0) 100%)",
-        maskImage:
-          "linear-gradient(180deg, #000 0%, #000 72%, rgba(0,0,0,0.85) 86%, rgba(0,0,0,0) 100%)",
-      }}
     >
       <div className="absolute inset-0">
         <img
@@ -26,6 +19,15 @@ export function Hero() {
         {/* Tonal wash */}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.14_0.04_50/0.55)_0%,oklch(0.14_0.04_50/0.30)_40%,oklch(0.14_0.04_50/0.20)_100%)]" />
         <div className="absolute inset-0 [background:var(--gradient-aurora)]" />
+        {/* Single, uniform fade-to-background at the bottom so the hero blends seamlessly into the next section */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[55%]"
+          style={{
+            background:
+              "linear-gradient(180deg, oklch(0.16 0.025 265 / 0) 0%, oklch(0.16 0.025 265 / 0.55) 55%, oklch(0.16 0.025 265 / 0.9) 85%, oklch(0.16 0.025 265) 100%)",
+          }}
+        />
       </div>
 
       <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-5 pb-32 pt-40 sm:pb-40">
