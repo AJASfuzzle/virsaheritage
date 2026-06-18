@@ -75,6 +75,7 @@ function useVoice() {
         const res = await synth({
           data: {
             text: lang.phrase,
+            voiceId: lang.voiceId,
             instructions: `Speak the phrase "${lang.phrase}" — a greeting in ${lang.name}, an indigenous Indian language from ${lang.region}. Pronounce it slowly, warmly and reverently, as an elder keeper of the language would. Say only the phrase itself, no translation, no English.`,
           },
         });
