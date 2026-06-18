@@ -18,6 +18,16 @@ import sanchiImg from "@/assets/sanchi.png.asset.json";
 import lothalImg from "@/assets/lothal.png.asset.json";
 import dholaviraImg from "@/assets/dholavira.png.asset.json";
 import ajantaElloraImg from "@/assets/ajanta-ellora.png.asset.json";
+import victoriaMemorialImg from "@/assets/victoria-memorial.png.asset.json";
+import sundarbansImg from "@/assets/sundarbans.png.asset.json";
+import raghurajpurImg from "@/assets/raghurajpur.png.asset.json";
+import konarkImg from "@/assets/konark.png.asset.json";
+import charminarImg from "@/assets/charminar.png.asset.json";
+import hampiImg from "@/assets/hampi.png.asset.json";
+import pattadakalImg from "@/assets/pattadakal.png.asset.json";
+import theyyamImg from "@/assets/theyyam.png.asset.json";
+import westernGhatsImg from "@/assets/western-ghats.png.asset.json";
+import channapatnaImg from "@/assets/channapatna.png.asset.json";
 
 export type HeritageCategory =
   | "Archaeology"
@@ -62,7 +72,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Empire", value: "Vijayanagara" },
       { label: "UNESCO", value: "World Heritage Site (1986)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Wide_angle_of_Galigopuram_of_Virupaksha_Temple%2C_Hampi_%2804%29_%28cropped%29.jpg/1600px-Wide_angle_of_Galigopuram_of_Virupaksha_Temple%2C_Hampi_%2804%29_%28cropped%29.jpg",
+    imageUrl: hampiImg.url,
   },
   {
     id: "ajanta-ellora", name: "Ajanta & Ellora Caves", category: "Archaeology",
@@ -122,7 +132,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Dynasty", value: "Eastern Ganga" },
       { label: "UNESCO", value: "World Heritage Site (1984)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Konarka_Temple.jpg/1600px-Konarka_Temple.jpg",
+    imageUrl: konarkImg.url,
   },
   {
     id: "mahabalipuram", name: "Mahabalipuram", category: "Archaeology",
@@ -167,7 +177,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Dynasty", value: "Badami Chalukya" },
       { label: "UNESCO", value: "World Heritage Site (1987)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Pattadakal_000.JPG/1600px-Pattadakal_000.JPG",
+    imageUrl: pattadakalImg.url,
   },
   {
     id: "rakhigarhi", name: "Rakhigarhi", category: "Archaeology",
@@ -213,7 +223,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Famous for", value: "Royal Bengal tigers" },
       { label: "UNESCO", value: "World Heritage Site (1987)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Sundarban_Tiger.jpg/1600px-Sundarban_Tiger.jpg",
+    imageUrl: sundarbansImg.url,
   },
   {
     id: "nanda-devi", name: "Nanda Devi & Valley of Flowers", category: "Nature",
@@ -243,7 +253,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Endemism", value: "325+ globally threatened species" },
       { label: "UNESCO", value: "World Heritage Site (2012)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/AnaimudiPeak_DSC_4834.jpg/1600px-AnaimudiPeak_DSC_4834.jpg",
+    imageUrl: westernGhatsImg.url,
   },
   {
     id: "keoladeo", name: "Keoladeo (Bharatpur)", category: "Nature",
@@ -410,7 +420,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Architect", value: "William Emerson" },
       { label: "Holdings", value: "28,000+ artefacts" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Victoria_Memorial_situated_in_Kolkata.jpg/1600px-Victoria_Memorial_situated_in_Kolkata.jpg",
+    imageUrl: victoriaMemorialImg.url,
   },
   {
     id: "charminar", name: "Charminar", category: "Architecture",
@@ -425,7 +435,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Patron", value: "Muhammad Quli Qutb Shah" },
       { label: "Height", value: "56 m" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Charminar_Hyderabad_1.jpg/1600px-Charminar_Hyderabad_1.jpg",
+    imageUrl: charminarImg.url,
   },
 
   // ────────── ART & CRAFTS ──────────
@@ -472,7 +482,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Craft", value: "Pattachitra, Gotipua" },
       { label: "Pigments", value: "Natural minerals & shells" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Entrance_of_Raghurajpur.jpg/1600px-Entrance_of_Raghurajpur.jpg",
+    imageUrl: raghurajpurImg.url,
   },
   {
     id: "channapatna", name: "Channapatna Toys", category: "Art & Crafts",
@@ -487,7 +497,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "GI tag", value: "2005" },
       { label: "Wood used", value: "Wrightia tinctoria (aale mara)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Wooden_toys.JPG/1600px-Wooden_toys.JPG",
+    imageUrl: channapatnaImg.url,
   },
   {
     id: "tanjore-paintings", name: "Tanjore Paintings", category: "Art & Crafts",
@@ -578,7 +588,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Season", value: "October–May" },
       { label: "Distinct forms", value: "450+" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Kathivanoor_Veeran_Chemmarathi_Thara-Eripuram.jpg/1600px-Kathivanoor_Veeran_Chemmarathi_Thara-Eripuram.jpg",
+    imageUrl: theyyamImg.url,
   },
   {
     id: "pushkar-fair", name: "Pushkar Camel Fair", category: "Living Heritage",
