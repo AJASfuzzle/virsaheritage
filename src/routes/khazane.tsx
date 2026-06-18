@@ -103,7 +103,7 @@ function KhazanePage() {
           <div className="mt-7 inline-flex items-center gap-2 rounded-full glass px-4 py-2 text-sm">
             <Coins className="h-4 w-4 text-primary" />
             <span className="text-muted-foreground">Balance</span>
-            <span className="text-foreground font-medium">{state?.balance ?? 0} Virsa Coins</span>
+            <span className="text-foreground font-medium">{`${state?.balance ?? 0} Virsa Coins`}</span>
           </div>
         ) : (
           <div className="mt-7 inline-flex items-center gap-3 rounded-full glass px-4 py-2 text-sm">

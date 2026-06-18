@@ -70,7 +70,7 @@ export function UserMenu() {
             <div className="text-sm font-medium truncate">{fullName ?? user.email}</div>
             <div className="text-[11px] text-muted-foreground truncate">{user.email}</div>
             <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-primary/15 px-2 py-0.5 text-[11px] text-primary">
-              <Coins className="h-3 w-3" /> {data?.balance ?? 0} Virsa Coins
+              <Coins className="h-3 w-3" /> {`${data?.balance ?? 0} Virsa Coins`}
             </div>
           </div>
           <div className="p-1">
