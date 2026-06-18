@@ -80,16 +80,6 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2 shrink-0">
-          {user && state && (
-            <Link
-              to="/khazane"
-              aria-label={`${state.balance} Virsa Coins — open Khazane`}
-              className="btn-glossy hidden sm:inline-flex items-center gap-1.5 rounded-full bg-primary/12 text-primary ring-1 ring-primary/30 px-3 py-1.5 text-xs font-semibold hover:bg-primary/18 transition"
-            >
-              <Coins className="h-3.5 w-3.5" />
-              {state.balance}
-            </Link>
-          )}
 
           <button
             onClick={toggle}
