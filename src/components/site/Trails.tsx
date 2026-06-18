@@ -1,11 +1,8 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Bookmark, Clock, Coins, Footprints, MapPin, MountainSnow, Share2, Sparkles } from "lucide-react";
+import { ArrowRight, Clock, Coins, Footprints, MapPin, MountainSnow, Sparkles } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import { trails, type Trail } from "@/lib/trails-data";
 
-const SAVED_KEY = "virsa:trails:saved";
 
 function useSaved() {
   const [saved, setSaved] = useState<string[]>([]);
