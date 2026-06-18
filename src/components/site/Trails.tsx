@@ -129,29 +129,9 @@ function TrailCard({
         {/* Content */}
         <div className="flex flex-1 flex-col justify-between p-5 sm:p-7">
           <div>
-            <div className="mb-3 flex items-center justify-between gap-3">
+            <div className="mb-3 flex items-center gap-3">
               <div className="text-foreground/70 text-xs inline-flex items-center gap-1.5">
                 <MapPin className="h-3.5 w-3.5" /> {trail.region}
-              </div>
-              <div className="flex items-center gap-1.5">
-                <button
-                  onClick={(e) => { e.stopPropagation(); onSave(); }}
-                  aria-label={isSaved ? "Unsave trail" : "Save trail"}
-                  className={`grid h-9 w-9 place-items-center rounded-full backdrop-blur ring-1 transition ${
-                    isSaved
-                      ? "bg-primary text-primary-foreground ring-primary/40"
-                      : "bg-foreground/10 text-foreground ring-foreground/15 hover:bg-foreground/20"
-                  }`}
-                >
-                  <Bookmark className={`h-4 w-4 ${isSaved ? "fill-current" : ""}`} />
-                </button>
-                <button
-                  onClick={(e) => { e.stopPropagation(); onShare(); }}
-                  aria-label="Share trail"
-                  className="grid h-9 w-9 place-items-center rounded-full bg-foreground/10 text-foreground ring-1 ring-foreground/15 backdrop-blur hover:bg-foreground/20 transition"
-                >
-                  <Share2 className="h-4 w-4" />
-                </button>
               </div>
             </div>
 
