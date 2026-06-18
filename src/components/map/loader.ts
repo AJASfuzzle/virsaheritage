@@ -1,3 +1,4 @@
+/// <reference types="google.maps" />
 /**
  * Singleton loader for the Google Maps JavaScript API.
  * Loads the API with the Lovable-managed browser key and resolves once the
