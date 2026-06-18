@@ -28,6 +28,11 @@ import pattadakalImg from "@/assets/pattadakal.png.asset.json";
 import theyyamImg from "@/assets/theyyam.png.asset.json";
 import westernGhatsImg from "@/assets/western-ghats.png.asset.json";
 import channapatnaImg from "@/assets/channapatna.png.asset.json";
+import mysorePalaceImg from "@/assets/mysore-palace.png.asset.json";
+import kanchipuramSilkImg from "@/assets/kanchipuram-silk.png.asset.json";
+import mahabalipuramImg from "@/assets/mahabalipuram.png.asset.json";
+import tanjorePaintingsImg from "@/assets/tanjore-paintings.png.asset.json";
+import meenakshiImg from "@/assets/meenakshi.png.asset.json";
 
 export type HeritageCategory =
   | "Archaeology"
