@@ -1,11 +1,12 @@
 import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { Eye, EyeOff, Loader2, Mail, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
+import { useAuth } from "@/hooks/use-auth";
 
 const searchSchema = z.object({
   mode: z.enum(["signin", "signup"]).optional(),
