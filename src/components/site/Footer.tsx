@@ -1,5 +1,5 @@
-import { Compass } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { BrandLogo } from "@/components/site/BrandLogo";
 
 export function Footer() {
   return (
@@ -7,11 +7,8 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-5">
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-2 max-w-md">
-            <div className="flex items-center gap-2.5">
-              <span className="grid h-9 w-9 place-items-center rounded-xl gradient-ember text-primary-foreground">
-                <Compass className="h-4.5 w-4.5" strokeWidth={2.4} />
-              </span>
-              <span className="font-display text-2xl">VIRSA</span>
+            <div className="flex items-center">
+              <BrandLogo className="h-10 w-auto" />
             </div>
             <p className="mt-5 text-muted-foreground text-pretty">
               Knowledge Archive of Ancestral Legacy — a non-profit, AI-powered
