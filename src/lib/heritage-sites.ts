@@ -28,6 +28,11 @@ import pattadakalImg from "@/assets/pattadakal.png.asset.json";
 import theyyamImg from "@/assets/theyyam.png.asset.json";
 import westernGhatsImg from "@/assets/western-ghats.png.asset.json";
 import channapatnaImg from "@/assets/channapatna.png.asset.json";
+import mysorePalaceImg from "@/assets/mysore-palace.png.asset.json";
+import kanchipuramSilkImg from "@/assets/kanchipuram-silk.png.asset.json";
+import mahabalipuramImg from "@/assets/mahabalipuram.png.asset.json";
+import tanjorePaintingsImg from "@/assets/tanjore-paintings.png.asset.json";
+import meenakshiImg from "@/assets/meenakshi.png.asset.json";
 
 export type HeritageCategory =
   | "Archaeology"
@@ -147,7 +152,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Dynasty", value: "Pallava" },
       { label: "UNESCO", value: "World Heritage Site (1984)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Mamallapuram_view.jpg/1600px-Mamallapuram_view.jpg",
+    imageUrl: mahabalipuramImg.url,
   },
   {
     id: "sanchi", name: "Sanchi Stupa", category: "Archaeology",
@@ -375,7 +380,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Dynasty", value: "Madurai Nayakas" },
       { label: "Gopurams", value: "14" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/An_aerial_view_of_Madurai_city_from_atop_of_Meenakshi_Amman_temple.jpg/1600px-An_aerial_view_of_Madurai_city_from_atop_of_Meenakshi_Amman_temple.jpg",
+    imageUrl: meenakshiImg.url,
   },
   {
     id: "golden-temple", name: "Harmandir Sahib (Golden Temple)", category: "Architecture",
@@ -405,7 +410,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Dynasty", value: "Wadiyar" },
       { label: "Style", value: "Indo-Saracenic" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mysore_Palace_Morning.jpg/1600px-Mysore_Palace_Morning.jpg",
+    imageUrl: mysorePalaceImg.url,
   },
   {
     id: "victoria-memorial", name: "Victoria Memorial", category: "Architecture",
@@ -511,7 +516,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Patrons", value: "Maratha rulers of Thanjavur" },
       { label: "GI tag", value: "2007" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Thanjavur_art_from_south_India.jpg/1600px-Thanjavur_art_from_south_India.jpg",
+    imageUrl: tanjorePaintingsImg.url,
   },
   {
     id: "kanchipuram-silk", name: "Kanchipuram Silk Weaving", category: "Art & Crafts",
@@ -526,7 +531,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "GI tag", value: "2005" },
       { label: "Technique", value: "Korvai (interlocked borders)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Kanchipuram_silk_sareer.JPG/1600px-Kanchipuram_silk_sareer.JPG",
+    imageUrl: kanchipuramSilkImg.url,
   },
 
   // ────────── LIVING HERITAGE ──────────
