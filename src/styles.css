@@ -285,6 +285,10 @@
   0% { transform: scale(1.05) translate3d(0,0,0); }
   100% { transform: scale(1.15) translate3d(-1%, -1%, 0); }
 }
+@keyframes hero-fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
 .animate-float-slow { animation: float-slow 6s ease-in-out infinite; }
 .animate-pulse-pin { animation: pulse-pin 2.4s ease-in-out infinite; }
 .animate-ken-burns { animation: ken-burns 24s ease-in-out infinite alternate; }
