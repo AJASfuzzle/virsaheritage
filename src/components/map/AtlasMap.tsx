@@ -60,6 +60,9 @@ const PIN_COLOR_BY_TRAIL: Record<string, string> = {
   "brihadeeswarar-to-hampi": "#b45309",
   "bhuj-craft-villages": "#a16207",
   "kumaoni-festival-loop": "#7c2d12",
+  "living-roots-cloud-kingdoms": "#166534",
+  "five-rivers-heritage": "#b45309",
+  "heart-of-india-civilisations": "#a16207",
 };
 
 function pinSvg(color: string) {
