@@ -152,7 +152,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Dynasty", value: "Pallava" },
       { label: "UNESCO", value: "World Heritage Site (1984)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Mamallapuram_view.jpg/1600px-Mamallapuram_view.jpg",
+    imageUrl: mahabalipuramImg.url,
   },
   {
     id: "sanchi", name: "Sanchi Stupa", category: "Archaeology",
