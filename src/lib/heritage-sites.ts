@@ -531,7 +531,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "GI tag", value: "2005" },
       { label: "Technique", value: "Korvai (interlocked borders)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Kanchipuram_silk_sareer.JPG/1600px-Kanchipuram_silk_sareer.JPG",
+    imageUrl: kanchipuramSilkImg.url,
   },
 
   // ────────── LIVING HERITAGE ──────────
