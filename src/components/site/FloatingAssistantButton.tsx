@@ -233,7 +233,6 @@ export function FloatingAssistantButton() {
                 </button>
               </form>
             </motion.div>
-          </div>
         )}
       </AnimatePresence>
     </>
