@@ -125,7 +125,7 @@ export function Shruti() {
             </h2>
             <p className="mt-4 text-muted-foreground text-pretty">
               India speaks in over a thousand tongues. Many will be silent within
-              a generation. <span className="italic">Kitab</span> records them —
+            a generation. <span className="italic inline-block ml-[0.28em] mr-[0.18em] pb-[0.14em] leading-[1.15]">Kitab</span> records them —
               pronunciation, proverb, song and script — for the centuries to come.
               Tap any phrase to hear the keeper's voice.
             </p>
