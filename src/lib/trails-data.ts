@@ -109,7 +109,7 @@ export const trails: Trail[] = [
     hook: "Sixteen embroideries, one desert horizon.",
     distance: "~180 km loop",
     difficulty: "Easy",
-    coverImage: img("photo-1610030469983-98e550d6193c"),
+    coverImage: "/__l5e/assets-v1/1ff845aa-4da2-4860-ba73-833e9a379cbb/bhuj-rann.jpg",
     accentFrom: "#a16207",
     accentTo: "#422006",
     intro:
