@@ -8,6 +8,16 @@ import keoladeoImg from "@/assets/keoladeo.png.asset.json";
 import pushkarImg from "@/assets/pushkar.png.asset.json";
 import jaisalmerImg from "@/assets/jaisalmer.png.asset.json";
 import kumbhImg from "@/assets/kumbh.png.asset.json";
+import varanasiImg from "@/assets/varanasi.png.asset.json";
+import madhubaniImg from "@/assets/madhubani.png.asset.json";
+import manasImg from "@/assets/manas.png.asset.json";
+import kazirangaImg from "@/assets/kaziranga.png.asset.json";
+import majuliImg from "@/assets/majuli.png.asset.json";
+import khajurahoImg from "@/assets/khajuraho.png.asset.json";
+import sanchiImg from "@/assets/sanchi.png.asset.json";
+import lothalImg from "@/assets/lothal.png.asset.json";
+import dholaviraImg from "@/assets/dholavira.png.asset.json";
+import ajantaElloraImg from "@/assets/ajanta-ellora.png.asset.json";
 
 export type HeritageCategory =
   | "Archaeology"
@@ -67,7 +77,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Ellora carved", value: "6th – 10th c. CE" },
       { label: "UNESCO", value: "World Heritage Sites (1983)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Ajanta_%2863%29.jpg/1600px-Ajanta_%2863%29.jpg",
+    imageUrl: ajantaElloraImg.url,
   },
   {
     id: "lothal", name: "Lothal", category: "Archaeology",
@@ -82,7 +92,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Civilisation", value: "Indus Valley (Harappan)" },
       { label: "Famous for", value: "World's earliest known dockyard" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/The_drainage_system_at_Lothal_2.JPG/1600px-The_drainage_system_at_Lothal_2.JPG",
+    imageUrl: lothalImg.url,
   },
   {
     id: "dholavira", name: "Dholavira", category: "Archaeology",
@@ -97,7 +107,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Civilisation", value: "Indus Valley (Harappan)" },
       { label: "UNESCO", value: "World Heritage Site (2021)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/DHOLAVIRA_SITE_%2824%29.jpg/1600px-DHOLAVIRA_SITE_%2824%29.jpg",
+    imageUrl: dholaviraImg.url,
   },
   {
     id: "konark", name: "Konark Sun Temple", category: "Archaeology",
@@ -142,7 +152,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Patron", value: "Emperor Ashoka" },
       { label: "UNESCO", value: "World Heritage Site (1989)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/East_Gateway_-_Stupa_1_-_Sanchi_Hill_2013-02-21_4398.JPG/1600px-East_Gateway_-_Stupa_1_-_Sanchi_Hill_2013-02-21_4398.JPG",
+    imageUrl: sanchiImg.url,
   },
   {
     id: "pattadakal", name: "Pattadakal", category: "Archaeology",
@@ -188,7 +198,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Famous for", value: "One-horned rhinoceros" },
       { label: "UNESCO", value: "World Heritage Site (1985)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Beauty_of_Kaziranga_National_Park.jpg/1600px-Beauty_of_Kaziranga_National_Park.jpg",
+    imageUrl: kazirangaImg.url,
   },
   {
     id: "sundarbans", name: "Sundarbans", category: "Nature",
@@ -293,7 +303,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Endemic to area", value: "Golden langur, pygmy hog" },
       { label: "UNESCO", value: "World Heritage Site (1985)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Manas_landscape_rhino.jpg/1600px-Manas_landscape_rhino.jpg",
+    imageUrl: manasImg.url,
   },
 
   // ────────── ARCHITECTURE ──────────
@@ -432,7 +442,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Dynasty", value: "Chandela" },
       { label: "UNESCO", value: "World Heritage Site (1986)" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/1_Khajuraho.jpg/1600px-1_Khajuraho.jpg",
+    imageUrl: khajurahoImg.url,
   },
   {
     id: "madhubani", name: "Madhubani Painting Villages", category: "Art & Crafts",
@@ -447,7 +457,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Recognised by GI", value: "2007" },
       { label: "Famous styles", value: "Bharni, Katchni, Kohbar" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Madhubani_Mahavidyas.jpg/1600px-Madhubani_Mahavidyas.jpg",
+    imageUrl: madhubaniImg.url,
   },
   {
     id: "raghurajpur", name: "Raghurajpur Pattachitra", category: "Art & Crafts",
@@ -538,7 +548,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Ghats", value: "88" },
       { label: "River", value: "Ganga" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Ahilya_Ghat_by_the_Ganges%2C_Varanasi.jpg/1600px-Ahilya_Ghat_by_the_Ganges%2C_Varanasi.jpg",
+    imageUrl: varanasiImg.url,
   },
   {
     id: "kumbh-prayagraj", name: "Kumbh Mela at Prayagraj", category: "Living Heritage",
@@ -598,7 +608,7 @@ export const heritageSites: HeritageSite[] = [
       { label: "Tradition", value: "Neo-Vaishnavism (Sankardev)" },
       { label: "Famous for", value: "Sattriya dance" },
     ],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Doriya_River_of_Majuli.jpg/1600px-Doriya_River_of_Majuli.jpg",
+    imageUrl: majuliImg.url,
   },
 ];
 
