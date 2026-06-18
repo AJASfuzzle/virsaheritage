@@ -1,78 +1,69 @@
+## Phase 1 — UI polish + Atlas-driven progression
 
-# KAAL — Auth, Trails, Khazane build plan
-
-Preserves the existing dark heritage aesthetic (oklch ember/jade tokens, Cormorant + Inter, glass surfaces, framer-motion). All new surfaces reuse `glass`, `gradient-ember`, `btn-glossy`, and the current spacing scale. No new color families.
-
-I'll need to enable **Lovable Cloud** (backend) for auth + persistent coins/check-ins. That's a one-click step I'll trigger in Phase 1.
+Good news on the backend: the database already has everything we need. `heritage_sites` (39 rows, 4 trails) carries `lat/lng/radius_m/coin_reward/trail_slug/stop_index`. The `checkin_at_site` RPC handles GPS distance check (Haversine vs `radius_m`), coin issuance, anti-double-claim, trail-complete bonus (+100), and achievement unlocks. `user_coins`, `coin_ledger`, `trail_progress`, `achievements`, `rewards`, `redeem_reward` all exist. Khazane reads balance via `getMyState`. **No new tables needed.** The work is wiring this into a real Google Map and the trail UI.
 
 ---
 
-## Phase 1 — Backend + Auth (this turn after you approve)
+### 1. Hero blur transition fix
+- `src/components/site/Hero.tsx` ends with a flat overlay (`oklch(.14_.04_50/.92)` at 100%) that hard-cuts at the section boundary, and `src/styles.css` has a separate `main > section + section::before` blur seam that fights it.
+- Replace with a continuous mask: extend the hero overlay 120–160 px past the section bottom using a CSS gradient mask, and let it fade into the next section's background colour. Drop the `::before` blur for the hero→next transition.
+- Verify on mobile (100svh quirks), tablet, desktop. Add `prefers-reduced-motion` respect on the ken-burns image (already present, audit).
 
-**Backend (Lovable Cloud)**
-- `profiles` (id, full_name, avatar_url, created_at)
-- `user_coins` (user_id, balance)
-- `coin_ledger` (id, user_id, delta, reason, trail_id, site_id, created_at) — append-only audit
-- `trail_progress` (user_id, trail_id, site_id, checked_in_at, lat, lng, distance_m)
-- `achievements` (user_id, code, unlocked_at)
-- `redemptions` (user_id, reward_code, coins_spent, created_at)
-- RLS on every table scoped to `auth.uid()`
-- Trigger: auto-create profile + `user_coins` row on signup
-- Server function `check_in_at_site(site_id, lat, lng)` does Haversine distance server-side, enforces one check-in per site, writes ledger + awards coins atomically (prevents client-side cheating)
+### 2. Light Mode default
+- Currently `Navbar.tsx` defaults `light=false` and writes `.light` to `<html>` on mount → flash of dark, then dark stays.
+- Move theme into a `ThemeProvider` (`src/hooks/use-theme.tsx`) with priority: `localStorage("virsa-theme")` → `light` default. System theme is ignored.
+- Inline an early script in `src/routes/__root.tsx`'s `<head>` (via `head().scripts`) that sets `.light` on `<html>` before hydration to prevent flash.
+- Replace navbar toggle to call `setTheme()`. Keep `Hero` section forced dark via its existing `className="dark"` override (intentional, looks correct).
+- Audit the rest of the codebase for color contrast in light mode (most surfaces already use semantic tokens, so this should be one polish pass).
 
-**Auth UI**
-- `/auth` route — frosted glass card, Cormorant heading, ember accent
-- Email + password sign-in / sign-up with strength meter + zod validation
-- "Continue with Google" via managed OAuth
-- Forgot password → `/reset-password`
-- Navbar: replaces "Login" pill with circular avatar dropdown (Profile, My Trails, Khazane, Settings, Logout) when signed in
-- `_authenticated/` layout gating `/dashboard`, `/settings`, `/khazane/redeem`
+### 3 + 4. Google Maps Atlas with live user pin
+- Connect the **Google Maps Platform connector** (asks the user inside Lovable; managed key works on `*.lovable.app`).
+- New component `src/components/site/AtlasMap.tsx` using the Maps JS API loaded async with the browser key (`VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY`). Use `google.maps.Marker` (NOT AdvancedMarkerElement — requires mapId).
+- Lazy-load via dynamic import; render a skeleton fallback.
+- Pin every `heritage_sites` row as a category-coloured marker. Click → existing site detail panel + a **Check in** button (auth-gated; if signed-out, show "Sign in to earn coins").
+- Keep the existing stylized `HeritageAtlas` (India PNG) as a secondary "Curated view" toggle so we don't lose the editorial design.
+- **Geolocation flow:** first visit shows a non-intrusive prompt card ("Allow location to enhance your Atlas") with Allow / Not Now. Persist decision in `localStorage("virsa-geo-consent")`. On Allow, use `navigator.geolocation.watchPosition` (high accuracy, throttled to 5 s).
+- Render user as a glowing red pulse marker (SVG symbol, CSS pulse animation on the map div via custom overlay). Pan-to-user button.
+- Privacy: never store raw coordinates server-side — `checkin_at_site` already discards lat/lng after the distance check; we don't log location anywhere else.
 
-## Phase 2 — Trails check-in + Kaal Coins
+### 5. Atlas ↔ Trails source of truth
+- `src/lib/trails-data.ts` (static editorial copy) stays for prose. The **map and progression** read from DB `heritage_sites` joined to that copy by `trail_slug` + `stop_index`. New helper `src/lib/trails.functions.ts` (server fn): `getTrailWithProgress(slug)` returns stops + checked-in flag per stop for current user.
+- Trail detail page (`src/routes/trails.$slug.tsx`) gets: per-stop status (locked/available/done), progress bar (X / N), open-in-map button that deep-links Atlas to that pin.
+- Schema is already future-proof for AR/audio/checkpoints — they'd be new optional columns or a `stop_extras` table later.
 
-- Trail detail page (`/trails/$slug`) gets a **checkpoint tracker**: progress bar, completed/remaining list, coin total
-- "Check in here" button per stop → requests geolocation → calls server fn → distance check (50–100 m configurable per site)
-- Celebration animation on success (✓ Heritage Site Discovered, coins awarded)
-- Trail-complete bonus + achievement unlock
-- Each trail card shows coins available + your progress when signed in
-- Anti-spoof: server-side distance + 1-per-site + timestamp; flag if >2 check-ins/minute across sites
+### 6. Trail verification
+- Use the existing `checkin_at_site(_site_id, _lat, _lng)` RPC. It already does Haversine + `radius_m` gate, blocks duplicates, awards on trail completion.
+- Add a small anti-abuse layer client-side: only enable Check-in button when `navigator.geolocation` reports `accuracy < 100 m` and movement since last check-in is plausible (rate-limit: 1 check-in per 30 s, enforced both client + by a new column `last_checkin_at` we can add later — out of scope this phase, leave RPC as the server gate).
+- Demo mode (`_force=true`) only available to a dev role — hide from production UI.
 
-## Phase 3 — Khazane (rewards)
+### 7. Reward points engine
+- Already implemented inside `checkin_at_site` (per-site coin + 100 bonus on trail complete + achievement). No new logic needed; expose category multipliers later by adding a `multiplier` column to `heritage_sites` and a `season` table — flagged as future, not built now.
 
-- New `/khazane` route — gold-leaf hero, "Unlock Treasures Beyond Time", category tabs (Travel, Merchandise, Digital)
-- Reward catalog seeded in a `rewards` table (image, title, coins, description, stock)
-- Reward card → Redeem modal → server fn deducts coins atomically, writes `redemptions`, shows "You've unlocked a piece of KAAL"
-- Live coin balance pill in navbar (next to avatar)
+### 8. Khazane live balance
+- `getMyState` already returns balance + achievements. After a successful `checkin_at_site`, invalidate `["my-state"]` and `["trail", slug]` queries → balance updates instantly across Atlas / Trails / Khazane / Dashboard without refresh.
+- Add a header coin chip (in `Navbar`) showing live balance for signed-in users; clicking it routes to Khazane.
+- Dashboard (`_authenticated/dashboard.tsx`) gets: balance, lifetime earned (sum of positive `coin_ledger` rows), completed trails, active trails (started but not finished).
 
-## Phase 4 — Dashboard, Achievements, Settings
-
-- `/dashboard` — welcome header, widgets (balance, trails completed, sites visited, active trails, redemptions, badges grid)
-- Achievement badges: First Footsteps, Time Traveler, Keeper of Stories, Heritage Explorer, Trail Master, Guardian of KAAL — unlocked by ledger triggers
-- `/settings` — profile, password, notifications, privacy, theme, Google link status
-
-## Phase 5 — Light mode pass + polish
-
-- Audit every new surface in light mode (warm ivory/sandstone/muted gold tokens already in `styles.css`)
-- Reduced-motion variants, keyboard focus rings, ARIA labels on icon buttons
-- Mobile nav: avatar drawer, sticky check-in CTA on trail pages
+### 9. Architecture
+- New module layout:
+  - `src/components/map/` — `GoogleMapProvider.tsx`, `AtlasMap.tsx`, `UserLocationMarker.tsx`, `SiteMarker.tsx`
+  - `src/hooks/use-geolocation.ts`, `src/hooks/use-theme.tsx`
+  - `src/lib/trails.functions.ts` — typed server fns: `getTrailWithProgress`, `checkInAtSite` (wraps RPC, requires auth via `requireSupabaseAuth`)
+- Strict types end-to-end; error boundaries on map components (graceful "Map couldn't load" fallback); console logging gated behind `import.meta.env.DEV`.
 
 ---
 
-## Tech notes (for reference)
+### Technical notes
+- New deps: none required — Google Maps JS loads via `<script>` tag in the map provider.
+- Connector required: **Google Maps Platform** (I'll trigger the connect dialog in build mode — the managed key works for `*.lovable.app` and you can add a custom key later for a custom domain).
+- Migrations: none in Phase 1.
+- Files touched (estimate): ~12 files modified, ~7 new.
 
-- Stack stays TanStack Start + Tailwind v4 + framer-motion (we're not switching to Next.js — the existing stack already covers SSR, routing, code-splitting)
-- Auth + DB via Lovable Cloud (Supabase under the hood); Google OAuth via the managed broker
-- Geolocation: browser API, server-side Haversine for trust
-- State: TanStack Query (already wired) — no Zustand needed
-- Real coin balance read with `useSuspenseQuery`, mutations invalidate `["coins"]` and `["progress", trailId]`
+### Out of scope for Phase 1 (flagged for Phase 2)
+- Route-line drawing between stops, checkpoint polylines, % completion via checkpoints
+- Seasonal multiplier engine
+- Server-side anti-spoof (movement plausibility on the RPC)
+- Digital collectibles / badges in Khazane (UI shell only, no minting)
 
----
-
-## What I need from you
-
-1. **Approve this plan**, and I'll start with Phase 1 (enable Cloud + auth + schema) in the next turn.
-2. **Google sign-in**: enable now, or email/password only for v1? (I default to enabling both.)
-3. **Trail check-in radius**: 50 m (strict, requires accurate GPS) or 100 m (forgiving)? Default 75 m.
-4. **Seed Khazane catalog**: I'll seed ~9 placeholder rewards (3 per category) with image prompts you can swap later — OK?
-
-Reply "go" (with any tweaks) and I'll ship Phase 1.
+### One decision needed
+**Atlas presentation**: replace the current stylized India PNG entirely with Google Maps, OR keep both views with a "Curated / Live Map" toggle? I recommend the **toggle** so the editorial atlas stays as the landing visual and Google Maps powers exploration + check-ins. Confirm if you want full replacement instead.
