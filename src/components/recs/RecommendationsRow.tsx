@@ -1,10 +1,11 @@
 import { useMemo } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Sparkles, ArrowRight, Heart, Lock } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useRecommendations, useSaves, useToggleSave } from "@/hooks/use-recommendations";
 import { buildCatalog, indexCatalog, type CatalogItem, type ItemType } from "@/lib/recommendation-catalog";
+
 
 export type RecommendationsRowProps = {
   surface: "library" | "trails" | "home";
