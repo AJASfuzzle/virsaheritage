@@ -32,13 +32,14 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: DashboardPage,
 });
 
-type TabKey = "overview" | "profile" | "posts" | "saved" | "library";
+type TabKey = "overview" | "profile" | "posts" | "saved" | "library" | "liked";
 const TABS: Array<{ key: TabKey; label: string; icon: typeof Coins }> = [
   { key: "overview", label: "Overview", icon: LayoutDashboard },
   { key: "profile", label: "Profile", icon: UserRound },
   { key: "posts", label: "My Echoes", icon: Images },
-  { key: "saved", label: "Saved", icon: Bookmark },
+  { key: "saved", label: "Saved Echoes", icon: Bookmark },
   { key: "library", label: "Library", icon: LibraryIcon },
+  { key: "liked", label: "Liked by you", icon: Heart },
 ];
 
 function DashboardPage() {
