@@ -217,6 +217,7 @@ const SHELVES: Shelf[] = [
 /* ---------------- page ---------------- */
 
 function LibraryPage() {
+  const search = Route.useSearch();
   const [query, setQuery] = useState("");
   const [active, setActive] = useState<Story | null>(null);
 
@@ -237,6 +238,18 @@ function LibraryPage() {
 
   const curated = useMemo(() => allStories.filter((s) => s.curator), [allStories]);
 
+  // Open a story when arriving with ?story=<id>
+  useEffect(() => {
+    const id = search.story;
+    if (!id) return;
+    const found = allStories.find((s) => s.id === id);
+    if (found) {
+      setActive(found);
+      // Smooth scroll to top so the modal slide-in feels intentional.
+      try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch {}
+    }
+  }, [search.story, allStories]);
+
   // close on esc
   useEffect(() => {
     if (!active) return;
@@ -244,6 +257,7 @@ function LibraryPage() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [active]);
+
 
   return (
     <div className="pt-24 sm:pt-28">
