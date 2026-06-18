@@ -12,7 +12,7 @@ const links = [
   { to: "/trails", label: "Trails" },
   { to: "/atlas", label: "Heritage Atlas" },
   { to: "/library", label: "Library" },
-  { to: "/kitab", label: "kitab" },
+  { to: "/kitab", label: "Kitab" },
   { to: "/khazane", label: "Khazane" },
   { to: "/echoes", label: "Echoes" },
 ] as const;
