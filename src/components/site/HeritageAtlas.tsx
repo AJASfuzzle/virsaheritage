@@ -37,11 +37,20 @@ function formatYear(y: number) {
   return `${y}`;
 }
 
-export function HeritageAtlas() {
+export function HeritageAtlas({ initialSiteId }: { initialSiteId?: string } = {}) {
   const [activeCats, setActiveCats] = useState<Set<HeritageCategory>>(new Set());
-  const [selected, setSelected] = useState<HeritageSite | null>(null);
+  const [selected, setSelected] = useState<HeritageSite | null>(
+    initialSiteId ? heritageSites.find((s) => s.id === initialSiteId) ?? null : null,
+  );
   const [year, setYear] = useState<number>(TIMELINE_MAX);
   const [hover, setHover] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!initialSiteId) return;
+    const match = heritageSites.find((s) => s.id === initialSiteId);
+    if (match) setSelected(match);
+  }, [initialSiteId]);
+
 
   const allOn = activeCats.size === 0;
 

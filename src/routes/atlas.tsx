@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import { Loader2, Map as MapIcon, Palette } from "lucide-react";
 import { HeritageAtlas } from "@/components/site/HeritageAtlas";
 
@@ -7,7 +7,13 @@ const AtlasMap = lazy(() =>
   import("@/components/map/AtlasMap").then((m) => ({ default: m.AtlasMap }))
 );
 
+type AtlasSearch = { site?: string; view?: "live" | "curated" };
+
 export const Route = createFileRoute("/atlas")({
+  validateSearch: (search: Record<string, unknown>): AtlasSearch => ({
+    site: typeof search.site === "string" ? search.site : undefined,
+    view: search.view === "curated" || search.view === "live" ? search.view : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Heritage Atlas — VIRSA" },
@@ -22,7 +28,12 @@ export const Route = createFileRoute("/atlas")({
 type View = "live" | "curated";
 
 function AtlasPage() {
-  const [view, setView] = useState<View>("live");
+  const { site, view: viewParam } = Route.useSearch();
+  const [view, setView] = useState<View>(viewParam ?? (site ? "curated" : "live"));
+
+  useEffect(() => {
+    if (site) setView("curated");
+  }, [site]);
 
   return (
     <div className="pt-24">
@@ -85,7 +96,7 @@ function AtlasPage() {
             <AtlasMap />
           </Suspense>
         ) : (
-          <HeritageAtlas />
+          <HeritageAtlas initialSiteId={site} />
         )}
       </div>
     </div>
