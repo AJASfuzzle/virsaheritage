@@ -86,7 +86,7 @@ function useVoice() {
 }
 
 export function Shruti() {
-  const { playing, speak } = useVoice();
+  const { playing, loading, speak } = useVoice();
 
   return (
     <section id="shruti" className="relative py-24 sm:py-32">
