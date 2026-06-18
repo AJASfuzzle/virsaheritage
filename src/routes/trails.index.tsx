@@ -19,11 +19,17 @@ function TrailsIndex() {
     <div className="pt-20 [&>section:first-child]:!pt-6 sm:[&>section:first-child]:!pt-10">
       <RecommendationsRow
         surface="trails"
+        title="Sites for you"
+        subtitle="Heritage sites Virsa AI thinks you'll love — tap one to open it on the curated atlas."
+        filterType="site"
+      />
+      <RecommendationsRow
+        surface="trails"
         title="Trails for you"
         subtitle="Virsa AI suggests trails and stops aligned with where you've been and what you love."
+        filterType="trail"
       />
       <Trails />
     </div>
   );
 }
-
