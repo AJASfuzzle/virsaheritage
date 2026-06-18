@@ -81,8 +81,7 @@ export const toggleSave = createServerFn({ method: "POST" })
     const { error } = await supabase
       .from("user_saves")
       .insert({ user_id: userId, item_type: data.itemType, item_id: data.itemId });
-    // Ignore unique-violation races (double-click / concurrent toggle)
-    if (error && (error as any).code !== "23505") throw new Error(error.message);
+    if (error) throw new Error(error.message);
     return { saved: true };
   });
 
