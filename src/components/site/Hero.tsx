@@ -13,19 +13,20 @@ export function Hero() {
           src={hero}
           alt="Aerial dusk view of an Indian temple landscape with diyas and a river"
           className="h-full w-full object-cover animate-ken-burns"
+          style={{ animation: "ken-burns 24s ease-in-out infinite alternate, hero-fade-in 1.4s ease-out forwards" }}
           width={1920}
           height={1080}
         />
         {/* Tonal wash */}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.14_0.04_50/0.55)_0%,oklch(0.14_0.04_50/0.30)_40%,oklch(0.14_0.04_50/0.20)_100%)]" />
         <div className="absolute inset-0 [background:var(--gradient-aurora)]" />
-        {/* Single, uniform fade-to-background at the bottom so the hero blends seamlessly into the next section */}
+        {/* Smooth, stretched fade-to-background covering most of the hero for a seamless blend into the next section */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-[55%]"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[80%]"
           style={{
             background:
-              "linear-gradient(180deg, oklch(0.16 0.025 265 / 0) 0%, oklch(0.16 0.025 265 / 0.55) 55%, oklch(0.16 0.025 265 / 0.9) 85%, oklch(0.16 0.025 265) 100%)",
+              "linear-gradient(180deg, oklch(0.16 0.025 265 / 0) 0%, oklch(0.16 0.025 265 / 0.15) 35%, oklch(0.16 0.025 265 / 0.45) 60%, oklch(0.16 0.025 265 / 0.75) 80%, oklch(0.16 0.025 265 / 0.92) 92%, oklch(0.16 0.025 265) 100%)",
           }}
         />
       </div>
