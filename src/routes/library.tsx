@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, Clock, MapPin, Sparkles, X, ArrowRight, BookOpen, Heart, Mic, FileText } from "lucide-react";
+import { Search, Sparkles, X, ArrowRight, BookOpen, Heart, Mic, FileText } from "lucide-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { listLibraryEchoes, toggleLike } from "@/lib/echoes.functions";
