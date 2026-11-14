@@ -56,7 +56,7 @@ type Ctx = {
   /** Translate a single string synchronously if cached; ensure queues missing translations after render. */
   t: (text: string) => string;
   /** Queue many strings for translation in one batch. */
-  ensure: (texts: string[]) => void;
+  ensure: (texts: string[], replacePage?: boolean) => void;
   /** A counter that bumps when new translations arrive so consumers can re-render. */
   version: number;
 };
@@ -108,6 +108,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const blocked = useRef(new Set<LangCode>());
   const attempted = useRef(new Map<LangCode, Set<string>>());
+  const inFlight = useRef(new Map<LangCode, Set<string>>());
   const flush = useRef<() => Promise<void>>(async () => {});
 
   // Load persisted lang
@@ -148,6 +149,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     }
     if (!batch.length) return;
     batch.forEach((text) => pending.delete(text));
+    inFlight.current.set(target, new Set(batch));
     busy.current = true;
     try {
       const res = await translate({ data: { targetLang: target, texts: batch } });
@@ -166,6 +168,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       const { toast } = await import("sonner");
       toast.error(error instanceof Error ? error.message : "Translation is temporarily unavailable.");
     } finally {
+      inFlight.current.delete(target);
       busy.current = false;
       if (queues.current.get(activeLang.current)?.size) scheduleFlush();
     }
@@ -176,15 +179,15 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return () => { if (timer.current) clearTimeout(timer.current); };
   }, [lang, scheduleFlush]);
 
-  const ensure = useCallback((texts: string[]) => {
+  const ensure = useCallback((texts: string[], replacePage = false) => {
     if (lang === "en" || blocked.current.has(lang)) return;
     const c = cacheFor(lang);
     let pending = queues.current.get(lang);
     if (!pending) { pending = new Set(); queues.current.set(lang, pending); }
     // The global walker supplies the current page: discard stale navigation work.
-    pending.clear();
+    if (replacePage) pending.clear();
     for (const text of texts) {
-      if (text && !c.has(text) && !attempted.current.get(lang)?.has(text)) pending.add(text);
+      if (text && !c.has(text) && !attempted.current.get(lang)?.has(text) && !inFlight.current.get(lang)?.has(text)) pending.add(text);
     }
     if (pending.size) scheduleFlush();
   }, [lang, scheduleFlush]);

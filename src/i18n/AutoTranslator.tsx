@@ -62,7 +62,7 @@ export function AutoTranslator() {
           record.applied = output;
         }
       });
-      ensure([...pending]);
+      ensure([...pending], true);
     } finally { observe(); }
   };
 
