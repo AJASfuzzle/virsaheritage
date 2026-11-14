@@ -1,6 +1,6 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { translateBatch, LANGUAGE_NAMES } from "@/lib/translate.functions";
+import { translateBatch, LANGUAGE_NAMES, LANGUAGE_CONFIG } from "@/lib/translate.functions";
 
 export type LangCode = keyof typeof LANGUAGE_NAMES;
 
@@ -48,11 +48,12 @@ export const SUPPORTED_LANGS: { code: LangCode; label: string; native: string }[
 
 const RTL_LANGS = new Set<LangCode>(["ur", "ar", "fa", "sd"]);
 const STORAGE_KEY = "virsa.lang";
+const CACHE_KEY = "virsa.translations.v2";
 
 type Ctx = {
   lang: LangCode;
   setLang: (l: LangCode) => void;
-  /** Translate a single string synchronously if cached, else returns original and starts background translation. */
+  /** Translate a single string synchronously if cached; ensure queues missing translations after render. */
   t: (text: string) => string;
   /** Queue many strings for translation in one batch. */
   ensure: (texts: string[]) => void;
@@ -73,11 +74,13 @@ function cacheFor(lang: LangCode): Map<string, string> {
 function loadFromLocalStorage(lang: LangCode) {
   if (typeof window === "undefined") return;
   try {
-    const raw = window.localStorage.getItem(`${STORAGE_KEY}.cache.${lang}`);
+    const raw = window.localStorage.getItem(`${CACHE_KEY}.${lang}`) ?? window.localStorage.getItem(`${STORAGE_KEY}.cache.${lang}`);
     if (!raw) return;
     const obj = JSON.parse(raw) as Record<string, string>;
     const c = cacheFor(lang);
-    for (const [k, v] of Object.entries(obj)) c.set(k, v);
+    for (const [k, v] of Object.entries(obj)) {
+      if (typeof v === "string" && v.trim() && v !== k && LANGUAGE_CONFIG[lang]?.scriptTest.test(v)) c.set(k, v);
+    }
   } catch {}
 }
 
@@ -87,7 +90,7 @@ function persistToLocalStorage(lang: LangCode) {
     const c = cacheFor(lang);
     const obj: Record<string, string> = {};
     c.forEach((v, k) => { obj[k] = v; });
-    window.localStorage.setItem(`${STORAGE_KEY}.cache.${lang}`, JSON.stringify(obj));
+    window.localStorage.setItem(`${CACHE_KEY}.${lang}`, JSON.stringify(obj));
   } catch {}
 }
 
@@ -98,8 +101,14 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
 
 
-  // Queue + debounce timer
-  const queueRef = useMemo(() => ({ pending: new Set<string>(), timer: null as ReturnType<typeof setTimeout> | null, inflight: false }), []);
+  const activeLang = useRef(lang);
+  activeLang.current = lang;
+  const queues = useRef(new Map<LangCode, Set<string>>());
+  const busy = useRef(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const blocked = useRef(new Set<LangCode>());
+  const attempted = useRef(new Map<LangCode, Set<string>>());
+  const flush = useRef<() => Promise<void>>(async () => {});
 
   // Load persisted lang
   useEffect(() => {
@@ -118,69 +127,77 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     document.documentElement.dir = RTL_LANGS.has(lang) ? "rtl" : "ltr";
   }, [lang]);
 
-  const flushQueue = useCallback(async () => {
-    if (queueRef.inflight) return;
-    if (queueRef.pending.size === 0) return;
-    if (lang === "en") { queueRef.pending.clear(); return; }
-
-    const c = cacheFor(lang);
-    const batch = Array.from(queueRef.pending).filter((t) => !c.has(t)).slice(0, 60);
-    if (batch.length === 0) { queueRef.pending.clear(); return; }
-    batch.forEach((t) => queueRef.pending.delete(t));
-
-    
-    queueRef.inflight = true;
-    try {
-      const res = await translate({ data: { targetLang: lang, texts: batch } });
-      const translations = res?.translations ?? batch;
-      
-      batch.forEach((src, i) => {
-        const out = translations[i];
-        if (typeof out === "string" && out) c.set(src, out);
-      });
-      persistToLocalStorage(lang);
-      setVersion((v) => v + 1);
-    } catch (e) {
-      console.warn("[i18n] batch failed", e);
-    } finally {
-      queueRef.inflight = false;
-      // If more queued during the request, schedule another flush.
-      if (queueRef.pending.size > 0) {
-        queueRef.timer = setTimeout(flushQueue, 50);
-      }
-    }
-  }, [lang, translate, queueRef]);
-
-
   const scheduleFlush = useCallback(() => {
-    if (queueRef.timer) clearTimeout(queueRef.timer);
-    queueRef.timer = setTimeout(flushQueue, 120);
-  }, [flushQueue, queueRef]);
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => void flush.current(), 100);
+  }, []);
 
-  const enqueue = useCallback((text: string) => {
-    if (!text || lang === "en") return;
-    const c = cacheFor(lang);
-    if (c.has(text)) return;
-    queueRef.pending.add(text);
+  flush.current = async () => {
+    const target = activeLang.current;
+    if (busy.current || target === "en" || blocked.current.has(target)) return;
+    const pending = queues.current.get(target);
+    if (!pending?.size) return;
+    const c = cacheFor(target);
+    const batch: string[] = [];
+    let chars = 0;
+    for (const text of pending) {
+      if (c.has(text)) { pending.delete(text); continue; }
+      if (batch.length && (batch.length >= 60 || chars + text.length > 12000)) break;
+      batch.push(text);
+      chars += text.length;
+    }
+    if (!batch.length) return;
+    batch.forEach((text) => pending.delete(text));
+    busy.current = true;
+    try {
+      const res = await translate({ data: { targetLang: target, texts: batch } });
+      let tried = attempted.current.get(target);
+      if (!tried) { tried = new Set(); attempted.current.set(target, tried); }
+      batch.forEach((source, i) => {
+        tried.add(source);
+        const output = res.translations[i];
+        if (typeof output === "string" && output.trim()) c.set(source, output);
+      });
+      persistToLocalStorage(target);
+      setVersion((v) => v + 1);
+    } catch (error) {
+      blocked.current.add(target);
+      console.warn("[i18n] Translation unavailable", error);
+      const { toast } = await import("sonner");
+      toast.error(error instanceof Error ? error.message : "Translation is temporarily unavailable.");
+    } finally {
+      busy.current = false;
+      if (queues.current.get(activeLang.current)?.size) scheduleFlush();
+    }
+  };
+
+  useEffect(() => {
     scheduleFlush();
-  }, [lang, scheduleFlush, queueRef]);
-
-  const t = useCallback((text: string) => {
-    if (!text) return text;
-    if (lang === "en") return text;
-    const c = cacheFor(lang);
-    const hit = c.get(text);
-    if (hit) return hit;
-    enqueue(text);
-    return text;
-  }, [lang, enqueue]);
+    return () => { if (timer.current) clearTimeout(timer.current); };
+  }, [lang, scheduleFlush]);
 
   const ensure = useCallback((texts: string[]) => {
-    if (lang === "en") return;
-    for (const t of texts) enqueue(t);
-  }, [lang, enqueue]);
+    if (lang === "en" || blocked.current.has(lang)) return;
+    const c = cacheFor(lang);
+    let pending = queues.current.get(lang);
+    if (!pending) { pending = new Set(); queues.current.set(lang, pending); }
+    // The global walker supplies the current page: discard stale navigation work.
+    pending.clear();
+    for (const text of texts) {
+      if (text && !c.has(text) && !attempted.current.get(lang)?.has(text)) pending.add(text);
+    }
+    if (pending.size) scheduleFlush();
+  }, [lang, scheduleFlush]);
+
+  const t = useCallback((text: string) => {
+    if (!text || lang === "en") return text;
+    return cacheFor(lang).get(text) ?? text;
+  }, [lang]);
 
   const setLang = useCallback((l: LangCode) => {
+    blocked.current.delete(l);
+    attempted.current.delete(l);
+    activeLang.current = l;
     setLangState(l);
     if (typeof window !== "undefined") {
       try { window.localStorage.setItem(STORAGE_KEY, l); } catch {}
@@ -202,7 +219,8 @@ export function useLanguage() {
 
 /** Translate a single string. Re-renders when translations arrive. */
 export function useT(text: string): string {
-  const { t, version } = useLanguage();
+  const { t, ensure, version } = useLanguage();
+  useEffect(() => { ensure([text]); }, [ensure, text]);
   // version dep ensures re-render when cache updates
   return useMemo(() => t(text), [t, text, version]);
 }
