@@ -1,53 +1,30 @@
 ## Goal
+Add many more languages to Kitab, the language archive, which has 16 today. Also widen the site-wide language switcher, which offers 11 today, using the same approach.
 
-Add a language switcher that translates the entire Virsa website (UI labels + dynamic content like stories, trails, descriptions) into popular Indian languages.
+## Current state (checked)
+- **Kitab (16):** Toda, Sanketi, Kurukh, Kodava, Mising, Khasi, Bhili, Gondi, Santali, Apatani, Mizo, Konyak, Saurashtra, Tulu, Ho, Ladakhi. Each card shows region, speakers, status, a native phrase and its meaning, and plays the phrase in its own ElevenLabs voice.
+- **Site switcher (11):** English, Hindi, Punjabi, Bengali, Tamil, Telugu, Marathi, Gujarati, Kannada, Malayalam, Urdu. It translates through Google Translate and checks that each translation uses the right alphabet.
 
-## Supported languages
+## Part 1: Kitab, adding about 34 languages for roughly 50 in total
+Same card format, the same voice settings and volume boost, and voices rotated across the existing ElevenLabs set. Already-listed languages are skipped: Santali, Tulu, Mizo and Khasi stay as they are.
 
-English (default), Hindi, Punjabi, Bengali, Tamil, Telugu, Marathi, Gujarati, Kannada, Malayalam, Urdu.
+- **Scheduled Indian languages:** Bodo, Dogri, Kashmiri, Konkani, Maithili, Manipuri (Meitei), Sanskrit, Assamese, Odia, Nepali, Sindhi
+- **Regional, endangered and indigenous:** Bhojpuri, Garo, Kokborok, Lepcha, Bhutia, Nyishi, Ao, Angami, Lotha, Tangkhul, Karbi, Halbi, Korku, Munda, Irula, Badaga, Great Andamanese, Jarawa, Bishnupriya
+- **Major international:** Spanish, French, Mandarin, Arabic, Portuguese, Russian, Japanese, Swahili, German, Persian, Indonesian, Korean, Turkish, Tibetan, Sinhala, Thai
 
-## Approach
+Each new card gets a short greeting or blessing in that language, shown in its native script where one exists (for example Devanagari, Meitei Mayek, Ol Chiki, Perso-Arabic, Han or Hangul), plus an English meaning.
 
-A two-layer system:
+The grid gains a filter row: All · Indian · Endangered · International. This keeps about 50 cards easy to browse.
 
-1. **Static UI strings** — a translation dictionary in `src/i18n/strings.ts` covering navbar, footer, buttons, headings, dashboard tabs, etc. Strings are looked up via a `t(key)` helper. Initial translations generated via Lovable AI Gateway and committed to the repo so they load instantly.
+## Part 2: Site switcher, adding the languages Google Translate supports reliably
+New options: Assamese, Odia, Nepali, Sindhi, Sanskrit, Konkani, Maithili, Bhojpuri, Dogri, Manipuri (Meitei), Santali (Ol Chiki), Mizo, Khasi, Kokborok, Tulu, plus Spanish, French, German, Portuguese, Russian, Arabic, Mandarin, Japanese, Korean, Indonesian, Turkish, Persian and Swahili.
 
-2. **Dynamic content** — text coming from the database (story titles, trail descriptions, voice descriptions, etc.) is translated at runtime via a server function that calls Lovable AI Gateway (`google/gemini-2.5-flash`). Results are cached:
-   - In-memory cache (Map) for the session
-   - `localStorage` cache keyed by `${lang}:${hash(text)}` so repeat visits are instant
-   - Server-side cache table `translations_cache` (text_hash, lang, translated) to share across users
+Each language gets its native name in the dropdown and the same alphabet check. Arabic, Persian and Sindhi switch the page to right-to-left, as Urdu does today.
 
-## Pieces to build
+Bodo, Garo and Kashmiri are not offered by Google Translate, so they appear only in Kitab and not in the site switcher.
 
-```text
-src/i18n/
-  strings.ts            ← static UI dictionary, all 11 languages
-  LanguageProvider.tsx  ← React context, persists selection to localStorage
-  useT.ts               ← t(key) hook for static strings
-  useTranslate.ts       ← async hook for dynamic strings, with cache
-src/lib/
-  translate.functions.ts ← createServerFn, batched translate via Lovable AI + DB cache
-src/components/site/
-  LanguageSwitcher.tsx  ← globe dropdown in Navbar with native language names
-```
-
-DB migration adds a `translations_cache` table (text_hash, lang, source, translated, created_at) with RLS allowing public read and authenticated insert.
-
-## Integration points
-
-- Wrap app in `<LanguageProvider>` inside `src/routes/__root.tsx`.
-- Add `<LanguageSwitcher />` to `Navbar` (desktop + mobile menu).
-- Replace hard-coded UI strings in Navbar, Footer, Hero, Dashboard tabs, FloatingAssistantButton, common CTAs with `t("key")` calls.
-- Wrap dynamic content rendering (story cards, trail cards, dashboard lists) with a `<TranslatedText>` component that uses `useTranslate` so the text re-renders when language changes. Falls back to the original string while the async translation resolves.
-
-## Caveats called out for the user
-
-- First load in a new language may take ~1–3s per page section while the AI translates uncached text; subsequent visits are instant.
-- AI translations are best-effort and may not be 100% idiomatic — committed static dictionary covers the most-seen strings precisely.
-- Right-to-left (Urdu) gets `dir="rtl"` on `<html>`.
-
-## Out of scope
-
-- Translating images / PDFs.
-- SEO hreflang per-language (can be added later).
-- Voice TTS in regional languages (ElevenLabs voices stay as-is unless you want me to wire multilingual voices next).
+## Technical details
+- `src/components/site/Shruti.tsx`: extend the `Lang` array and add a `group` field plus the filter UI.
+- `src/lib/translate.functions.ts`: add `LANGUAGE_CONFIG` entries with Google codes (`mni-Mtei`, `sat`, `lus`, `kha`, `trp`, `tcy`, `gom`, `doi`, `bho`, `mai`, `sa`, `zh-CN`, and so on) and Unicode script ranges.
+- `src/i18n/LanguageProvider.tsx`: extend `SUPPORTED_LANGS`, `RTL_LANGS` (`ar`, `fa`, `sd`) and the dropdown, which is already scrollable.
+- Verification: run a batch translation per new code and confirm the alphabet; play a sample of Kitab cards.
