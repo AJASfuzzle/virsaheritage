@@ -276,6 +276,24 @@ export type Database = {
         }
         Relationships: []
       }
+      library_story_bodies: {
+        Row: {
+          body: string
+          created_at: string
+          story_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          story_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          story_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null

@@ -1,3 +1,4 @@
+import { HERITAGE_SHELVES } from "@/lib/library-heritage-stories";
 // Lightweight metadata for every story in the Library.
 // Used to feed the recommendation engine without dragging the full story bodies.
 // Keep in sync with SHELVES in src/routes/library.tsx.
@@ -12,7 +13,7 @@ export type LibraryStoryMeta = {
   minutes: number;
 };
 
-export const LIBRARY_STORIES_META: LibraryStoryMeta[] = [
+const BASE_META: LibraryStoryMeta[] = [
   // Family Stories
   { id: "partition-letter", title: "A Letter from Lahore, August 1947", blurb: "My grandfather's last letter from the city he was about to lose.", tag: "Letter · Punjab", shelf: "Family Stories", region: "Punjab", minutes: 12 },
   { id: "nanima-wedding", title: "Interview: My Nani's Wedding, Jaipur 1962", blurb: "Recorded one monsoon afternoon on a kitchen stool, in three languages.", tag: "Oral History · Rajasthan", shelf: "Family Stories", region: "Rajasthan", minutes: 14 },
@@ -61,4 +62,9 @@ export const LIBRARY_STORIES_META: LibraryStoryMeta[] = [
   { id: "dance", title: "Dance Forms", blurb: "Bharatanatyam, Kathak, Odissi, Manipuri.", tag: "Performance", shelf: "Performance", region: "Pan-India", minutes: 7 },
   { id: "theatre", title: "Theatre", blurb: "Kathakali masks, Yakshagana torches, Koodiyattam nights.", tag: "Performance", shelf: "Performance", region: "Kerala", minutes: 6 },
   { id: "ritual", title: "Ritual Performances", blurb: "Theyyam, where the dancer becomes the god.", tag: "Performance", shelf: "Performance", region: "Kerala", minutes: 6 },
+];
+
+export const LIBRARY_STORIES_META: LibraryStoryMeta[] = [
+  ...BASE_META,
+  ...HERITAGE_SHELVES.flatMap((sh) => sh.stories.map((st) => ({ id: st.id, title: st.title, blurb: st.blurb, tag: st.tag, shelf: sh.name, region: st.region, minutes: st.minutes }))),
 ];

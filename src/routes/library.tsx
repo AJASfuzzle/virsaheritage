@@ -10,6 +10,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { HERITAGE_SHELVES } from "@/lib/library-heritage-stories";
+import { getHeritageStoryBody } from "@/lib/library-stories.functions";
 
 
 export const Route = createFileRoute("/library")({
@@ -37,6 +39,7 @@ type Story = {
   tag: string;
   curator?: boolean;
   body?: string;
+  source?: string;
 };
 
 type Shelf = {
@@ -46,7 +49,7 @@ type Shelf = {
   stories: Story[];
 };
 
-const SHELVES: Shelf[] = [
+const BASE_SHELVES: Shelf[] = [
   {
     id: "family-stories",
     name: "Family Stories",
@@ -213,6 +216,8 @@ const SHELVES: Shelf[] = [
     ],
   },
 ];
+
+const SHELVES: Shelf[] = [...BASE_SHELVES, ...HERITAGE_SHELVES];
 
 /* ---------------- page ---------------- */
 
@@ -532,6 +537,18 @@ function StoryCard({
 /* ---------------- modal ---------------- */
 
 function StoryModal({ story, onClose }: { story: Story | null; onClose: () => void }) {
+  const fetchBody = useServerFn(getHeritageStoryBody);
+  const needsBody = !!story && !story.body && !!story.source;
+  const bodyQuery = useQuery({
+    queryKey: ["heritage-story", story?.id],
+    queryFn: () => fetchBody({ data: { id: story!.id } }),
+    enabled: needsBody,
+    staleTime: Infinity,
+    retry: 1,
+  });
+  const bodyText = story?.body ?? (needsBody
+    ? bodyQuery.data?.body ?? (bodyQuery.isError ? "This story could not be opened just now. Please try again in a moment." : "Opening the story from the archive…")
+    : story?.blurb);
   return (
     <AnimatePresence>
       {story && (
@@ -575,8 +592,8 @@ function StoryModal({ story, onClose }: { story: Story | null; onClose: () => vo
             <div className="px-6 py-8 sm:px-10 sm:py-10">
               <p className="text-pretty text-base italic text-muted-foreground">{story.blurb}</p>
               <div className="my-6 h-px w-12 bg-[color:var(--accent)]/50" />
-              <p className="text-pretty text-base leading-relaxed text-foreground/90 sm:text-lg">
-                {story.body ?? story.blurb}
+              <p className="whitespace-pre-line text-pretty text-base leading-relaxed text-foreground/90 sm:text-lg">
+                {bodyText}
               </p>
 
               <div className="mt-10 flex items-center justify-between border-t border-[var(--glass-border)] pt-6 text-xs text-muted-foreground">
