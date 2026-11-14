@@ -191,7 +191,7 @@ export function Shruti() {
             </p>
           </div>
           <div className="inline-flex items-center gap-2 rounded-full glass px-4 py-2 text-sm">
-            <Volume2 className="h-4 w-4 text-primary" /> 247 languages mapped
+            <Volume2 className="h-4 w-4 text-primary" /> 62 languages mapped
           </div>
         </div>
 
@@ -207,7 +207,6 @@ export function Shruti() {
               {f}
             </button>
           ))}
-          <span className="self-center text-xs text-muted-foreground ml-2">{shown.length} voices</span>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

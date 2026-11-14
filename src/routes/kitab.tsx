@@ -7,7 +7,7 @@ export const Route = createFileRoute("/kitab")({
       { title: "Kitab — India's Language Archive · VIRSA" },
       { name: "description", content: "Kitab preserves India's spoken tongues — pronunciation, proverb, song and script — for the centuries to come." },
       { property: "og:title", content: "Kitab — India's Language Archive" },
-      { property: "og:description", content: "247 languages mapped, voiced and remembered." },
+      { property: "og:description", content: "62 languages mapped, voiced and remembered." },
     ],
   }),
   component: KitabPage,
