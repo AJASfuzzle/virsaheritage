@@ -2,16 +2,16 @@ import { motion } from "framer-motion";
 import { Languages, Mic, Bot, BookOpen, Route, Archive, Gamepad2, Dna, Network, HeartPulse } from "lucide-react";
 
 const features = [
-  { id: "shruti", icon: Languages, title: "Kitab — Language Archive", body: "Preserve dialects with pronunciation, folk tales, proverbs and scripts. AI-generated summaries for every tongue." },
-  { id: "echoes", icon: Mic, title: "Echoes — A Living Archive", body: "Share photographs, stories, recipes, songs and traditions with a community of keepers. Every echo can be added to the Library." },
-  { id: "assistant", icon: Bot, title: "AI Heritage Assistant", body: "Ask anything — folk dances of Assam, festivals of Rajasthan, foods of 1950s Punjab. Answers with maps, images, sources." },
-  { id: "library", icon: BookOpen, title: "Living Heritage Library", body: "A curated digital archive of foods, recipes, dances, crafts, architecture and folklore — each with timeline and kin." },
-  { id: "trails", icon: Route, title: "Heritage Trails", body: "AI-generated tourism routes: food trails, temple trails, festival trails, craft villages — fully mapped." },
+  { id: "shruti", icon: Languages, title: "Kitab - Language Archive", body: "Preserve dialects with pronunciation, folk tales, proverbs and scripts. AI-generated summaries for every tongue." },
+  { id: "echoes", icon: Mic, title: "Echoes - A Living Archive", body: "Share photographs, stories, recipes, songs and traditions with a community of keepers. Every echo can be added to the Library." },
+  { id: "assistant", icon: Bot, title: "AI Heritage Assistant", body: "Ask anything - folk dances of Assam, festivals of Rajasthan, foods of 1950s Punjab. Answers with maps, images, sources." },
+  { id: "library", icon: BookOpen, title: "Living Heritage Library", body: "A curated digital archive of foods, recipes, dances, crafts, architecture and folklore - each with timeline and kin." },
+  { id: "trails", icon: Route, title: "Heritage Trails", body: "AI-generated tourism routes: food trails, temple trails, festival trails, craft villages - fully mapped." },
   { id: "capsules", icon: Archive, title: "Memory Capsules", body: "Families preserve voice notes, recipes, letters and photos as permanent digital legacies." },
   { id: "game", icon: Gamepad2, title: "GeoGuessr Through Time", body: "Explore AI-rendered scenes from 1920, 1947, 1980. Guess the place, learn its story, earn badges." },
   { id: "dna", icon: Dna, title: "Cultural DNA Engine", body: "Reveals hidden ties between foods, festivals, languages and migration patterns across the subcontinent." },
-  { id: "graph", icon: Network, title: "Knowledge Graph", body: "An interactive web of people, places, foods, festivals and stories — see how Indias connect." },
-  { id: "emotion", icon: HeartPulse, title: "Emotional Memory Engine", body: "Analyses stories for pride, joy, nostalgia and hope — tagging the feeling inside every memory." },
+  { id: "graph", icon: Network, title: "Knowledge Graph", body: "An interactive web of people, places, foods, festivals and stories - see how Indias connect." },
+  { id: "emotion", icon: HeartPulse, title: "Emotional Memory Engine", body: "Analyses stories for pride, joy, nostalgia and hope - tagging the feeling inside every memory." },
 ];
 
 export function Features() {
@@ -24,7 +24,7 @@ export function Features() {
             Ten ways to <span className="italic text-gradient-ember">remember a country</span>
           </h2>
           <p className="mt-5 text-muted-foreground text-lg text-pretty">
-            VIRSA pairs human stories with machine intelligence — translating,
+            VIRSA pairs human stories with machine intelligence - translating,
             transcribing, connecting and visualising the heritage that defines us.
           </p>
         </div>

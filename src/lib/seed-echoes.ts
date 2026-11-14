@@ -128,7 +128,7 @@ export const SEED_CREATORS: Record<string, SeedCreator> = {
     full_name: "Shalini Devi",
     username: "shalini.d",
     avatar_url: avatar("photo-1517841905240-472988babdf9"),
-    bio: "Kutch embroidery — Rabari, Ahir, Mutwa. I learn from the women who taught their daughters.",
+    bio: "Kutch embroidery - Rabari, Ahir, Mutwa. I learn from the women who taught their daughters.",
     location: "Bhuj, Gujarat",
     heritage_origins: ["Kutch"],
     languages: ["Kutchi", "Gujarati", "Hindi"],
@@ -172,7 +172,7 @@ const RAW: Seed[] = [
     title: "The night before Diwali, in our courtyard",
     caption: "Amma still believes a clay diya holds prayer better than a candle. We light them together at dusk, every year.",
     story:
-      "We start the morning of Dhanteras. My mother lays out the diyas she bought from the kumhar's lane near Chandpole — small ones for the threshold, larger ones for the tulsi, one fat round one that sits in front of the Ganesh in the puja room. She rubs each one with mustard oil so the clay doesn't drink the ghee through the night.\n\nMy nephew, who is six and important about it, lines them up on the parapet. The cousins arrive. The neighbours wave from the next terrace. At dusk we light the first one from the lamp in the puja room and carry the flame from diya to diya, palm cupped against the wind. It takes an hour. It is the slowest, quietest hour of Diwali, and the one I remember best.",
+      "We start the morning of Dhanteras. My mother lays out the diyas she bought from the kumhar's lane near Chandpole - small ones for the threshold, larger ones for the tulsi, one fat round one that sits in front of the Ganesh in the puja room. She rubs each one with mustard oil so the clay doesn't drink the ghee through the night.\n\nMy nephew, who is six and important about it, lines them up on the parapet. The cousins arrive. The neighbours wave from the next terrace. At dusk we light the first one from the lamp in the puja room and carry the flame from diya to diya, palm cupped against the wind. It takes an hour. It is the slowest, quietest hour of Diwali, and the one I remember best.",
     media_url: img("photo-1604423481963-faaaccaba6c4"),
     category: "Festivals",
     state: "Rajasthan",
@@ -194,7 +194,7 @@ const RAW: Seed[] = [
     title: "Inside the pandal, three days before Ashtami",
     caption: "The bamboo bones go up first. Then the cloth, then the gods. By the time the city sees it, it looks effortless.",
     story:
-      "I went to Kumartuli at four in the morning. The murti-makers were already at it — their fingers white with clay, their kurtas streaked with the same. The pandal for our para is being built by a team from Midnapore who travel up every September. They sleep in the half-finished structure, on jute sacks, beside the goddess.\n\nThe shilpi, Subroto-da, said the same thing his father used to say: 'Maa doesn't come because the pandal is grand. She comes because we waited for her.' I stood there with my camera and didn't take a picture for ten minutes.",
+      "I went to Kumartuli at four in the morning. The murti-makers were already at it - their fingers white with clay, their kurtas streaked with the same. The pandal for our para is being built by a team from Midnapore who travel up every September. They sleep in the half-finished structure, on jute sacks, beside the goddess.\n\nThe shilpi, Subroto-da, said the same thing his father used to say: 'Maa doesn't come because the pandal is grand. She comes because we waited for her.' I stood there with my camera and didn't take a picture for ten minutes.",
     media_url: img("photo-1605557202138-cf3b9af31961"),
     category: "Festivals",
     state: "West Bengal",
@@ -216,7 +216,7 @@ const RAW: Seed[] = [
     title: "Pookalam, morning of Thiruvonam",
     caption: "Ten days of flowers. The children own the first ring. The aunts argue about the last.",
     story:
-      "Pookalam begins on Atham, ten days before Onam, with a single small ring of yellow flowers — usually thumba or chethi. Each day, another ring is added, another flower allowed in. By Thiruvonam morning the pookalam is the size of the courtyard, and the floor of our tharavadu disappears under it.\n\nThe rule in our family, set by my great-aunt in 1962 and never since revised, is that the children lay the centre. The aunts lay the outer ring. The men are permitted to fetch water and admire. It works.",
+      "Pookalam begins on Atham, ten days before Onam, with a single small ring of yellow flowers - usually thumba or chethi. Each day, another ring is added, another flower allowed in. By Thiruvonam morning the pookalam is the size of the courtyard, and the floor of our tharavadu disappears under it.\n\nThe rule in our family, set by my great-aunt in 1962 and never since revised, is that the children lay the centre. The aunts lay the outer ring. The men are permitted to fetch water and admire. It works.",
     media_url: img("photo-1567527013-bf90c7a4cef9"),
     category: "Festivals",
     state: "Kerala",
@@ -238,7 +238,7 @@ const RAW: Seed[] = [
     title: "Hornbill, first morning",
     caption: "Sixteen tribes, one open ground in Kisama. My grandfather walks ahead of us, still.",
     story:
-      "Hornbill happens every December and every year my grandfather puts on his Ao shawl — the tsüngkotepsü, with its black, red and white bands — and walks ahead of the family into Kisama. He is eighty-three. He will not be photographed by tourists, but he allows me.\n\nThe morning begins with the log drum. You feel it in your sternum before you hear it. Then the Konyak warriors enter, then the Angami, then the Ao. By midday there is rice beer in bamboo cups and someone is always singing. My grandfather says the festival was made for outsiders to watch, but the songs were not. The songs are still ours.",
+      "Hornbill happens every December and every year my grandfather puts on his Ao shawl - the tsüngkotepsü, with its black, red and white bands - and walks ahead of the family into Kisama. He is eighty-three. He will not be photographed by tourists, but he allows me.\n\nThe morning begins with the log drum. You feel it in your sternum before you hear it. Then the Konyak warriors enter, then the Angami, then the Ao. By midday there is rice beer in bamboo cups and someone is always singing. My grandfather says the festival was made for outsiders to watch, but the songs were not. The songs are still ours.",
     media_url: img("photo-1604608672516-f1b9b1d1e64b"),
     category: "Festivals",
     state: "Nagaland",
@@ -260,7 +260,7 @@ const RAW: Seed[] = [
     title: "My dadi's mango pickle, transcribed at last",
     caption: "She measures in fistfuls. I have tried to translate them into grams. Some things refuse the conversion.",
     story:
-      "My dadi is ninety-one. She makes mango pickle every June, has done it since 1953, and has never written the recipe down. This year I sat in her kitchen with a notebook.\n\nShe uses kacche aam — raw, sour, the green so tight the knife squeaks against them. She cuts them with a hasiya pressed between her toes, the way her own mother taught her in Sialkot before Partition. Salt, methi dana, saunf, kalonji, haldi, red chilli — all dry-roasted, then ground coarse. Mustard oil heated until it stops smelling raw. Everything tossed together in a wide patila with her hands. Sun-cured on the terrace for fifteen days in a glass barni.\n\nHer one instruction I cannot pin down: 'Khatai theek honi chahiye.' The sourness must be correct. I asked her how I would know. She said, 'You will know when your mother's mother tells you in a dream.' I am still waiting.",
+      "My dadi is ninety-one. She makes mango pickle every June, has done it since 1953, and has never written the recipe down. This year I sat in her kitchen with a notebook.\n\nShe uses kacche aam - raw, sour, the green so tight the knife squeaks against them. She cuts them with a hasiya pressed between her toes, the way her own mother taught her in Sialkot before Partition. Salt, methi dana, saunf, kalonji, haldi, red chilli - all dry-roasted, then ground coarse. Mustard oil heated until it stops smelling raw. Everything tossed together in a wide patila with her hands. Sun-cured on the terrace for fifteen days in a glass barni.\n\nHer one instruction I cannot pin down: 'Khatai theek honi chahiye.' The sourness must be correct. I asked her how I would know. She said, 'You will know when your mother's mother tells you in a dream.' I am still waiting.",
     media_url: img("photo-1605209586744-72b389e16a93"),
     category: "Food Heritage",
     state: "Punjab",
@@ -282,7 +282,7 @@ const RAW: Seed[] = [
     title: "Xaaj-paani: the long, slow Assamese tea",
     caption: "At my grandmother's, tea is not a drink. It is the half-hour around the drink.",
     story:
-      "My grandmother makes tea on a wood stove. The kettle is brass, dented on one side from the year my uncle dropped it. She uses leaves from a small garden behind the house — second flush, picked by her neighbour Bhugeswari-ba, who is now seventy-five and still walks the rows.\n\nThe leaves go into cold water. The water is brought to a boil exactly once, no more. Sugar last. No milk. We drink it from small porcelain cups my great-grandfather brought back from Calcutta in 1948. While we drink, she tells me which neighbour married whom in which year, and I always lose track by the third cousin.",
+      "My grandmother makes tea on a wood stove. The kettle is brass, dented on one side from the year my uncle dropped it. She uses leaves from a small garden behind the house - second flush, picked by her neighbour Bhugeswari-ba, who is now seventy-five and still walks the rows.\n\nThe leaves go into cold water. The water is brought to a boil exactly once, no more. Sugar last. No milk. We drink it from small porcelain cups my great-grandfather brought back from Calcutta in 1948. While we drink, she tells me which neighbour married whom in which year, and I always lose track by the third cousin.",
     media_url: img("photo-1576092768241-dec231879fc3"),
     category: "Food Heritage",
     state: "Assam",
@@ -324,9 +324,9 @@ const RAW: Seed[] = [
     author_id: SEED_CREATORS.tashi.id,
     author_key: "tashi",
     title: "A word for the colour of late snow",
-    caption: "Tshong-kar — the white that snow turns just before it goes. There is no English for it.",
+    caption: "Tshong-kar - the white that snow turns just before it goes. There is no English for it.",
     story:
-      "I am working in a village above Tawang where eleven people still speak a dialect of Monpa that the linguistic surveys missed. The oldest speaker is a woman called Pem Dolma. She is eighty-nine. She makes me butter tea and tests my vocabulary in the same breath.\n\nLast week she taught me the word tshong-kar — the white that old snow turns, slightly grey, slightly translucent, the white of snow that has been on the ground long enough to know it will soon be water. There is no word for it in standard Monpa. There is no word for it in Hindi or English. I wrote it down and she laughed and said, 'When I am gone, the word will go also. Why are you writing it?'\n\nI told her: so that one day a child in this village can find the word again and understand what their great-grandmother saw.",
+      "I am working in a village above Tawang where eleven people still speak a dialect of Monpa that the linguistic surveys missed. The oldest speaker is a woman called Pem Dolma. She is eighty-nine. She makes me butter tea and tests my vocabulary in the same breath.\n\nLast week she taught me the word tshong-kar - the white that old snow turns, slightly grey, slightly translucent, the white of snow that has been on the ground long enough to know it will soon be water. There is no word for it in standard Monpa. There is no word for it in Hindi or English. I wrote it down and she laughed and said, 'When I am gone, the word will go also. Why are you writing it?'\n\nI told her: so that one day a child in this village can find the word again and understand what their great-grandmother saw.",
     media_url: img("photo-1551582045-6ec9c11d8697"),
     category: "Language",
     state: "Arunachal Pradesh",
@@ -392,7 +392,7 @@ const RAW: Seed[] = [
     title: "Block printing, on a Tuesday morning in Bagru",
     caption: "The block is teak. The dye is iron and jaggery, fermented for fifteen days. The hand is forty years old, exactly.",
     story:
-      "Ramprasad-ji has been printing in Bagru since he was eleven. His father printed. His grandfather printed. His son does not print — his son has gone to Jaipur to study commerce, and Ramprasad does not blame him.\n\nHe lays the cloth on the table padded with eight layers of jute. He dips the block into a tray of black syaahi made from iron filings, jaggery and water that has sat in a clay pot for two weeks. He presses, lifts, moves two inches, presses, lifts. The rhythm is so even that you stop noticing his hand and start noticing only the pattern advancing across the cloth.\n\nIn six hours he prints a sari. In a workshop attached to the courtyard, a young woman from Sanganer dyes the next batch in indigo. Neither of them looks up when I take photographs. I think they have decided I am furniture.",
+      "Ramprasad-ji has been printing in Bagru since he was eleven. His father printed. His grandfather printed. His son does not print - his son has gone to Jaipur to study commerce, and Ramprasad does not blame him.\n\nHe lays the cloth on the table padded with eight layers of jute. He dips the block into a tray of black syaahi made from iron filings, jaggery and water that has sat in a clay pot for two weeks. He presses, lifts, moves two inches, presses, lifts. The rhythm is so even that you stop noticing his hand and start noticing only the pattern advancing across the cloth.\n\nIn six hours he prints a sari. In a workshop attached to the courtyard, a young woman from Sanganer dyes the next batch in indigo. Neither of them looks up when I take photographs. I think they have decided I am furniture.",
     media_url: img("photo-1610030469983-98e550d6193c"),
     category: "Crafts",
     state: "Rajasthan",
@@ -414,7 +414,7 @@ const RAW: Seed[] = [
     title: "What a Rabari grandmother stitches into a wedding blouse",
     caption: "Mirrors to catch the evil eye. Chains for long life. A small camel in the corner, because of course.",
     story:
-      "Hiraben is from Hodka. She is sixty-eight. She has been stitching Rabari embroidery since she was nine, when her own grandmother sat her down with a piece of indigo cloth and refused to feed her dinner until she had made a single satisfactory chain stitch.\n\nThe blouse she is working on now is for her granddaughter's wedding next month. It will take her four months in total. She has already embroidered: two mirrors above the heart, to catch and return any envy from the wedding crowd; a long curling vine across the yoke, for a long marriage; a peacock on the right shoulder, because the girl loves peacocks; and, in a corner near the hem where only the bride will know to look, a small embroidered camel — for the family's old life, before they settled.\n\nHiraben says: 'When she wears this, she will wear all of us.'",
+      "Hiraben is from Hodka. She is sixty-eight. She has been stitching Rabari embroidery since she was nine, when her own grandmother sat her down with a piece of indigo cloth and refused to feed her dinner until she had made a single satisfactory chain stitch.\n\nThe blouse she is working on now is for her granddaughter's wedding next month. It will take her four months in total. She has already embroidered: two mirrors above the heart, to catch and return any envy from the wedding crowd; a long curling vine across the yoke, for a long marriage; a peacock on the right shoulder, because the girl loves peacocks; and, in a corner near the hem where only the bride will know to look, a small embroidered camel - for the family's old life, before they settled.\n\nHiraben says: 'When she wears this, she will wear all of us.'",
     media_url: img("photo-1591084728795-1149f32d9866"),
     category: "Crafts",
     state: "Gujarat",
@@ -480,7 +480,7 @@ const RAW: Seed[] = [
     title: "A Baul on the train to Bolpur",
     caption: "Khepa-da boarded at Burdwan with an ektara and got off at Bolpur having sung for two hours straight.",
     story:
-      "He didn't ask for money. He sang Lalon — 'milon hobe koto dine, amar moner manush er-ee shone' — and then he sang a song he said he had made that morning about a fish that wouldn't be caught. The compartment quieted in stages. The young boys with their phones, last. By the second song the phones were down.\n\nHe wore a saffron alkhalla and had a small jhola with two onions, a piece of cloth, a notebook tied with string. He did not look at any of us when he sang. When he got off at Bolpur he turned back at the door and said, 'The song is yours now. I have only borrowed it.' The doors closed.",
+      "He didn't ask for money. He sang Lalon - 'milon hobe koto dine, amar moner manush er-ee shone' - and then he sang a song he said he had made that morning about a fish that wouldn't be caught. The compartment quieted in stages. The young boys with their phones, last. By the second song the phones were down.\n\nHe wore a saffron alkhalla and had a small jhola with two onions, a piece of cloth, a notebook tied with string. He did not look at any of us when he sang. When he got off at Bolpur he turned back at the door and said, 'The song is yours now. I have only borrowed it.' The doors closed.",
     media_url: img("photo-1582719471384-894fbb16e074"),
     category: "Music & Performance",
     state: "West Bengal",
@@ -502,7 +502,7 @@ const RAW: Seed[] = [
     title: "Panchavadyam, before the temple opens",
     caption: "Five instruments, one heartbeat. My father plays the timila. He has, since 1979.",
     story:
-      "Panchavadyam means five instruments: timila, maddalam, ilathalam, idakka, kombu. Together they build a structure of sound that begins slow and ascends, beat by beat, for almost ninety minutes. There is no melody — there is only rhythm, growing.\n\nMy father has played the timila since 1979. He learned from his uncle, who learned from his uncle, who is said to have learned from a man who slept inside the Vadakkunnathan temple for one full year so that he could hear the percussion at every hour of the day. Whether this is true I do not know. My father shrugs when I ask. He says, 'Maybe yes, maybe no. The sound is true. That is enough.'",
+      "Panchavadyam means five instruments: timila, maddalam, ilathalam, idakka, kombu. Together they build a structure of sound that begins slow and ascends, beat by beat, for almost ninety minutes. There is no melody - there is only rhythm, growing.\n\nMy father has played the timila since 1979. He learned from his uncle, who learned from his uncle, who is said to have learned from a man who slept inside the Vadakkunnathan temple for one full year so that he could hear the percussion at every hour of the day. Whether this is true I do not know. My father shrugs when I ask. He says, 'Maybe yes, maybe no. The sound is true. That is enough.'",
     media_url: img("photo-1542665952-14513db15293"),
     category: "Music & Performance",
     state: "Kerala",
@@ -546,7 +546,7 @@ const RAW: Seed[] = [
     title: "A trunk from Karachi, opened after thirty-eight years",
     caption: "Inside: a pair of jootis, a Quran wrapped in muslin, my great-grandmother's wedding bangles, and a recipe for sheermal.",
     story:
-      "The trunk arrived in 1985 by ship, addressed to my grandfather in Hyderabad, sent by a cousin who had stayed back. He never opened it. He said, 'When I am ready.' He died in 2003. The trunk sat in the storeroom until last Sunday, when my mother and I, with my uncle on the phone from Toronto, finally opened it.\n\nInside: a pair of red jootis that fit no one in our family today; a Quran wrapped in muslin, with a verse marked in green ink; my great-grandmother's gold bangles, slightly bent, exactly the weight my grandmother had remembered; and a folded paper, handwritten, in Urdu — a recipe for sheermal, with the note at the bottom: 'Bibi, agar Hyderabad jaakar yeh bana paayi, toh humein bhi yaad rakhna.' Bibi, if you make this in Hyderabad, remember us too.\n\nMy mother made the sheermal on Thursday. She cried before she ate it.",
+      "The trunk arrived in 1985 by ship, addressed to my grandfather in Hyderabad, sent by a cousin who had stayed back. He never opened it. He said, 'When I am ready.' He died in 2003. The trunk sat in the storeroom until last Sunday, when my mother and I, with my uncle on the phone from Toronto, finally opened it.\n\nInside: a pair of red jootis that fit no one in our family today; a Quran wrapped in muslin, with a verse marked in green ink; my great-grandmother's gold bangles, slightly bent, exactly the weight my grandmother had remembered; and a folded paper, handwritten, in Urdu - a recipe for sheermal, with the note at the bottom: 'Bibi, agar Hyderabad jaakar yeh bana paayi, toh humein bhi yaad rakhna.' Bibi, if you make this in Hyderabad, remember us too.\n\nMy mother made the sheermal on Thursday. She cried before she ate it.",
     media_url: img("photo-1582719188393-bb71ca45dbb9"),
     category: "Family Stories",
     state: "Telangana",

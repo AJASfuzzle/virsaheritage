@@ -14,7 +14,7 @@ type ThemeCtx = {
 const Ctx = createContext<ThemeCtx | null>(null);
 
 /**
- * Inline script string — write this into <head> via head().scripts on the root
+ * Inline script string - write this into <head> via head().scripts on the root
  * route so the `.light` class lands on <html> before React hydrates. Prevents
  * a flash of incorrect theme.
  */

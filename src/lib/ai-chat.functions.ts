@@ -38,7 +38,7 @@ export const askVirsa = createServerFn({ method: "POST" })
       return { reply: text };
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      if (msg.includes("429")) throw new Error("The assistant is busy — please try again in a moment.");
+      if (msg.includes("429")) throw new Error("The assistant is busy - please try again in a moment.");
       if (msg.includes("402")) throw new Error("AI credits exhausted. Please top up to keep chatting.");
       throw new Error("Sorry, the assistant could not respond just now.");
     }

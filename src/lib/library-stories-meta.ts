@@ -49,14 +49,14 @@ export const LIBRARY_STORIES_META: LibraryStoryMeta[] = [
   { id: "monasteries", title: "Monasteries", blurb: "Cells of silence above the snow line.", tag: "Architecture", shelf: "Architecture", region: "Himalayas", minutes: 7 },
 
   // Art & Crafts
-  { id: "textiles", title: "Textiles", blurb: "Patola, Jamdani, Kalamkari — fabrics written by hand.", tag: "Craft", shelf: "Crafts", region: "Gujarat", minutes: 7 },
+  { id: "textiles", title: "Textiles", blurb: "Patola, Jamdani, Kalamkari - fabrics written by hand.", tag: "Craft", shelf: "Crafts", region: "Gujarat", minutes: 7 },
   { id: "pottery", title: "Pottery", blurb: "Earth, wheel, fire, hand. Nothing else.", tag: "Craft", shelf: "Crafts", region: "Rajasthan", minutes: 5 },
   { id: "miniature", title: "Miniature Paintings", blurb: "Stories painted on the back of a hand.", tag: "Art", shelf: "Crafts", region: "Rajasthan", minutes: 6 },
   { id: "sculpture", title: "Sculpture", blurb: "From Mathura serenity to Hoysala excess.", tag: "Art", shelf: "Crafts", region: "Karnataka", minutes: 6 },
-  { id: "metalwork", title: "Metalwork", blurb: "Bidri, dhokra, repoussé — alloys with memory.", tag: "Craft", shelf: "Crafts", region: "Pan-India", minutes: 5 },
+  { id: "metalwork", title: "Metalwork", blurb: "Bidri, dhokra, repoussé - alloys with memory.", tag: "Craft", shelf: "Crafts", region: "Pan-India", minutes: 5 },
 
   // Music & Performance
-  { id: "classical", title: "Classical Traditions", blurb: "Hindustani and Carnatic — two rivers from one sky.", tag: "Music", shelf: "Music", region: "Pan-India", minutes: 8 },
+  { id: "classical", title: "Classical Traditions", blurb: "Hindustani and Carnatic - two rivers from one sky.", tag: "Music", shelf: "Music", region: "Pan-India", minutes: 8 },
   { id: "folk", title: "Folk Music", blurb: "Songs sung while planting, walking, mourning, marrying.", tag: "Music", shelf: "Music", region: "Pan-India", minutes: 5 },
   { id: "dance", title: "Dance Forms", blurb: "Bharatanatyam, Kathak, Odissi, Manipuri.", tag: "Performance", shelf: "Performance", region: "Pan-India", minutes: 7 },
   { id: "theatre", title: "Theatre", blurb: "Kathakali masks, Yakshagana torches, Koodiyattam nights.", tag: "Performance", shelf: "Performance", region: "Kerala", minutes: 6 },

@@ -4,9 +4,9 @@ import { Shruti } from "@/components/site/Shruti";
 export const Route = createFileRoute("/kitab")({
   head: () => ({
     meta: [
-      { title: "Kitab — India's Language Archive · VIRSA" },
-      { name: "description", content: "Kitab preserves India's spoken tongues — pronunciation, proverb, song and script — for the centuries to come." },
-      { property: "og:title", content: "Kitab — India's Language Archive" },
+      { title: "Kitab - India's Language Archive · VIRSA" },
+      { name: "description", content: "Kitab preserves India's spoken tongues - pronunciation, proverb, song and script - for the centuries to come." },
+      { property: "og:title", content: "Kitab - India's Language Archive" },
       { property: "og:description", content: "62 languages mapped, voiced and remembered." },
     ],
   }),

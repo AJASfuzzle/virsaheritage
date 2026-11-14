@@ -35,7 +35,7 @@ const items: Item[] = [
     contributor: "Shantabai Govekar",
     age: 84,
     story:
-      "When I was a girl in Malvan, my grandfather would sit on the verandah after the monsoon clouds had passed and tell us of the Sindhudurg fort built by Shivaji Maharaj on the black rocks of the sea. He said the masons mixed lime with jaggery and seashells, and the waves themselves swore loyalty to the king. On nights when the tide was high, we believed we could hear the conches of his sailors. My mother sang us a lavani about a fisherman who fell in love with a sea-spirit; she refused to come ashore, and he refused to leave the boat, so the gods turned them into the twin rocks you still see off the Tarkarli shore. We learned the sea before we learned the alphabet — and the sea, my grandfather said, remembers every name that ever sailed on it.",
+      "When I was a girl in Malvan, my grandfather would sit on the verandah after the monsoon clouds had passed and tell us of the Sindhudurg fort built by Shivaji Maharaj on the black rocks of the sea. He said the masons mixed lime with jaggery and seashells, and the waves themselves swore loyalty to the king. On nights when the tide was high, we believed we could hear the conches of his sailors. My mother sang us a lavani about a fisherman who fell in love with a sea-spirit; she refused to come ashore, and he refused to leave the boat, so the gods turned them into the twin rocks you still see off the Tarkarli shore. We learned the sea before we learned the alphabet - and the sea, my grandfather said, remembers every name that ever sailed on it.",
   },
   {
     img: festival,
@@ -46,7 +46,7 @@ const items: Item[] = [
     contributor: "Pandit Hari Prasad Mishra",
     age: 71,
     story:
-      "On Kartik Purnima, the Ganga becomes a mirror for the heavens. My father, who served at Dashashwamedh Ghat for fifty-three years, taught me that each diya we float carries a wish from one ancestor to another — the living lighting a path for the dead, and the dead, in turn, lighting a path back to the living. We make the wicks from cotton spun by widows of the city, soaked in mustard oil pressed in the lanes behind Vishwanath. When the entire river catches fire with a hundred thousand small flames, you understand why our scriptures call Kashi the city that even Yama cannot enter. I have lit a diya every Kartik Purnima since I was four. My grandson lit his first this year. The river accepted them both.",
+      "On Kartik Purnima, the Ganga becomes a mirror for the heavens. My father, who served at Dashashwamedh Ghat for fifty-three years, taught me that each diya we float carries a wish from one ancestor to another - the living lighting a path for the dead, and the dead, in turn, lighting a path back to the living. We make the wicks from cotton spun by widows of the city, soaked in mustard oil pressed in the lanes behind Vishwanath. When the entire river catches fire with a hundred thousand small flames, you understand why our scriptures call Kashi the city that even Yama cannot enter. I have lit a diya every Kartik Purnima since I was four. My grandson lit his first this year. The river accepted them both.",
   },
   {
     img: craft,
@@ -57,7 +57,7 @@ const items: Item[] = [
     contributor: "Mohammad Rafiq Ansari",
     age: 67,
     story:
-      "Our family has been weavers in Madanpura for seven generations. My great-grandfather wove a saree for the wedding of the Nawab of Rampur with real gold zari so fine that the pallu weighed less than a sparrow. I learned the kadhwa technique from my father when I was nine — you do not weave a Banarasi, you converse with it. Each butta, each kalga, each meenakari flower is a word in a sentence the loom and the weaver write together. A six-yard saree can take three months and the prayers of two men. People ask why we still sit at the pit-loom when power looms can finish in a day. I tell them: a machine can copy the pattern, but it cannot copy the breath. And it is the breath, woven thread by thread, that a bride feels on her shoulders when she walks around the fire.",
+      "Our family has been weavers in Madanpura for seven generations. My great-grandfather wove a saree for the wedding of the Nawab of Rampur with real gold zari so fine that the pallu weighed less than a sparrow. I learned the kadhwa technique from my father when I was nine - you do not weave a Banarasi, you converse with it. Each butta, each kalga, each meenakari flower is a word in a sentence the loom and the weaver write together. A six-yard saree can take three months and the prayers of two men. People ask why we still sit at the pit-loom when power looms can finish in a day. I tell them: a machine can copy the pattern, but it cannot copy the breath. And it is the breath, woven thread by thread, that a bride feels on her shoulders when she walks around the fire.",
   },
   {
     img: food,
@@ -68,18 +68,18 @@ const items: Item[] = [
     contributor: "Lakshmi Amma",
     age: 78,
     story:
-      "In our tharavad in Alappuzha, the Onam sadhya was never just a meal — it was a calendar of the year laid out on a banana leaf. The leaf must be placed with the tip to the left; the parippu and ghee go first, because the ancestors taught us that lentils were the first cooked food humans ever made. Then olan, virsaan, avial, thoran — each curry in its place, each with its own season, its own soil, its own memory. The payasam at the end is poured slowly so that the elders can bless it before the children dip their fingers. My mother could make twenty-six dishes on a wood stove with one helper. I cook only sixteen now, and my daughters tease me, but each one I cook with the same prayer my mother whispered: that the harvest was kind, the rains were honest, and the table is full enough to invite a stranger.",
+      "In our tharavad in Alappuzha, the Onam sadhya was never just a meal - it was a calendar of the year laid out on a banana leaf. The leaf must be placed with the tip to the left; the parippu and ghee go first, because the ancestors taught us that lentils were the first cooked food humans ever made. Then olan, virsaan, avial, thoran - each curry in its place, each with its own season, its own soil, its own memory. The payasam at the end is poured slowly so that the elders can bless it before the children dip their fingers. My mother could make twenty-six dishes on a wood stove with one helper. I cook only sixteen now, and my daughters tease me, but each one I cook with the same prayer my mother whispered: that the harvest was kind, the rains were honest, and the table is full enough to invite a stranger.",
   },
   {
     img: dance,
-    title: "Kathakali — The Eyes that Speak",
+    title: "Kathakali - The Eyes that Speak",
     tag: "Dance",
     region: "Kerala",
     year: "17th c.",
     contributor: "Guru Krishnan Nair Ashan",
     age: 82,
     story:
-      "I was taken to the kalari at the age of seven. For the first two years, my teacher did not let me touch a single mudra — only the eye exercises, the navarasam, the nine emotions. We rolled mustard seeds across the floor with our pupils until our eyes wept. He said: 'The face is the stage. The body only carries it.' To play Nala or Bhima or the demoness Poothana, I had to learn to become small enough to fit inside a single glance. The chutti makeup takes four hours; the costume weighs almost as much as a child. By the time the chenda begins to thunder and the lamp is lit, the man who entered the green room is gone. What walks onto the stage is the story itself. I have danced for sixty-one years. When I can no longer dance, I will teach. When I can no longer teach, I will watch. And when I can no longer watch, the lamp will still be lit by someone else's son.",
+      "I was taken to the kalari at the age of seven. For the first two years, my teacher did not let me touch a single mudra - only the eye exercises, the navarasam, the nine emotions. We rolled mustard seeds across the floor with our pupils until our eyes wept. He said: 'The face is the stage. The body only carries it.' To play Nala or Bhima or the demoness Poothana, I had to learn to become small enough to fit inside a single glance. The chutti makeup takes four hours; the costume weighs almost as much as a child. By the time the chenda begins to thunder and the lamp is lit, the man who entered the green room is gone. What walks onto the stage is the story itself. I have danced for sixty-one years. When I can no longer dance, I will teach. When I can no longer teach, I will watch. And when I can no longer watch, the lamp will still be lit by someone else's son.",
   },
 ];
 

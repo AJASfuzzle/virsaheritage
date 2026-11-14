@@ -52,7 +52,7 @@
 :root {
   --radius: 0.875rem;
 
-  /* DARK — Ancient records by candlelight: deep charcoal-navy, bronze & muted gold */
+  /* DARK - Ancient records by candlelight: deep charcoal-navy, bronze & muted gold */
   --background: oklch(0.16 0.025 265);        /* deep charcoal-navy */
   --foreground: oklch(0.92 0.035 80);         /* warm parchment, not stark white */
 
@@ -101,7 +101,7 @@
 }
 
 .light {
-  /* LIGHT — Warm parchment archive: aged paper, sepia, earthy accents */
+  /* LIGHT - Warm parchment archive: aged paper, sepia, earthy accents */
   --background: oklch(0.965 0.022 82);        /* aged parchment */
   --foreground: oklch(0.22 0.035 45);         /* warm dark ink */
 
@@ -276,7 +276,7 @@
     transition-duration: 120ms;
   }
 
-  /* Section seam removed — hero owns its own clean fade-to-background. */
+  /* Section seam removed - hero owns its own clean fade-to-background. */
   main > section { position: relative; }
 }
 

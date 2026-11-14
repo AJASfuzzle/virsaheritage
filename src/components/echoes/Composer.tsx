@@ -196,7 +196,7 @@ export function Composer({ onPosted }: { onPosted?: (id: string) => void }) {
         </div>
         <div>
           <Label htmlFor="e-story">Story (optional, longer)</Label>
-          <Textarea id="e-story" rows={5} value={story} onChange={(e) => setStory(e.target.value)} placeholder="The fuller story — why this matters, who it belongs to, what it preserves." />
+          <Textarea id="e-story" rows={5} value={story} onChange={(e) => setStory(e.target.value)} placeholder="The fuller story - why this matters, who it belongs to, what it preserves." />
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <div>

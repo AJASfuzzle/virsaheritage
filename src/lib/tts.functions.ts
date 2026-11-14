@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-// Default warm female voice — Sarah from ElevenLabs.
+// Default warm female voice - Sarah from ElevenLabs.
 const DEFAULT_VOICE_ID = "EXAVITQu4vr4xnSDxMaL";
 
 export const synthesizePhrase = createServerFn({ method: "POST" })
@@ -14,7 +14,7 @@ export const synthesizePhrase = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     const apiKey = process.env.ELEVENLABS_API_KEY;
-    if (!apiKey) throw new Error("ELEVENLABS_API_KEY missing — connect ElevenLabs.");
+    if (!apiKey) throw new Error("ELEVENLABS_API_KEY missing - connect ElevenLabs.");
 
     const voiceId = data.voiceId ?? DEFAULT_VOICE_ID;
 
@@ -29,7 +29,7 @@ export const synthesizePhrase = createServerFn({ method: "POST" })
         body: JSON.stringify({
           text: data.text,
           model_id: "eleven_multilingual_v2",
-          // Tuned for a human, lived-in delivery — low stability lets the
+          // Tuned for a human, lived-in delivery - low stability lets the
           // voice breathe and inflect, high similarity keeps it anchored
           // to the speaker's real timbre, a touch of style adds warmth,
           // and a slightly slower pace reads as reverent rather than rushed.

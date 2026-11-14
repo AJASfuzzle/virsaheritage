@@ -11,7 +11,7 @@ import { useAuth } from "@/hooks/use-auth";
 export const Route = createFileRoute("/khazane")({
   head: () => ({
     meta: [
-      { title: "Khazane — Treasures Beyond Time · VIRSA" },
+      { title: "Khazane - Treasures Beyond Time · VIRSA" },
       { name: "description", content: "Redeem Virsa Coins for heritage experiences, hand-bound journals, art prints and exclusive archives." },
       { property: "og:title", content: "Khazane · VIRSA" },
       { property: "og:description", content: "Unlock treasures beyond time." },

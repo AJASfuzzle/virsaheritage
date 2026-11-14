@@ -20,7 +20,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    // Hydrate then subscribe — listener must be set up FIRST per Supabase docs
+    // Hydrate then subscribe - listener must be set up FIRST per Supabase docs
     const { data: sub } = supabase.auth.onAuthStateChange((event, newSession) => {
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED" && event !== "INITIAL_SESSION") return;
       setSession(newSession);

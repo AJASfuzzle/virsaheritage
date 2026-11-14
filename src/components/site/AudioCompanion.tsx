@@ -7,7 +7,7 @@ type Segment = { title: string; text: string };
 
 function buildSegments(trail: Trail): Segment[] {
   const intro: Segment = {
-    title: `Welcome — ${trail.title}`,
+    title: `Welcome - ${trail.title}`,
     text: `Welcome to ${trail.title}. ${trail.intro}`,
   };
   const stops = trail.stops.map((s, i) => ({
@@ -19,7 +19,7 @@ function buildSegments(trail: Trail): Segment[] {
   return [intro, ...stops];
 }
 
-// Browser SpeechSynthesis wrapper — minimal, resilient.
+// Browser SpeechSynthesis wrapper - minimal, resilient.
 function useNarration(segments: Segment[]) {
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);

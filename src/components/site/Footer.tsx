@@ -11,7 +11,7 @@ export function Footer() {
               <BrandLogo className="h-10 w-auto" />
             </div>
             <p className="mt-5 text-muted-foreground text-pretty">
-              Knowledge Archive of Ancestral Legacy — a non-profit, AI-powered
+              Knowledge Archive of Ancestral Legacy - a non-profit, AI-powered
               atlas preserving the languages, stories and traditions of the
               Indian subcontinent for the generations to come.
             </p>

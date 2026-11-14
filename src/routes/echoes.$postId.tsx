@@ -126,7 +126,7 @@ function PostPage() {
         )}
         {post && <PostCard post={post as unknown as EchoPost} currentUserId={user?.id ?? null} />}
 
-        {/* comments — open on every post, including curated stories */}
+        {/* comments - open on every post, including curated stories */}
         {post && (
           <section className="mt-6 rounded-3xl border border-[var(--glass-border)] bg-[var(--card)] p-5 shadow-[var(--shadow-soft)]">
             <h2 className="font-display text-lg">Comments</h2>

@@ -27,8 +27,8 @@ import { buildCatalog, indexCatalog } from "@/lib/recommendation-catalog";
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
-      { title: "Dashboard — VIRSA Heritage" },
-      { name: "description", content: "Your unified VIRSA dashboard — profile, echoes, library contributions, saved stories, trails and coins." },
+      { title: "Dashboard - VIRSA Heritage" },
+      { name: "description", content: "Your unified VIRSA dashboard - profile, echoes, library contributions, saved stories, trails and coins." },
     ],
   }),
   component: DashboardPage,
@@ -499,7 +499,7 @@ function LibraryTab() {
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-accent/30 bg-accent/10 p-4 text-sm text-accent">
-        <FileText className="mb-1 inline h-4 w-4" /> These echoes also live in the Library — the permanent archive of VIRSA.
+        <FileText className="mb-1 inline h-4 w-4" /> These echoes also live in the Library - the permanent archive of VIRSA.
       </div>
       {data.map((p: any) => (
         <PostCard key={p.id} post={p as EchoPost} currentUserId={user?.id ?? null} />
@@ -605,7 +605,7 @@ function LikedSection({
               type="button"
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); onUnlike(s); }}
               aria-label="Remove from liked"
-              title="Liked by you — click to remove"
+              title="Liked by you - click to remove"
               className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-[color:var(--accent)] px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-[color:var(--accent-foreground)] shadow-[0_6px_18px_-8px_var(--accent)] transition hover:opacity-90"
             >
               <Heart className="h-3 w-3 fill-current" /> Liked

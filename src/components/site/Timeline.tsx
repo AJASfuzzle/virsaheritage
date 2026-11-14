@@ -77,7 +77,7 @@ const eras: Era[] = [
     year: 2026,
     tag: "Living Atlas",
     title: "Twenty-eight states, a thousand crafts",
-    body: "GI tags, e-commerce and VIRSA itself now help artisans reach the world. New states — Telangana, Uttarakhand, Jharkhand, Chhattisgarh — formalise crafts that had always been there. Memory becomes a map you can search.",
+    body: "GI tags, e-commerce and VIRSA itself now help artisans reach the world. New states - Telangana, Uttarakhand, Jharkhand, Chhattisgarh - formalise crafts that had always been there. Memory becomes a map you can search.",
     mapLabel: "Present-day states & union territories, 2026",
     crafts: [
       { region: "Telangana", craft: "Pochampally Ikat & Bidriware", note: "India's first GI-tagged handloom; double-ikat silk-cotton from Bhoodan Pochampally." },
@@ -87,7 +87,7 @@ const eras: Era[] = [
       { region: "Ladakh (UT)", craft: "Thangka & Pashmina", note: "Changpa nomads herd the goats whose wool becomes the world's finest shawl." },
       { region: "Andhra Pradesh", craft: "Kalamkari", note: "Sri Kalahasti's pen-drawn, vegetable-dyed cottons go global." },
       { region: "Karnataka", craft: "Mysore silk & Channapatna toys", note: "GI-tagged lacquerware now sold from Tokyo to Toronto." },
-      { region: "Kerala", craft: "Kasavu & Aranmula Kannadi", note: "The metal mirror — one of only nine GI-tagged metal crafts." },
+      { region: "Kerala", craft: "Kasavu & Aranmula Kannadi", note: "The metal mirror - one of only nine GI-tagged metal crafts." },
       { region: "Tamil Nadu", craft: "Kanchipuram silk & Thanjavur paintings", note: "Temple-town crafts thrive on weddings and online couture." },
       { region: "Odisha", craft: "Pattachitra & Sambalpuri ikat", note: "Raghurajpur heritage village trains a new generation of painters." },
       { region: "West Bengal", craft: "Kantha, Baluchari & Dokra", note: "Birbhum and Bishnupur run designer-craft collaborations." },
@@ -129,7 +129,7 @@ export function Timeline() {
             Walk through <span className="italic text-gradient-ember">two centuries of culture</span>
           </h2>
           <p className="mt-4 max-w-2xl text-muted-foreground">
-            From the courts of 1800 to the digital atlas of today — see how the
+            From the courts of 1800 to the digital atlas of today - see how the
             kingdoms, presidencies and states of India each carried a craft of
             their own.
           </p>

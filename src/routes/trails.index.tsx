@@ -5,9 +5,9 @@ import { RecommendationsRow } from "@/components/recs/RecommendationsRow";
 export const Route = createFileRoute("/trails/")({
   head: () => ({
     meta: [
-      { title: "Heritage Trails — VIRSA" },
-      { name: "description", content: "AI-generated heritage itineraries through India — food trails, temple trails, craft villages and festival loops." },
-      { property: "og:title", content: "Heritage Trails — VIRSA" },
+      { title: "Heritage Trails - VIRSA" },
+      { name: "description", content: "AI-generated heritage itineraries through India - food trails, temple trails, craft villages and festival loops." },
+      { property: "og:title", content: "Heritage Trails - VIRSA" },
       { property: "og:description", content: "Tourism guided by memory, not maps." },
     ],
   }),
@@ -20,7 +20,7 @@ function TrailsIndex() {
       <RecommendationsRow
         surface="trails"
         title="Sites for you"
-        subtitle="Heritage sites Virsa AI thinks you'll love — tap one to open it on the curated atlas."
+        subtitle="Heritage sites Virsa AI thinks you'll love - tap one to open it on the curated atlas."
         filterType="site"
       />
       <RecommendationsRow

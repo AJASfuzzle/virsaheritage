@@ -35,7 +35,7 @@ const rawLanguages: Array<Omit<Lang, "voiceId"> & { voiceId?: string }> = [
   { name: "Tulu", region: "Karnataka · Kerala", speakers: "~1.8 M", status: "Vulnerable", phrase: "Encha ullar", meaning: "How are you keeping?", bcp47: "kn-IN", voiceId: "pqHfZKP75CvOlQylNhV4" /* Bill */ },
   { name: "Ho", region: "Jharkhand · Odisha", speakers: "~1.4 M", status: "Stable", phrase: "Johar, am chiloka menaiya", meaning: "Greetings, how are you?", bcp47: "hi-IN", voiceId: "CwhRBWXzGAHq8TQ4Fs17" /* Roger */ },
   { name: "Ladakhi", region: "Ladakh", speakers: "~110,000", status: "Vulnerable", phrase: "Julley, kham zang-a", meaning: "Hello, are you well?", bcp47: "hi-IN", voiceId: "SAz9YHcvj6GT2YYXdXww" /* River */ },
-  // ——— Scheduled Indian languages ———
+  // --- Scheduled Indian languages ---
   { name: "Bodo", region: "Assam", speakers: "~1.5 M", status: "Vulnerable", phrase: "खुलुमबाय", meaning: "Greetings, with respect." },
   { name: "Dogri", region: "Jammu", speakers: "~2.6 M", status: "Vulnerable", phrase: "तुस केह् हाल ओ?", meaning: "How are you?" },
   { name: "Kashmiri", region: "Kashmir Valley", speakers: "~6.8 M", status: "Stable", phrase: "توہہ چھِو ٹھیک؟", meaning: "Are you well?" },
@@ -47,7 +47,7 @@ const rawLanguages: Array<Omit<Lang, "voiceId"> & { voiceId?: string }> = [
   { name: "Odia", region: "Odisha", speakers: "~37 M", status: "Stable", phrase: "ଆପଣ କେମିତି ଅଛନ୍ତି?", meaning: "How are you?" },
   { name: "Nepali", region: "Sikkim · Darjeeling", speakers: "~2.9 M (India)", status: "Stable", phrase: "नमस्कार, सन्चै हुनुहुन्छ?", meaning: "Hello, are you well?" },
   { name: "Sindhi", region: "Kutch · diaspora", speakers: "~2.7 M (India)", status: "Vulnerable", phrase: "توهان ڪيئن آهيو؟", meaning: "How are you?" },
-  // ——— Regional, endangered & indigenous ———
+  // --- Regional, endangered & indigenous ---
   { name: "Bhojpuri", region: "Bihar · Uttar Pradesh", speakers: "~50 M", status: "Stable", phrase: "रउआ कइसन बानी?", meaning: "How are you?" },
   { name: "Garo", region: "Meghalaya", speakers: "~1.1 M", status: "Vulnerable", phrase: "Nama gipin?", meaning: "Are you well?" },
   { name: "Kokborok", region: "Tripura", speakers: "~1 M", status: "Vulnerable", phrase: "Kwrwi bwrwi?", meaning: "How are you?" },
@@ -67,7 +67,7 @@ const rawLanguages: Array<Omit<Lang, "voiceId"> & { voiceId?: string }> = [
   { name: "Great Andamanese", region: "Andaman Islands", speakers: "<10", status: "Endangered", phrase: "Ai-te-bo", meaning: "Hello, friend." },
   { name: "Jarawa", region: "Andaman Islands", speakers: "~400", status: "Endangered", phrase: "Ue-ue", meaning: "Welcome." },
   { name: "Bishnupriya", region: "Assam · Tripura", speakers: "~115,000", status: "Endangered", phrase: "তি কিসাদে আসত?", meaning: "How are you?" },
-  // ——— Major international ———
+  // --- Major international ---
   { name: "Spanish", region: "Spain · Latin America", speakers: "~560 M", status: "Stable", phrase: "Que la paz sea contigo", meaning: "May peace be with you.", group: "International" },
   { name: "French", region: "France · Africa · Canada", speakers: "~310 M", status: "Stable", phrase: "Bienvenue, mon ami", meaning: "Welcome, my friend.", group: "International" },
   { name: "Mandarin", region: "China · Taiwan", speakers: "~1.1 B", status: "Stable", phrase: "你好，欢迎", meaning: "Hello, welcome.", group: "International" },
@@ -132,7 +132,7 @@ function useVoice() {
           data: {
             text: lang.phrase,
             voiceId: lang.voiceId,
-            instructions: `Speak the phrase "${lang.phrase}" — a greeting in ${lang.name}, spoken in ${lang.region}. Pronounce it slowly, warmly and reverently, as an elder keeper of the language would. Say only the phrase itself, no translation, no English.`,
+            instructions: `Speak the phrase "${lang.phrase}" - a greeting in ${lang.name}, spoken in ${lang.region}. Pronounce it slowly, warmly and reverently, as an elder keeper of the language would. Say only the phrase itself, no translation, no English.`,
           },
         });
         src = res.audio;
@@ -185,8 +185,8 @@ export function Shruti() {
             </h2>
             <p className="mt-4 text-muted-foreground text-pretty">
               India speaks in over a thousand tongues. Many will be silent within
-            a generation. <span className="italic inline-block ml-[0.28em] mr-[0.18em] pb-[0.14em] leading-[1.15]">Kitab</span> records them —
-              pronunciation, proverb, song and script — for the centuries to come.
+            a generation. <span className="italic inline-block ml-[0.28em] mr-[0.18em] pb-[0.14em] leading-[1.15]">Kitab</span> records them -
+              pronunciation, proverb, song and script - for the centuries to come.
               Tap any phrase to hear the keeper's voice.
             </p>
           </div>

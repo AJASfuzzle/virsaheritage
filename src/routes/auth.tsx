@@ -17,7 +17,7 @@ export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Sign in — VIRSA Heritage" },
+      { title: "Sign in - VIRSA Heritage" },
       { name: "description", content: "Sign in to track your trails, earn Virsa Coins and redeem treasures from Khazane." },
     ],
   }),

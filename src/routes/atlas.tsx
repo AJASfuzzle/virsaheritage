@@ -16,9 +16,9 @@ export const Route = createFileRoute("/atlas")({
   }),
   head: () => ({
     meta: [
-      { title: "Heritage Atlas — VIRSA" },
-      { name: "description", content: "An interactive map of India's cultural and natural heritage — monuments, sanctuaries and living traditions, pin by pin, across three millennia." },
-      { property: "og:title", content: "Heritage Atlas — VIRSA" },
+      { title: "Heritage Atlas - VIRSA" },
+      { name: "description", content: "An interactive map of India's cultural and natural heritage - monuments, sanctuaries and living traditions, pin by pin, across three millennia." },
+      { property: "og:title", content: "Heritage Atlas - VIRSA" },
       { property: "og:description", content: "Explore India's cultural and natural heritage on an interactive curated map." },
     ],
   }),
@@ -47,7 +47,7 @@ function AtlasPage() {
             <p className="mt-2 max-w-2xl text-muted-foreground">
               {view === "live"
                 ? "Pinned heritage sites across India. Allow location to check in and earn Virsa Coins as you explore."
-                : "A curated cartography of monuments, sanctuaries and living traditions — by category and across three millennia."}
+                : "A curated cartography of monuments, sanctuaries and living traditions - by category and across three millennia."}
             </p>
           </div>
 

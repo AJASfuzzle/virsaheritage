@@ -120,7 +120,7 @@ export const getRecommendations = createServerFn({ method: "POST" })
     const filtered = catalog.filter((it) => {
       if (data.surface === "library") return it.type === "story";
       if (data.surface === "trails") return it.type === "trail" || it.type === "site";
-      return true; // home — full mix
+      return true; // home - full mix
     });
 
     const compact = filtered.map((it) => ({

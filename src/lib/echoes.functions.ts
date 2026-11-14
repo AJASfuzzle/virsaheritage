@@ -409,7 +409,7 @@ export const listLibraryEchoes = createServerFn({ method: "GET" })
     if (error) throw new Error(error.message);
 
     const withAuthors = await attachAuthors(sb, posts ?? []);
-    // Sign media with publishable client — may return null for private bucket; we use admin fallback if needed
+    // Sign media with publishable client - may return null for private bucket; we use admin fallback if needed
     const enriched = await Promise.all(
       withAuthors.map(async (p: any) => {
         let signed = await signMedia(sb, p.media);

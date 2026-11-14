@@ -65,7 +65,7 @@ export function Assistant() {
           <div>
             <p className="text-xs uppercase tracking-[0.28em] text-primary/90">AI Heritage Assistant</p>
             <h2 className="mt-3 font-display text-4xl sm:text-5xl text-balance">
-              Ask India anything —
+              Ask India anything -
               <br />
               <span className="italic text-gradient-ember">she remembers.</span>
             </h2>

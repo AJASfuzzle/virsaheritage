@@ -20,7 +20,7 @@ export const Route = createFileRoute("/trails/$slug")({
     const t = loaderData?.trail;
     return {
       meta: [
-        { title: t ? `${t.title} — Heritage Trail · VIRSA` : "Trail — VIRSA" },
+        { title: t ? `${t.title} - Heritage Trail · VIRSA` : "Trail - VIRSA" },
         { name: "description", content: t?.intro ?? "A VIRSA heritage trail." },
         { property: "og:title", content: t?.title ?? "Heritage Trail" },
         { property: "og:description", content: t?.intro ?? "" },
@@ -308,7 +308,7 @@ function TrailDetail() {
                                 <button
                                   onClick={() => attemptCheckIn(site, true)}
                                   disabled={isPending}
-                                  title="Demo check-in (dev only) — bypasses geolocation"
+                                  title="Demo check-in (dev only) - bypasses geolocation"
                                   className="rounded-full bg-white/5 text-foreground/60 hover:text-foreground px-2.5 py-1.5 text-[11px] ring-1 ring-white/10 transition"
                                 >
                                   Demo
@@ -369,7 +369,7 @@ function TrailDetail() {
               </div>
               {celebration.trailComplete && (
                 <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-jade/15 px-4 py-2 text-sm text-jade ring-1 ring-jade/30">
-                  <Trophy className="h-4 w-4" /> Trail complete — Trail Master unlocked
+                  <Trophy className="h-4 w-4" /> Trail complete - Trail Master unlocked
                 </div>
               )}
               <div className="mt-6 flex items-center justify-center gap-2 flex-wrap">

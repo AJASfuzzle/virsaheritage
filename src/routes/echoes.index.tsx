@@ -12,9 +12,9 @@ import { getSeedPosts } from "@/lib/seed-echoes";
 export const Route = createFileRoute("/echoes/")({
   head: () => ({
     meta: [
-      { title: "Echoes — Heritage stories, lived and remembered | VIRSA" },
-      { name: "description", content: "Echoes is a quiet social space to share photographs, stories, recipes, songs and traditions — a living archive of cultural memory." },
-      { property: "og:title", content: "Echoes — A living archive of culture" },
+      { title: "Echoes - Heritage stories, lived and remembered | VIRSA" },
+      { name: "description", content: "Echoes is a quiet social space to share photographs, stories, recipes, songs and traditions - a living archive of cultural memory." },
+      { property: "og:title", content: "Echoes - A living archive of culture" },
       { property: "og:description", content: "Document, preserve and share heritage with others who care. Every echo can be added to the Library." },
     ],
   }),
@@ -55,7 +55,7 @@ function EchoesIndex() {
           Memory, <span className="italic text-gradient-ember">passed forward.</span>
         </h1>
         <p className="mt-4 max-w-xl text-pretty text-base text-muted-foreground sm:text-lg">
-          A slower place. Share a photograph, a recipe, a song, a story — and let it become part of a living archive.
+          A slower place. Share a photograph, a recipe, a song, a story - and let it become part of a living archive.
         </p>
         <div className="mt-5 flex flex-wrap gap-2">
           {user ? (

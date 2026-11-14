@@ -41,7 +41,7 @@ const eras: Era[] = [
     body: "Sikh misls, Maratha confederacies, Rajput houses and southern princely states each guard their own court arts, looms and kilns.",
     mapUrl: map1800.url,
     aspect: 0.812,
-    // A.K. Johnston 1799–1806 map — image extends from ~3°N (south of Ceylon) to ~37°N
+    // A.K. Johnston 1799–1806 map - image extends from ~3°N (south of Ceylon) to ~37°N
     bounds: { lonMin: 67, lonMax: 95, latMin: 3, latMax: 37 },
     pins: [
       { id: "1800-kashmir", lat: 34.1, lon: 74.8, region: "Kashmir", craft: "Pashmina & Kani shawls", note: "Changthangi wool hand-woven on twill-tapestry looms for Mughal and Persian courts." },
@@ -414,7 +414,7 @@ export function IndiaMap() {
                 <div className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
                   <Sparkles className="h-3 w-3 text-primary" /> Era context
                 </div>
-                <p className="mt-2 text-sm text-foreground/85">{era.title} — {era.body}</p>
+                <p className="mt-2 text-sm text-foreground/85">{era.title} - {era.body}</p>
               </div>
 
               <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-5 text-xs text-muted-foreground">

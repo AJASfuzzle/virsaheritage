@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 
 /**
- * Public — list every heritage_site row (trail stops with coordinates).
+ * Public - list every heritage_site row (trail stops with coordinates).
  * Used by the live Google Maps Atlas. RLS exposes these read-only via the
  * heritage_sites SELECT policy granted to anon.
  */

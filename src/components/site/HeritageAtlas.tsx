@@ -78,7 +78,7 @@ export function HeritageAtlas({ initialSiteId }: { initialSiteId?: string } = {}
 
   return (
     <section className="relative w-full bg-[var(--background)] text-foreground">
-      {/* Subtle paper texture — warm cream in light, muted in dark */}
+      {/* Subtle paper texture - warm cream in light, muted in dark */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-[0.18] mix-blend-multiply dark:opacity-[0.08] dark:mix-blend-screen"
@@ -141,7 +141,7 @@ export function HeritageAtlas({ initialSiteId }: { initialSiteId?: string } = {}
           </div>
         </header>
 
-        {/* Map canvas — fills the rest of the viewport */}
+        {/* Map canvas - fills the rest of the viewport */}
         <div className="relative flex-1 min-h-[640px] rounded-3xl bg-[color-mix(in_oklab,var(--background)_82%,var(--parchment)_18%)] ring-1 ring-border/60 shadow-[0_30px_60px_-30px_rgba(80,55,20,0.25)] dark:shadow-[0_30px_60px_-30px_rgba(0,0,0,0.5)] overflow-hidden">
           <MapCanvas
             visible={visible}
@@ -173,7 +173,7 @@ export function HeritageAtlas({ initialSiteId }: { initialSiteId?: string } = {}
 
         </div>
 
-        {/* Timeline scrubber — below the map so it never covers it */}
+        {/* Timeline scrubber - below the map so it never covers it */}
         <TimelineScrubber year={year} setYear={setYear} />
       </div>
 
@@ -206,7 +206,7 @@ function MapCanvas({
         className="relative h-full max-h-full"
         style={{ aspectRatio: `${MAP.w} / ${MAP.h}` }}
       >
-        {/* Ambient elevation shadow — Apple-style soft halo */}
+        {/* Ambient elevation shadow - Apple-style soft halo */}
         <div
           aria-hidden
           className="pointer-events-none absolute -inset-6 rounded-[2.5rem]"
@@ -216,7 +216,7 @@ function MapCanvas({
             filter: "blur(18px)",
           }}
         />
-        {/* Base map image — the uploaded India asset, untouched */}
+        {/* Base map image - the uploaded India asset, untouched */}
         <img
           src={indiaBaseMap.url}
           alt="Map of India"
@@ -229,7 +229,7 @@ function MapCanvas({
           style={{ WebkitUserDrag: "none" } as React.CSSProperties}
         />
 
-        {/* Pushpins layer — aligned to the image's lon/lat calibration */}
+        {/* Pushpins layer - aligned to the image's lon/lat calibration */}
         <div className="absolute inset-0">
           {visible.map((site) => {
             const { x, y } = project(site.lon, site.lat);
@@ -266,7 +266,7 @@ function Pushpin({ color, active }: { color: string; active: boolean }) {
       whileHover={{ scale: 1.18, y: -2 }}
       transition={{ type: "spring", stiffness: 380, damping: 22 }}
     >
-      {/* Ground shadow — Apple-style soft ellipse */}
+      {/* Ground shadow - Apple-style soft ellipse */}
       <span
         aria-hidden
         className="absolute left-1/2 top-full -translate-x-1/2 h-1.5 w-3 rounded-full bg-foreground/25 blur-[2px]"

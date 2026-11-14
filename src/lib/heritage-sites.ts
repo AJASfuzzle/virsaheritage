@@ -68,9 +68,9 @@ export const heritageSites: HeritageSite[] = [
     lat: 15.335, lon: 76.460, region: "Vijayanagara, Karnataka", year: 1336,
     shortDescription: "Boulder-strewn ruins of Vijayanagara, once one of the richest cities in the world.",
     fullDescription: [
-      "Spread across a 36-square-kilometre landscape of granite outcrops along the Tungabhadra, Hampi is the surviving footprint of Vijayanagara — capital of the eponymous empire that ruled much of southern India between the 14th and 16th centuries.",
+      "Spread across a 36-square-kilometre landscape of granite outcrops along the Tungabhadra, Hampi is the surviving footprint of Vijayanagara - capital of the eponymous empire that ruled much of southern India between the 14th and 16th centuries.",
       "More than 1,600 surviving monuments include the Virupaksha Temple, the musical pillars of Vittala, the iconic stone chariot, royal enclosures and aqueducts.",
-      "The city was sacked in 1565 after the Battle of Talikota and never reoccupied — UNESCO inscribed it in 1986.",
+      "The city was sacked in 1565 after the Battle of Talikota and never reoccupied - UNESCO inscribed it in 1986.",
     ],
     quickFacts: [
       { label: "Flourished", value: "14th–16th century" },
@@ -97,10 +97,10 @@ export const heritageSites: HeritageSite[] = [
   {
     id: "lothal", name: "Lothal", category: "Archaeology",
     lat: 22.5217, lon: 72.2495, region: "Saragwala, Gujarat", year: -2400,
-    shortDescription: "One of the southernmost cities of the Indus Valley Civilisation — and the world's earliest known dockyard.",
+    shortDescription: "One of the southernmost cities of the Indus Valley Civilisation - and the world's earliest known dockyard.",
     fullDescription: [
       "Lothal flourished between 2400 and 1900 BCE as a Harappan trading port on the Gulf of Khambhat. Its baked-brick basin, fed by a channel from the Sabarmati, is widely accepted as the earliest engineered dockyard yet found.",
-      "Excavations uncovered standardised weights, Persian Gulf seals, bead-making workshops and a planned grid of streets and drains — evidence of a sophisticated mercantile society three millennia before the Mughals.",
+      "Excavations uncovered standardised weights, Persian Gulf seals, bead-making workshops and a planned grid of streets and drains - evidence of a sophisticated mercantile society three millennia before the Mughals.",
     ],
     quickFacts: [
       { label: "Period", value: "c. 2400–1900 BCE" },
@@ -114,8 +114,8 @@ export const heritageSites: HeritageSite[] = [
     lat: 23.8916, lon: 70.2090, region: "Kachchh, Gujarat", year: -2600,
     shortDescription: "A Harappan city of reservoirs, gates and a still-undeciphered ten-character signboard.",
     fullDescription: [
-      "Built on an island in the Great Rann of Kachchh, Dholavira is one of the five largest Harappan sites. Its three-tier city plan — castle, middle and lower town — was supplied by 16 carefully engineered stone reservoirs that captured monsoon runoff in a near-rainless landscape.",
-      "Above its northern gateway archaeologists found ten Harappan glyphs cut into gypsum — the so-called 'Dholavira Signboard', still undeciphered. UNESCO inscribed the city in 2021.",
+      "Built on an island in the Great Rann of Kachchh, Dholavira is one of the five largest Harappan sites. Its three-tier city plan - castle, middle and lower town - was supplied by 16 carefully engineered stone reservoirs that captured monsoon runoff in a near-rainless landscape.",
+      "Above its northern gateway archaeologists found ten Harappan glyphs cut into gypsum - the so-called 'Dholavira Signboard', still undeciphered. UNESCO inscribed the city in 2021.",
     ],
     quickFacts: [
       { label: "Occupied", value: "c. 2650–1450 BCE" },
@@ -127,9 +127,9 @@ export const heritageSites: HeritageSite[] = [
   {
     id: "konark", name: "Konark Sun Temple", category: "Archaeology",
     lat: 19.8876, lon: 86.0945, region: "Konark, Odisha", year: 1250,
-    shortDescription: "A 13th-century chariot of the Sun God hewn from sandstone — wheels, horses and all.",
+    shortDescription: "A 13th-century chariot of the Sun God hewn from sandstone - wheels, horses and all.",
     fullDescription: [
-      "Built around 1250 by King Narasimhadeva I of the Eastern Ganga dynasty, the Konark Sun Temple is conceived as a colossal stone chariot of Surya — 24 carved wheels, seven straining horses and a now-collapsed sanctum that once held the deity.",
+      "Built around 1250 by King Narasimhadeva I of the Eastern Ganga dynasty, the Konark Sun Temple is conceived as a colossal stone chariot of Surya - 24 carved wheels, seven straining horses and a now-collapsed sanctum that once held the deity.",
       "The walls carry one of the densest programmes of sculpture in India: musicians, dancers, deities and erotic mithuna couples. UNESCO inscribed the temple in 1984.",
     ],
     quickFacts: [
@@ -157,9 +157,9 @@ export const heritageSites: HeritageSite[] = [
   {
     id: "sanchi", name: "Sanchi Stupa", category: "Archaeology",
     lat: 23.4795, lon: 77.7396, region: "Raisen, Madhya Pradesh", year: -300,
-    shortDescription: "The earliest surviving Buddhist monument in India — a hemispherical reliquary of brick and stone.",
+    shortDescription: "The earliest surviving Buddhist monument in India - a hemispherical reliquary of brick and stone.",
     fullDescription: [
-      "Commissioned by Emperor Ashoka in the 3rd century BCE on a hilltop in central India, the Great Stupa at Sanchi enshrines relics of the Buddha. Later Shunga and Satavahana patrons enlarged it and added the famous toranas — four carved gateways depicting the jataka tales.",
+      "Commissioned by Emperor Ashoka in the 3rd century BCE on a hilltop in central India, the Great Stupa at Sanchi enshrines relics of the Buddha. Later Shunga and Satavahana patrons enlarged it and added the famous toranas - four carved gateways depicting the jataka tales.",
       "Sanchi marks the start of Indian architectural history. UNESCO inscribed the site in 1989.",
     ],
     quickFacts: [
@@ -187,9 +187,9 @@ export const heritageSites: HeritageSite[] = [
   {
     id: "rakhigarhi", name: "Rakhigarhi", category: "Archaeology",
     lat: 29.2917, lon: 76.1135, region: "Hisar, Haryana", year: -2600,
-    shortDescription: "The largest known Harappan city — bigger than Mohenjo-daro, still mostly buried under farmland.",
+    shortDescription: "The largest known Harappan city - bigger than Mohenjo-daro, still mostly buried under farmland.",
     fullDescription: [
-      "Excavations since 1969 have revealed a planned Harappan city spread across at least seven mounds, with fired-brick streets, drains, granaries, jewellery workshops and a cemetery. DNA from a Rakhigarhi skeleton sequenced in 2019 carried no Steppe ancestry — a key data point in the long debate over Indo-Aryan migrations.",
+      "Excavations since 1969 have revealed a planned Harappan city spread across at least seven mounds, with fired-brick streets, drains, granaries, jewellery workshops and a cemetery. DNA from a Rakhigarhi skeleton sequenced in 2019 carried no Steppe ancestry - a key data point in the long debate over Indo-Aryan migrations.",
     ],
     quickFacts: [
       { label: "Occupied", value: "c. 2600–1900 BCE" },
@@ -218,7 +218,7 @@ export const heritageSites: HeritageSite[] = [
   {
     id: "sundarbans", name: "Sundarbans", category: "Nature",
     lat: 21.95, lon: 88.9, region: "South 24 Parganas, West Bengal", year: 1973,
-    shortDescription: "The world's largest contiguous mangrove forest — and the realm of the swimming tiger.",
+    shortDescription: "The world's largest contiguous mangrove forest - and the realm of the swimming tiger.",
     fullDescription: [
       "Where the Ganges, Brahmaputra and Meghna empty into the Bay of Bengal, their silt has woven a 10,000-square-kilometre labyrinth of tidal creeks and mangrove islands.",
       "The Indian portion shelters one of the few Bengal tiger populations that habitually swim between islands and hunt in salt water. UNESCO inscribed it in 1987.",
@@ -240,7 +240,7 @@ export const heritageSites: HeritageSite[] = [
     ],
     quickFacts: [
       { label: "Established", value: "1982 (NP)" },
-      { label: "Highest point", value: "Nanda Devi — 7,816 m" },
+      { label: "Highest point", value: "Nanda Devi - 7,816 m" },
       { label: "UNESCO", value: "World Heritage Site (1988)" },
     ],
     imageUrl: nandaDeviImg.url,
@@ -248,9 +248,9 @@ export const heritageSites: HeritageSite[] = [
   {
     id: "western-ghats", name: "Western Ghats", category: "Nature",
     lat: 12.5, lon: 75.5, region: "Six states along India's western seaboard", year: 1986,
-    shortDescription: "An older-than-the-Himalayas mountain chain — one of eight 'hottest hotspots' of biodiversity on Earth.",
+    shortDescription: "An older-than-the-Himalayas mountain chain - one of eight 'hottest hotspots' of biodiversity on Earth.",
     fullDescription: [
-      "Running 1,600 km from Gujarat to Kanyakumari, the Western Ghats predate the Himalayas. Their cloud forests, shola grasslands and laterite plateaux harbour more than 7,400 species of plants, 139 mammals, 508 birds and 179 amphibians — most found nowhere else.",
+      "Running 1,600 km from Gujarat to Kanyakumari, the Western Ghats predate the Himalayas. Their cloud forests, shola grasslands and laterite plateaux harbour more than 7,400 species of plants, 139 mammals, 508 birds and 179 amphibians - most found nowhere else.",
       "39 properties across the range were inscribed by UNESCO in 2012.",
     ],
     quickFacts: [
@@ -266,7 +266,7 @@ export const heritageSites: HeritageSite[] = [
     shortDescription: "Man-made wetland that becomes a Siberian-crane wintering ground each November.",
     fullDescription: [
       "Originally a duck-shooting reserve created by Maharaja Suraj Mal of Bharatpur in the 1850s, the 29-square-km mosaic of shallow lakes and acacia woodland was declared a national park in 1971.",
-      "It hosts over 370 bird species — including the now critically endangered Siberian crane, which last bred here in the 1990s.",
+      "It hosts over 370 bird species - including the now critically endangered Siberian crane, which last bred here in the 1990s.",
     ],
     quickFacts: [
       { label: "Established", value: "1971 (NP)" },
@@ -293,10 +293,10 @@ export const heritageSites: HeritageSite[] = [
   {
     id: "andaman-reef", name: "Andaman & Nicobar Coral Reefs", category: "Nature",
     lat: 11.7401, lon: 92.6586, region: "Andaman & Nicobar Islands", year: 1956,
-    shortDescription: "Some of India's healthiest coral reefs — and the last refuge of the Sentinelese.",
+    shortDescription: "Some of India's healthiest coral reefs - and the last refuge of the Sentinelese.",
     fullDescription: [
       "Off the eastern flank of the Bay of Bengal, the Andaman & Nicobar archipelago harbours nearly 200 species of coral and over 1,200 species of reef fish across the Mahatma Gandhi Marine National Park and surrounding waters.",
-      "The islands are also home to several indigenous peoples — including the Sentinelese, the last fully uncontacted population on Earth.",
+      "The islands are also home to several indigenous peoples - including the Sentinelese, the last fully uncontacted population on Earth.",
     ],
     quickFacts: [
       { label: "Islands", value: "572 (37 inhabited)" },
@@ -343,7 +343,7 @@ export const heritageSites: HeritageSite[] = [
     shortDescription: "A 73-metre brick tower marking the first wave of Islamic architecture in India.",
     fullDescription: [
       "Begun in 1192 by Qutb-ud-din Aibak after the defeat of the last Hindu king of Delhi and completed by his successor Iltutmish, the Qutub Minar rises in five tapering storeys of red sandstone and marble, each band ringed by Quranic calligraphy.",
-      "The surrounding complex includes the Iron Pillar of Delhi — a 1,600-year-old wrought-iron column that has barely rusted, a metallurgical mystery.",
+      "The surrounding complex includes the Iron Pillar of Delhi - a 1,600-year-old wrought-iron column that has barely rusted, a metallurgical mystery.",
     ],
     quickFacts: [
       { label: "Built", value: "1192–1220" },
@@ -355,7 +355,7 @@ export const heritageSites: HeritageSite[] = [
   {
     id: "red-fort", name: "Red Fort", category: "Architecture",
     lat: 28.6562, lon: 77.2410, region: "Old Delhi", year: 1648,
-    shortDescription: "Shah Jahan's red sandstone citadel — political stage of Mughal Delhi and modern Republic Day.",
+    shortDescription: "Shah Jahan's red sandstone citadel - political stage of Mughal Delhi and modern Republic Day.",
     fullDescription: [
       "Built between 1638 and 1648 when Shah Jahan moved his capital from Agra, the Lal Qila enclosed marble pavilions, a perfumed water channel (the Nahr-i-Bihisht), and the famed Peacock Throne.",
       "From its Lahori Gate every Independence Day since 1947 the Prime Minister of India addresses the nation. UNESCO inscribed it in 2007.",
@@ -385,7 +385,7 @@ export const heritageSites: HeritageSite[] = [
   {
     id: "golden-temple", name: "Harmandir Sahib (Golden Temple)", category: "Architecture",
     lat: 31.6200, lon: 74.8765, region: "Amritsar, Punjab", year: 1604,
-    shortDescription: "The spiritual centre of Sikhism — a marble shrine on a pool of nectar.",
+    shortDescription: "The spiritual centre of Sikhism - a marble shrine on a pool of nectar.",
     fullDescription: [
       "Founded by the fourth Guru Ram Das around 1577, completed and consecrated under Guru Arjan in 1604, Harmandir Sahib enshrines the Guru Granth Sahib. The Mughal-era gilded copper cladding and Sikh frescoes of the upper levels were added under Maharaja Ranjit Singh in the early 19th century.",
       "Its langar feeds up to 100,000 people every day, free, regardless of caste or creed.",
@@ -415,7 +415,7 @@ export const heritageSites: HeritageSite[] = [
   {
     id: "victoria-memorial", name: "Victoria Memorial", category: "Architecture",
     lat: 22.5448, lon: 88.3426, region: "Kolkata, West Bengal", year: 1921,
-    shortDescription: "An Edwardian marble pile commemorating Empress Victoria — now a museum of the Raj.",
+    shortDescription: "An Edwardian marble pile commemorating Empress Victoria - now a museum of the Raj.",
     fullDescription: [
       "Conceived by Lord Curzon, designed by William Emerson and completed in 1921, the Victoria Memorial is built from the same Makrana marble as the Taj, on 64 acres of formal garden.",
       "Today it holds one of the largest collections of British-era oil paintings, manuscripts and arms in India.",
@@ -432,7 +432,7 @@ export const heritageSites: HeritageSite[] = [
     lat: 17.3616, lon: 78.4747, region: "Hyderabad, Telangana", year: 1591,
     shortDescription: "A four-minareted gateway raised in 1591 at the heart of newly founded Hyderabad.",
     fullDescription: [
-      "Built in 1591 by Muhammad Quli Qutb Shah to mark the founding of Hyderabad — and by tradition, to commemorate the end of a plague — the Charminar rises 56 metres at the intersection of the four cardinal streets of the old city.",
+      "Built in 1591 by Muhammad Quli Qutb Shah to mark the founding of Hyderabad - and by tradition, to commemorate the end of a plague - the Charminar rises 56 metres at the intersection of the four cardinal streets of the old city.",
       "Around it sprawls the Laad Bazaar, famed for lacquer bangles, perfumes and pearls.",
     ],
     quickFacts: [
@@ -449,7 +449,7 @@ export const heritageSites: HeritageSite[] = [
     lat: 24.8318, lon: 79.9199, region: "Chhatarpur, Madhya Pradesh", year: 950,
     shortDescription: "Chandela-era sandstone temples celebrated for their dense, virtuosic sculpture.",
     fullDescription: [
-      "Built between 950 and 1050 CE by the Chandela dynasty, the Khajuraho temples once numbered 85; about 25 survive. Their exteriors are sheathed in bands of sculpture — gods, courtly women, processions and the celebrated mithuna couples.",
+      "Built between 950 and 1050 CE by the Chandela dynasty, the Khajuraho temples once numbered 85; about 25 survive. Their exteriors are sheathed in bands of sculpture - gods, courtly women, processions and the celebrated mithuna couples.",
       "Abandoned after the 13th century, they were swallowed by jungle until 1838. UNESCO inscribed the group in 1986.",
     ],
     quickFacts: [
@@ -462,9 +462,9 @@ export const heritageSites: HeritageSite[] = [
   {
     id: "madhubani", name: "Madhubani Painting Villages", category: "Art & Crafts",
     lat: 26.3552, lon: 86.0726, region: "Mithila, Bihar", year: 700,
-    shortDescription: "A women's painting tradition of the Mithila region — ritual walls turned into a global art form.",
+    shortDescription: "A women's painting tradition of the Mithila region - ritual walls turned into a global art form.",
     fullDescription: [
-      "Madhubani (or Mithila) painting was traditionally made by women on the freshly plastered walls of their homes for weddings and seasonal rituals. Five distinct styles — Bharni, Katchni, Tantric, Godna and Kohbar — use natural dyes and bamboo-stick brushes.",
+      "Madhubani (or Mithila) painting was traditionally made by women on the freshly plastered walls of their homes for weddings and seasonal rituals. Five distinct styles - Bharni, Katchni, Tantric, Godna and Kohbar - use natural dyes and bamboo-stick brushes.",
       "The art moved to paper in the 1960s after a drought devastated farming income, becoming one of India's most recognisable folk traditions.",
     ],
     quickFacts: [
@@ -479,7 +479,7 @@ export const heritageSites: HeritageSite[] = [
     lat: 19.8975, lon: 85.7833, region: "Puri, Odisha", year: 1100,
     shortDescription: "A heritage village where every household paints scrolls of Jagannath in egg-tempera technique.",
     fullDescription: [
-      "Tucked into a coconut grove near Puri, Raghurajpur was declared India's first heritage village in 2000. Every one of its ~120 houses produces Pattachitra — narrative cloth paintings of Jagannath, Krishna and Ramayana scenes — using pigments from conch, lamp black, hingula and shell lime.",
+      "Tucked into a coconut grove near Puri, Raghurajpur was declared India's first heritage village in 2000. Every one of its ~120 houses produces Pattachitra - narrative cloth paintings of Jagannath, Krishna and Ramayana scenes - using pigments from conch, lamp black, hingula and shell lime.",
       "The village is also the birthplace of the Gotipua dance tradition, the precursor of Odissi.",
     ],
     quickFacts: [
@@ -507,9 +507,9 @@ export const heritageSites: HeritageSite[] = [
   {
     id: "tanjore-paintings", name: "Tanjore Paintings", category: "Art & Crafts",
     lat: 10.7867, lon: 79.1378, region: "Thanjavur, Tamil Nadu", year: 1600,
-    shortDescription: "Glittering devotional panels — gold foil, gemstones and gesso, perfected under the Marathas.",
+    shortDescription: "Glittering devotional panels - gold foil, gemstones and gesso, perfected under the Marathas.",
     fullDescription: [
-      "Developed in Thanjavur under the patronage of the Maratha rulers in the 17th–18th centuries, Tanjore painting layers a wooden plank with chalk gesso, applies hammered 22-karat gold foil and inlays semi-precious stones to render images of Hindu deities — usually a serene, infant-faced Krishna or Balaji.",
+      "Developed in Thanjavur under the patronage of the Maratha rulers in the 17th–18th centuries, Tanjore painting layers a wooden plank with chalk gesso, applies hammered 22-karat gold foil and inlays semi-precious stones to render images of Hindu deities - usually a serene, infant-faced Krishna or Balaji.",
     ],
     quickFacts: [
       { label: "Tradition since", value: "17th c. CE" },
@@ -521,9 +521,9 @@ export const heritageSites: HeritageSite[] = [
   {
     id: "kanchipuram-silk", name: "Kanchipuram Silk Weaving", category: "Art & Crafts",
     lat: 12.8342, lon: 79.7036, region: "Kanchipuram, Tamil Nadu", year: 400,
-    shortDescription: "Heavy mulberry-silk saris woven with separately-attached zari borders — the temple sari of the south.",
+    shortDescription: "Heavy mulberry-silk saris woven with separately-attached zari borders - the temple sari of the south.",
     fullDescription: [
-      "Believed to descend from the Chola-era weavers Markanda and Sage Markandeya, Kanchipuram saris are woven in three separate parts — body, border and pallu — and then interlocked with the rare korvai technique so the borders survive even if the body wears out.",
+      "Believed to descend from the Chola-era weavers Markanda and Sage Markandeya, Kanchipuram saris are woven in three separate parts - body, border and pallu - and then interlocked with the rare korvai technique so the borders survive even if the body wears out.",
       "Three-ply pure mulberry silk and real gold-and-silver zari give a single sari its weight, drape and price.",
     ],
     quickFacts: [
@@ -541,7 +541,7 @@ export const heritageSites: HeritageSite[] = [
     shortDescription: "A 12th-century golden-sandstone fort in the Thar desert still inhabited by thousands.",
     fullDescription: [
       "Founded in 1156 by Rao Jaisal Bhati on Trikuta Hill, Jaisalmer Fort rises out of the Thar in honey-coloured Jurassic sandstone. Its 99 bastions and triple walls guarded a key staging post on caravan routes between India and Central Asia.",
-      "Unlike most Indian forts, Jaisalmer is a living fortress — a quarter of the city's population still resides inside. UNESCO inscribed it in 2013.",
+      "Unlike most Indian forts, Jaisalmer is a living fortress - a quarter of the city's population still resides inside. UNESCO inscribed it in 2013.",
     ],
     quickFacts: [
       { label: "Founded", value: "1156 CE" },
@@ -553,9 +553,9 @@ export const heritageSites: HeritageSite[] = [
   {
     id: "varanasi", name: "Varanasi Ghats", category: "Living Heritage",
     lat: 25.3176, lon: 83.0064, region: "Varanasi, Uttar Pradesh", year: -1000,
-    shortDescription: "Eighty-eight stone ghats stepping into the Ganga — perhaps the oldest continuously inhabited city on Earth.",
+    shortDescription: "Eighty-eight stone ghats stepping into the Ganga - perhaps the oldest continuously inhabited city on Earth.",
     fullDescription: [
-      "Sacred to Hindus, Buddhists and Jains alike, Kashi has been a continuous centre of pilgrimage and learning for at least three millennia. Its 88 ghats — Dashashwamedh, Manikarnika, Assi and the rest — descend in cut sandstone steps to the Ganga.",
+      "Sacred to Hindus, Buddhists and Jains alike, Kashi has been a continuous centre of pilgrimage and learning for at least three millennia. Its 88 ghats - Dashashwamedh, Manikarnika, Assi and the rest - descend in cut sandstone steps to the Ganga.",
       "The Ganga Aarti each dusk, and the funeral pyres of Manikarnika that never go out, remain the visible heart of the city's living religion.",
     ],
     quickFacts: [
@@ -568,7 +568,7 @@ export const heritageSites: HeritageSite[] = [
   {
     id: "kumbh-prayagraj", name: "Kumbh Mela at Prayagraj", category: "Living Heritage",
     lat: 25.4304, lon: 81.8467, region: "Prayagraj, Uttar Pradesh", year: 600,
-    shortDescription: "The largest peaceful gathering of humans on Earth — held at the Triveni Sangam every 12 years.",
+    shortDescription: "The largest peaceful gathering of humans on Earth - held at the Triveni Sangam every 12 years.",
     fullDescription: [
       "Documented since at least the 7th century by the Chinese pilgrim Xuanzang, the Kumbh Mela cycles between Prayagraj, Haridwar, Ujjain and Nashik. The 2025 Maha Kumbh at Prayagraj drew an estimated 600 million people over 45 days.",
       "UNESCO added the Kumbh Mela to its Intangible Cultural Heritage list in 2017.",
@@ -585,7 +585,7 @@ export const heritageSites: HeritageSite[] = [
     lat: 11.87, lon: 75.37, region: "Kannur & Kasaragod, Kerala", year: 1500,
     shortDescription: "A ritual possession-dance in which the dancer becomes the deity for the duration of the performance.",
     fullDescription: [
-      "Practised in over 400 shrines across North Malabar between October and May, Theyyam is one of South India's oldest surviving ritual art forms. The dancer dons towering headgear, full-body paint of natural pigments and a costume of fronds, then becomes the deity invoked — speaking with their voice and blessing devotees.",
+      "Practised in over 400 shrines across North Malabar between October and May, Theyyam is one of South India's oldest surviving ritual art forms. The dancer dons towering headgear, full-body paint of natural pigments and a costume of fronds, then becomes the deity invoked - speaking with their voice and blessing devotees.",
       "More than 450 distinct Theyyams exist, each tied to a specific lineage shrine.",
     ],
     quickFacts: [
@@ -613,10 +613,10 @@ export const heritageSites: HeritageSite[] = [
   {
     id: "majuli", name: "Majuli Satras", category: "Living Heritage",
     lat: 27.0034, lon: 94.2196, region: "Majuli, Assam", year: 1500,
-    shortDescription: "Vaishnavite monastic islands on the Brahmaputra — home of Sattriya, India's youngest classical dance.",
+    shortDescription: "Vaishnavite monastic islands on the Brahmaputra - home of Sattriya, India's youngest classical dance.",
     fullDescription: [
       "Majuli is the world's largest river island and the cradle of the neo-Vaishnavite reform movement led by Srimanta Sankardev in the 15th–16th centuries. Of the 65 satras (monasteries) he founded, 22 still operate here, teaching mask-making, manuscript painting and the Sattriya dance form.",
-      "Sattriya was recognised as a classical dance of India in 2000 — the youngest of the eight classical traditions.",
+      "Sattriya was recognised as a classical dance of India in 2000 - the youngest of the eight classical traditions.",
     ],
     quickFacts: [
       { label: "Monasteries (satras)", value: "22 active" },
@@ -635,7 +635,7 @@ export const heritageCategories: HeritageCategory[] = [
   "Living Heritage",
 ];
 
-// Pushpin colour per category — Talking Tours-style flat dots.
+// Pushpin colour per category - Talking Tours-style flat dots.
 export const categoryStyles: Record<
   HeritageCategory,
   { color: string; label: string }

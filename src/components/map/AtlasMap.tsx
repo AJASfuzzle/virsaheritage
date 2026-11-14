@@ -338,7 +338,7 @@ export function AtlasMap() {
         return;
       }
       qc.invalidateQueries({ queryKey: ["my-state"] });
-      toast.success(`+${res.earned} Virsa Coins — ${vars.site.name}`);
+      toast.success(`+${res.earned} Virsa Coins - ${vars.site.name}`);
       if (res.trail_complete) {
         toast.success("Trail complete! +100 bonus.", { duration: 5000 });
       }
@@ -570,7 +570,7 @@ export function AtlasMap() {
                       onClick={() => attemptCheckIn(selected, true)}
                       disabled={isPending}
                       className="rounded-full bg-foreground/5 px-3 py-2 text-xs text-foreground/60 hover:text-foreground"
-                      title="Dev only — bypass geolocation"
+                      title="Dev only - bypass geolocation"
                     >
                       Demo
                     </button>

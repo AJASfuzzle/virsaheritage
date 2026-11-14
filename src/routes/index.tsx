@@ -6,17 +6,17 @@ import { RecommendationsRow } from "@/components/recs/RecommendationsRow";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "VIRSA — India's Living Memory & Heritage Atlas" },
+      { title: "VIRSA - India's Living Memory & Heritage Atlas" },
       {
         name: "description",
         content:
           "VIRSA preserves India's languages, stories, recipes, festivals and traditions on an AI-powered cultural memory map.",
       },
-      { property: "og:title", content: "VIRSA — India's Living Memory & Heritage Atlas" },
+      { property: "og:title", content: "VIRSA - India's Living Memory & Heritage Atlas" },
       {
         property: "og:description",
         content:
-          "An AI-powered atlas of India's heritage — languages, stories, festivals and crafts, mapped across geography and time.",
+          "An AI-powered atlas of India's heritage - languages, stories, festivals and crafts, mapped across geography and time.",
       },
     ],
   }),

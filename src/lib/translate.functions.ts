@@ -73,7 +73,7 @@ export const translateBatch = createServerFn({ method: "POST" })
 
     const cfg = LANGUAGE_CONFIG[targetLang];
     if (!cfg) {
-      // Unsupported language — return originals so UI stays usable.
+      // Unsupported language - return originals so UI stays usable.
       return { translations: texts };
     }
 
@@ -83,7 +83,7 @@ export const translateBatch = createServerFn({ method: "POST" })
       return { translations: texts };
     }
 
-    // Google Cloud Translation v2 — supports batched `q` params.
+    // Google Cloud Translation v2 - supports batched `q` params.
     const url = `https://translation.googleapis.com/language/translate/v2?key=${encodeURIComponent(apiKey)}`;
 
     let translated: string[] = [];

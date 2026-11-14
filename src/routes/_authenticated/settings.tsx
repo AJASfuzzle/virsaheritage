@@ -8,7 +8,7 @@ import { useAuth } from "@/hooks/use-auth";
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
     meta: [
-      { title: "Settings — VIRSA Heritage" },
+      { title: "Settings - VIRSA Heritage" },
       { name: "description", content: "Manage your VIRSA account, profile and preferences." },
     ],
   }),
