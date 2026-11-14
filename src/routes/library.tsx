@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, Clock, Sparkles, X, ArrowRight, BookOpen, Heart, Mic, FileText } from "lucide-react";
+import { Search, Clock, MapPin, Sparkles, X, ArrowRight, BookOpen, Heart, Mic, FileText } from "lucide-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { listLibraryEchoes, toggleLike } from "@/lib/echoes.functions";
@@ -10,6 +10,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { LIBRARY_STORIES_META } from "@/lib/library-stories-meta";
 import { HERITAGE_SHELVES } from "@/lib/library-heritage-stories";
 import { getHeritageStoryBody } from "@/lib/library-stories.functions";
 
@@ -219,6 +220,23 @@ const BASE_SHELVES: Shelf[] = [
 
 const SHELVES: Shelf[] = [...BASE_SHELVES, ...HERITAGE_SHELVES];
 
+// Place label shown on cards in place of reading time. Built from each story's recorded region.
+const BASE_LOCALITY: Record<string, string> = {
+  "partition-letter": "Lahore, Punjab", "nanima-wedding": "Jaipur, Rajasthan", "sindh-migration": "Sindh & Bombay",
+  "soldier-letter": "Assam & Arunachal Pradesh", "recipe-diary": "Thanjavur, Tamil Nadu", "kashmiri-houseboat": "Dal Lake, Kashmir",
+  indus: "Indus Valley", gupta: "North India", mughal: "North India", persian: "North India", dialects: "Northeast India",
+  temples: "South India", monasteries: "The Himalayas",
+};
+const LOCALITY: Record<string, string> = Object.fromEntries(
+  LIBRARY_STORIES_META.map((m) => {
+    const r = BASE_LOCALITY[m.id] ?? m.region ?? "";
+    if (!r) return [m.id, ""];
+    if (r === "Pan-India" || r === "Pan-Indian") return [m.id, "India"];
+    return [m.id, `${r}, India`];
+  }),
+);
+const localityOf = (id: string) => LOCALITY[id] ?? "";
+
 /* ---------------- page ---------------- */
 
 function LibraryPage() {
@@ -340,7 +358,7 @@ function LibraryPage() {
                       >
                         <div className="min-w-0">
                           <p className="truncate text-sm font-medium">{r.title}</p>
-                          <p className="truncate text-xs text-muted-foreground">{r.shelf} · {r.minutes} min</p>
+                          <p className="truncate text-xs text-muted-foreground">{r.shelf}{localityOf(r.id) ? ` · ${localityOf(r.id)}` : ""}</p>
                         </div>
                         <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground" />
                       </button>
@@ -391,7 +409,7 @@ function LibraryPage() {
               <h3 className="font-display text-2xl leading-tight">{s.title}</h3>
               <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">{s.blurb}</p>
               <div className="mt-6 flex items-center justify-between text-xs text-muted-foreground">
-                <span className="inline-flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" /> {s.minutes} min</span>
+                <span className="inline-flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> {localityOf(s.id)}</span>
                 <span className="inline-flex items-center gap-1 text-foreground/80 opacity-0 transition group-hover:translate-x-1 group-hover:opacity-100">
                   Open <ArrowRight className="h-3.5 w-3.5" />
                 </span>
@@ -525,7 +543,7 @@ function StoryCard({
       <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{story.blurb}</p>
 
       <div className="mt-5 flex items-center justify-between text-[11px] text-muted-foreground">
-        <span className="inline-flex items-center gap-1.5"><Clock className="h-3 w-3" /> {story.minutes} min read</span>
+        <span className="inline-flex items-center gap-1.5"><MapPin className="h-3 w-3" /> {localityOf(story.id)}</span>
         <span className="inline-flex items-center gap-1 text-foreground/70 opacity-0 transition group-hover:translate-x-0.5 group-hover:opacity-100">
           Open <ArrowRight className="h-3 w-3" />
         </span>
@@ -597,7 +615,7 @@ function StoryModal({ story, onClose }: { story: Story | null; onClose: () => vo
               </p>
 
               <div className="mt-10 flex items-center justify-between border-t border-[var(--glass-border)] pt-6 text-xs text-muted-foreground">
-                <span className="inline-flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" /> {story.minutes} min read</span>
+                <span className="inline-flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> {localityOf(story.id)}</span>
                 <button
                   onClick={onClose}
                   className="btn-glossy rounded-full bg-[var(--accent)] px-5 py-2.5 text-[11px] uppercase tracking-[0.22em] text-[color:var(--accent-foreground)]"
