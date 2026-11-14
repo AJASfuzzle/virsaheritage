@@ -1,7 +1,7 @@
 /// <reference types="google.maps" />
 /**
  * Singleton loader for the Google Maps JavaScript API.
- * Loads the API with the Lovable-managed browser key and resolves once the
+ * Loads the API with the project's own browser key (GOOGLE_API_KEY) and resolves once the
  * `google.maps` namespace is ready. Subsequent callers receive the same promise.
  */
 
@@ -21,22 +21,21 @@ export function loadGoogleMaps(): Promise<typeof google> {
   if (window.google?.maps) return Promise.resolve(window.google);
   if (loadPromise) return loadPromise;
 
-  const key = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY as
-    | string
-    | undefined;
   const channel = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_TRACKING_ID as
     | string
     | undefined;
 
-  if (!key) {
-    return Promise.reject(
-      new Error(
-        "Google Maps browser key is missing. The Google Maps Platform connector may be disconnected."
-      )
-    );
-  }
-
-  loadPromise = new Promise<typeof google>((resolve, reject) => {
+  loadPromise = new Promise<typeof google>(async (resolve, reject) => {
+    let key: string | null = null;
+    try {
+      const { getMapsBrowserKey } = await import("@/lib/maps-key.functions");
+      key = (await getMapsBrowserKey()).key;
+    } catch {}
+    if (!key) {
+      loadPromise = null;
+      reject(new Error("Google Maps browser key is missing."));
+      return;
+    }
     window.__virsaMapsCallback = () => {
       if (window.google?.maps) resolve(window.google);
       else reject(new Error("Google Maps failed to initialize."));
