@@ -13,7 +13,7 @@ import { toast } from "sonner";
 
 
 export const Route = createFileRoute("/library")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): { story?: string } => ({
     story: typeof search.story === "string" ? (search.story as string) : undefined,
   }),
   head: () => ({

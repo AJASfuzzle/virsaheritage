@@ -9,65 +9,34 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TrailsRouteImport } from './routes/trails'
-import { Route as LibraryRouteImport } from './routes/library'
-import { Route as KitabRouteImport } from './routes/kitab'
-import { Route as KhazaneRouteImport } from './routes/khazane'
-import { Route as EchoesRouteImport } from './routes/echoes'
-import { Route as ContributeRouteImport } from './routes/contribute'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AtlasRouteImport } from './routes/atlas'
-import { Route as AssistantRouteImport } from './routes/assistant'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as TrailsIndexRouteImport } from './routes/trails.index'
-import { Route as EchoesIndexRouteImport } from './routes/echoes.index'
-import { Route as TrailsSlugRouteImport } from './routes/trails.$slug'
-import { Route as EchoesPostIdRouteImport } from './routes/echoes.$postId'
-import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AssistantRouteImport } from './routes/assistant'
+import { Route as AtlasRouteImport } from './routes/atlas'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ContributeRouteImport } from './routes/contribute'
+import { Route as EchoesRouteImport } from './routes/echoes'
+import { Route as KhazaneRouteImport } from './routes/khazane'
+import { Route as KitabRouteImport } from './routes/kitab'
+import { Route as LibraryRouteImport } from './routes/library'
+import { Route as TrailsRouteImport } from './routes/trails'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as EchoesProfileUserIdRouteImport } from './routes/echoes.profile.$userId'
-import { Route as AuthenticatedEchoesSettingsRouteImport } from './routes/_authenticated/echoes.settings'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as EchoesIndexRouteImport } from './routes/echoes.index'
+import { Route as EchoesPostIdRouteImport } from './routes/echoes.$postId'
+import { Route as TrailsIndexRouteImport } from './routes/trails.index'
+import { Route as TrailsSlugRouteImport } from './routes/trails.$slug'
 import { Route as AuthenticatedEchoesSavedRouteImport } from './routes/_authenticated/echoes.saved'
+import { Route as AuthenticatedEchoesSettingsRouteImport } from './routes/_authenticated/echoes.settings'
+import { Route as EchoesProfileUserIdRouteImport } from './routes/echoes.profile.$userId'
 
-const TrailsRoute = TrailsRouteImport.update({
-  id: '/trails',
-  path: '/trails',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LibraryRoute = LibraryRouteImport.update({
-  id: '/library',
-  path: '/library',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const KitabRoute = KitabRouteImport.update({
-  id: '/kitab',
-  path: '/kitab',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const KhazaneRoute = KhazaneRouteImport.update({
-  id: '/khazane',
-  path: '/khazane',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EchoesRoute = EchoesRouteImport.update({
-  id: '/echoes',
-  path: '/echoes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContributeRoute = ContributeRouteImport.update({
-  id: '/contribute',
-  path: '/contribute',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AtlasRoute = AtlasRouteImport.update({
-  id: '/atlas',
-  path: '/atlas',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AssistantRoute = AssistantRouteImport.update({
@@ -75,62 +44,93 @@ const AssistantRoute = AssistantRouteImport.update({
   path: '/assistant',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const AtlasRoute = AtlasRouteImport.update({
+  id: '/atlas',
+  path: '/atlas',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TrailsIndexRoute = TrailsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => TrailsRoute,
+const ContributeRoute = ContributeRouteImport.update({
+  id: '/contribute',
+  path: '/contribute',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const EchoesIndexRoute = EchoesIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => EchoesRoute,
+const EchoesRoute = EchoesRouteImport.update({
+  id: '/echoes',
+  path: '/echoes',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const TrailsSlugRoute = TrailsSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => TrailsRoute,
+const KhazaneRoute = KhazaneRouteImport.update({
+  id: '/khazane',
+  path: '/khazane',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const EchoesPostIdRoute = EchoesPostIdRouteImport.update({
-  id: '/$postId',
-  path: '/$postId',
-  getParentRoute: () => EchoesRoute,
+const KitabRoute = KitabRouteImport.update({
+  id: '/kitab',
+  path: '/kitab',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AuthenticatedRouteRoute,
+const LibraryRoute = LibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrailsRoute = TrailsRouteImport.update({
+  id: '/trails',
+  path: '/trails',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const EchoesProfileUserIdRoute = EchoesProfileUserIdRouteImport.update({
-  id: '/profile/$userId',
-  path: '/profile/$userId',
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const EchoesIndexRoute = EchoesIndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => EchoesRoute,
 } as any)
-const AuthenticatedEchoesSettingsRoute =
-  AuthenticatedEchoesSettingsRouteImport.update({
-    id: '/echoes/settings',
-    path: '/echoes/settings',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
+const EchoesPostIdRoute = EchoesPostIdRouteImport.update({
+  id: '/$postId',
+  path: '/$postId',
+  getParentRoute: () => EchoesRoute,
+} as any)
+const TrailsIndexRoute = TrailsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TrailsRoute,
+} as any)
+const TrailsSlugRoute = TrailsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => TrailsRoute,
+} as any)
 const AuthenticatedEchoesSavedRoute =
   AuthenticatedEchoesSavedRouteImport.update({
     id: '/echoes/saved',
     path: '/echoes/saved',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedEchoesSettingsRoute =
+  AuthenticatedEchoesSettingsRouteImport.update({
+    id: '/echoes/settings',
+    path: '/echoes/settings',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const EchoesProfileUserIdRoute = EchoesProfileUserIdRouteImport.update({
+  id: '/profile/$userId',
+  path: '/profile/$userId',
+  getParentRoute: () => EchoesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -276,67 +276,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/trails': {
-      id: '/trails'
-      path: '/trails'
-      fullPath: '/trails'
-      preLoaderRoute: typeof TrailsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/library': {
-      id: '/library'
-      path: '/library'
-      fullPath: '/library'
-      preLoaderRoute: typeof LibraryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/kitab': {
-      id: '/kitab'
-      path: '/kitab'
-      fullPath: '/kitab'
-      preLoaderRoute: typeof KitabRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/khazane': {
-      id: '/khazane'
-      path: '/khazane'
-      fullPath: '/khazane'
-      preLoaderRoute: typeof KhazaneRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/echoes': {
-      id: '/echoes'
-      path: '/echoes'
-      fullPath: '/echoes'
-      preLoaderRoute: typeof EchoesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contribute': {
-      id: '/contribute'
-      path: '/contribute'
-      fullPath: '/contribute'
-      preLoaderRoute: typeof ContributeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/atlas': {
-      id: '/atlas'
-      path: '/atlas'
-      fullPath: '/atlas'
-      preLoaderRoute: typeof AtlasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/assistant': {
-      id: '/assistant'
-      path: '/assistant'
-      fullPath: '/assistant'
-      preLoaderRoute: typeof AssistantRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -346,47 +290,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/assistant': {
+      id: '/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AssistantRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/trails/': {
-      id: '/trails/'
-      path: '/'
-      fullPath: '/trails/'
-      preLoaderRoute: typeof TrailsIndexRouteImport
-      parentRoute: typeof TrailsRoute
+    '/atlas': {
+      id: '/atlas'
+      path: '/atlas'
+      fullPath: '/atlas'
+      preLoaderRoute: typeof AtlasRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/echoes/': {
-      id: '/echoes/'
-      path: '/'
-      fullPath: '/echoes/'
-      preLoaderRoute: typeof EchoesIndexRouteImport
-      parentRoute: typeof EchoesRoute
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/trails/$slug': {
-      id: '/trails/$slug'
-      path: '/$slug'
-      fullPath: '/trails/$slug'
-      preLoaderRoute: typeof TrailsSlugRouteImport
-      parentRoute: typeof TrailsRoute
+    '/contribute': {
+      id: '/contribute'
+      path: '/contribute'
+      fullPath: '/contribute'
+      preLoaderRoute: typeof ContributeRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/echoes/$postId': {
-      id: '/echoes/$postId'
-      path: '/$postId'
-      fullPath: '/echoes/$postId'
-      preLoaderRoute: typeof EchoesPostIdRouteImport
-      parentRoute: typeof EchoesRoute
+    '/echoes': {
+      id: '/echoes'
+      path: '/echoes'
+      fullPath: '/echoes'
+      preLoaderRoute: typeof EchoesRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/settings': {
-      id: '/_authenticated/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/khazane': {
+      id: '/khazane'
+      path: '/khazane'
+      fullPath: '/khazane'
+      preLoaderRoute: typeof KhazaneRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kitab': {
+      id: '/kitab'
+      path: '/kitab'
+      fullPath: '/kitab'
+      preLoaderRoute: typeof KitabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library': {
+      id: '/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof LibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trails': {
+      id: '/trails'
+      path: '/trails'
+      fullPath: '/trails'
+      preLoaderRoute: typeof TrailsRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
@@ -395,12 +360,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/echoes/profile/$userId': {
-      id: '/echoes/profile/$userId'
-      path: '/profile/$userId'
-      fullPath: '/echoes/profile/$userId'
-      preLoaderRoute: typeof EchoesProfileUserIdRouteImport
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/echoes/': {
+      id: '/echoes/'
+      path: '/'
+      fullPath: '/echoes/'
+      preLoaderRoute: typeof EchoesIndexRouteImport
       parentRoute: typeof EchoesRoute
+    }
+    '/echoes/$postId': {
+      id: '/echoes/$postId'
+      path: '/$postId'
+      fullPath: '/echoes/$postId'
+      preLoaderRoute: typeof EchoesPostIdRouteImport
+      parentRoute: typeof EchoesRoute
+    }
+    '/trails/': {
+      id: '/trails/'
+      path: '/'
+      fullPath: '/trails/'
+      preLoaderRoute: typeof TrailsIndexRouteImport
+      parentRoute: typeof TrailsRoute
+    }
+    '/trails/$slug': {
+      id: '/trails/$slug'
+      path: '/$slug'
+      fullPath: '/trails/$slug'
+      preLoaderRoute: typeof TrailsSlugRouteImport
+      parentRoute: typeof TrailsRoute
+    }
+    '/_authenticated/echoes/saved': {
+      id: '/_authenticated/echoes/saved'
+      path: '/echoes/saved'
+      fullPath: '/echoes/saved'
+      preLoaderRoute: typeof AuthenticatedEchoesSavedRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/echoes/settings': {
       id: '/_authenticated/echoes/settings'
@@ -409,12 +409,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEchoesSettingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/echoes/saved': {
-      id: '/_authenticated/echoes/saved'
-      path: '/echoes/saved'
-      fullPath: '/echoes/saved'
-      preLoaderRoute: typeof AuthenticatedEchoesSavedRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/echoes/profile/$userId': {
+      id: '/echoes/profile/$userId'
+      path: '/profile/$userId'
+      fullPath: '/echoes/profile/$userId'
+      preLoaderRoute: typeof EchoesProfileUserIdRouteImport
+      parentRoute: typeof EchoesRoute
     }
   }
 }
@@ -480,3 +480,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

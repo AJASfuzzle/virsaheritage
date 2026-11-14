@@ -25,6 +25,34 @@ export const LANGUAGE_CONFIG: Record<string, LangConfig> = {
   kn: { name: "Kannada", script: "Kannada", scriptTest: /[\u0C80-\u0CFF]/ },
   ml: { name: "Malayalam", script: "Malayalam", scriptTest: /[\u0D00-\u0D7F]/ },
   ur: { name: "Urdu", script: "Arabic (Nastaliq)", scriptTest: /[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF]/ },
+  as: { name: "Assamese", script: "Bengali-Assamese", scriptTest: /[\u0980-\u09FF]/ },
+  or: { name: "Odia", script: "Odia", scriptTest: /[\u0B00-\u0B7F]/ },
+  ne: { name: "Nepali", script: "Devanagari", scriptTest: /[\u0900-\u097F]/ },
+  sd: { name: "Sindhi", script: "Arabic", scriptTest: /[\u0600-\u06FF]/ },
+  sa: { name: "Sanskrit", script: "Devanagari", scriptTest: /[\u0900-\u097F]/ },
+  gom: { name: "Konkani", script: "Devanagari", scriptTest: /[\u0900-\u097F]/ },
+  mai: { name: "Maithili", script: "Devanagari", scriptTest: /[\u0900-\u097F]/ },
+  bho: { name: "Bhojpuri", script: "Devanagari", scriptTest: /[\u0900-\u097F]/ },
+  doi: { name: "Dogri", script: "Devanagari", scriptTest: /[\u0900-\u097F]/ },
+  "mni-Mtei": { name: "Manipuri", script: "Meitei Mayek", scriptTest: /[\uABC0-\uABFF\uAAE0-\uAAFF]/ },
+  sat: { name: "Santali", script: "Ol Chiki", scriptTest: /[\u1C50-\u1C7F]/ },
+  lus: { name: "Mizo", script: "Latin", scriptTest: /[A-Za-z]/ },
+  kha: { name: "Khasi", script: "Latin", scriptTest: /[A-Za-z]/ },
+  trp: { name: "Kokborok", script: "Latin", scriptTest: /[A-Za-z]/ },
+  tcy: { name: "Tulu", script: "Kannada", scriptTest: /[\u0C80-\u0CFF]/ },
+  es: { name: "Spanish", script: "Latin", scriptTest: /[A-Za-zÀ-ÿ]/ },
+  fr: { name: "French", script: "Latin", scriptTest: /[A-Za-zÀ-ÿ]/ },
+  de: { name: "German", script: "Latin", scriptTest: /[A-Za-zÀ-ÿ]/ },
+  pt: { name: "Portuguese", script: "Latin", scriptTest: /[A-Za-zÀ-ÿ]/ },
+  ru: { name: "Russian", script: "Cyrillic", scriptTest: /[\u0400-\u04FF]/ },
+  ar: { name: "Arabic", script: "Arabic", scriptTest: /[\u0600-\u06FF]/ },
+  "zh-CN": { name: "Mandarin", script: "Han", scriptTest: /[\u4E00-\u9FFF]/ },
+  ja: { name: "Japanese", script: "Japanese", scriptTest: /[\u3040-\u30FF\u4E00-\u9FFF]/ },
+  ko: { name: "Korean", script: "Hangul", scriptTest: /[\uAC00-\uD7AF]/ },
+  id: { name: "Indonesian", script: "Latin", scriptTest: /[A-Za-z]/ },
+  tr: { name: "Turkish", script: "Latin", scriptTest: /[A-Za-zçğıöşüÇĞİÖŞÜ]/ },
+  fa: { name: "Persian", script: "Arabic", scriptTest: /[\u0600-\u06FF]/ },
+  sw: { name: "Swahili", script: "Latin", scriptTest: /[A-Za-z]/ },
 };
 
 // Kept for backwards compatibility with existing imports.
@@ -33,7 +61,7 @@ export const LANGUAGE_NAMES: Record<string, string> = Object.fromEntries(
 );
 
 const InputSchema = z.object({
-  targetLang: z.string().min(2).max(5),
+  targetLang: z.string().min(2).max(10),
   texts: z.array(z.string().min(1).max(2000)).min(1).max(80),
 });
 

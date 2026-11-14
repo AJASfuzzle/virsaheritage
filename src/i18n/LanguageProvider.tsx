@@ -16,9 +16,37 @@ export const SUPPORTED_LANGS: { code: LangCode; label: string; native: string }[
   { code: "kn", label: "Kannada", native: "ಕನ್ನಡ" },
   { code: "ml", label: "Malayalam", native: "മലയാളം" },
   { code: "ur", label: "Urdu", native: "اُردُو" },
+  { code: "as", label: "Assamese", native: "অসমীয়া" },
+  { code: "or", label: "Odia", native: "ଓଡ଼ିଆ" },
+  { code: "ne", label: "Nepali", native: "नेपाली" },
+  { code: "sd", label: "Sindhi", native: "سنڌي" },
+  { code: "sa", label: "Sanskrit", native: "संस्कृतम्" },
+  { code: "gom", label: "Konkani", native: "कोंकणी" },
+  { code: "mai", label: "Maithili", native: "मैथिली" },
+  { code: "bho", label: "Bhojpuri", native: "भोजपुरी" },
+  { code: "doi", label: "Dogri", native: "डोगरी" },
+  { code: "mni-Mtei", label: "Manipuri", native: "ꯃꯤꯇꯩꯂꯣꯟ" },
+  { code: "sat", label: "Santali", native: "ᱥᱟᱱᱛᱟᱲᱤ" },
+  { code: "lus", label: "Mizo", native: "Mizo ṭawng" },
+  { code: "kha", label: "Khasi", native: "Ka Ktien Khasi" },
+  { code: "trp", label: "Kokborok", native: "Kokborok" },
+  { code: "tcy", label: "Tulu", native: "ತುಳು" },
+  { code: "es", label: "Spanish", native: "Español" },
+  { code: "fr", label: "French", native: "Français" },
+  { code: "de", label: "German", native: "Deutsch" },
+  { code: "pt", label: "Portuguese", native: "Português" },
+  { code: "ru", label: "Russian", native: "Русский" },
+  { code: "ar", label: "Arabic", native: "العربية" },
+  { code: "zh-CN", label: "Mandarin", native: "中文" },
+  { code: "ja", label: "Japanese", native: "日本語" },
+  { code: "ko", label: "Korean", native: "한국어" },
+  { code: "id", label: "Indonesian", native: "Bahasa Indonesia" },
+  { code: "tr", label: "Turkish", native: "Türkçe" },
+  { code: "fa", label: "Persian", native: "فارسی" },
+  { code: "sw", label: "Swahili", native: "Kiswahili" },
 ];
 
-const RTL_LANGS = new Set<LangCode>(["ur"]);
+const RTL_LANGS = new Set<LangCode>(["ur", "ar", "fa", "sd"]);
 const STORAGE_KEY = "virsa.lang";
 
 type Ctx = {

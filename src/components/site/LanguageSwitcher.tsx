@@ -40,11 +40,11 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
       >
         <Globe className="h-3.5 w-3.5" />
         {compact ? (
-          <span className="uppercase">{current.code}</span>
+          <span className="uppercase">{current.code.split("-")[0]}</span>
         ) : (
           <span className="hidden sm:inline">{current.native}</span>
         )}
-        {!compact && <span className="sm:hidden uppercase">{current.code}</span>}
+        {!compact && <span className="sm:hidden uppercase">{current.code.split("-")[0]}</span>}
       </button>
 
       {open && (
