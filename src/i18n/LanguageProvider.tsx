@@ -104,7 +104,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const activeLang = useRef(lang);
   activeLang.current = lang;
   const queues = useRef(new Map<LangCode, Set<string>>());
-  const busy = useRef(false);
+  const busy = useRef(0);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const blocked = useRef(new Set<LangCode>());
   const attempted = useRef(new Map<LangCode, Set<string>>());
@@ -130,12 +130,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const scheduleFlush = useCallback(() => {
     if (timer.current) clearTimeout(timer.current);
-    timer.current = setTimeout(() => void flush.current(), 100);
+    timer.current = setTimeout(() => void flush.current(), 30);
   }, []);
 
   flush.current = async () => {
     const target = activeLang.current;
-    if (busy.current || target === "en" || blocked.current.has(target)) return;
+    if (busy.current >= 4 || target === "en" || blocked.current.has(target)) return;
     const pending = queues.current.get(target);
     if (!pending?.size) return;
     const c = cacheFor(target);
@@ -143,14 +143,17 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     let chars = 0;
     for (const text of pending) {
       if (c.has(text)) { pending.delete(text); continue; }
-      if (batch.length && (batch.length >= 60 || chars + text.length > 12000)) break;
+      if (batch.length && (batch.length >= 25 || chars + text.length > 4000)) break;
       batch.push(text);
       chars += text.length;
     }
     if (!batch.length) return;
     batch.forEach((text) => pending.delete(text));
-    inFlight.current.set(target, new Set(batch));
-    busy.current = true;
+    let fl = inFlight.current.get(target);
+    if (!fl) { fl = new Set(); inFlight.current.set(target, fl); }
+    batch.forEach((t) => fl!.add(t));
+    busy.current++;
+    if (pending.size) scheduleFlush();
     try {
       const res = await translate({ data: { targetLang: target, texts: batch } });
       let tried = attempted.current.get(target);
@@ -168,8 +171,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       const { toast } = await import("sonner");
       toast.error(error instanceof Error ? error.message : "Translation is temporarily unavailable.");
     } finally {
-      inFlight.current.delete(target);
-      busy.current = false;
+      batch.forEach((t) => inFlight.current.get(target)?.delete(t));
+      busy.current--;
       if (queues.current.get(activeLang.current)?.size) scheduleFlush();
     }
   };

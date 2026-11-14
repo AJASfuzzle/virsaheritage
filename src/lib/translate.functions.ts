@@ -78,6 +78,38 @@ export const translateBatch = createServerFn({ method: "POST" })
       throw new Error("Unsupported translation language.");
     }
 
+    // Shared server cache: phrases translated once are reused for every visitor.
+    const hashes = await Promise.all(texts.map(async (t) => {
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t));
+      return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+    }));
+    const cached = new Map<string, string>();
+    let admin: any = null;
+    try {
+      admin = (await import("@/integrations/supabase/client.server")).supabaseAdmin;
+      const { data: rows } = await admin.from("translation_cache").select("source_hash, translated").eq("lang", targetLang).in("source_hash", hashes);
+      for (const r of rows ?? []) cached.set(r.source_hash, r.translated);
+    } catch (err) { console.error("[translateBatch] cache read failed", err); }
+    const missIdx = texts.map((_, i) => i).filter((i) => !cached.has(hashes[i]));
+    if (!missIdx.length) return { translations: hashes.map((h) => cached.get(h)!) };
+    const allTexts = texts;
+    const subTexts = missIdx.map((i) => texts[i]);
+    const result = await translateUncached(targetLang, cfg, subTexts);
+    const out: (string | null)[] = hashes.map((h) => cached.get(h) ?? null);
+    const toSave: { lang: string; source_hash: string; translated: string }[] = [];
+    missIdx.forEach((i, j) => {
+      const v = result[j];
+      out[i] = v;
+      if (v && v !== allTexts[i]) toSave.push({ lang: targetLang, source_hash: hashes[i], translated: v });
+    });
+    if (admin && toSave.length) {
+      try { await admin.from("translation_cache").upsert(toSave, { onConflict: "lang,source_hash" }); }
+      catch (err) { console.error("[translateBatch] cache write failed", err); }
+    }
+    return { translations: out };
+  });
+
+async function translateUncached(targetLang: string, cfg: (typeof LANGUAGE_CONFIG)[string], texts: string[]): Promise<(string | null)[]> {
     const apiKey = process.env['GOOGLE_TRANSLATE_API_KEY'];
     let translated: string[] = [];
     if (apiKey && Date.now() >= googlePausedUntil) try {
@@ -127,8 +159,8 @@ export const translateBatch = createServerFn({ method: "POST" })
       return out;
     });
 
-    return { translations };
-  });
+    return translations;
+}
 
 function decodeHtmlEntities(s: string): string {
   return s

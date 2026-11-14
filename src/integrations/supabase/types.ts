@@ -463,6 +463,27 @@ export type Database = {
           },
         ]
       }
+      translation_cache: {
+        Row: {
+          created_at: string
+          lang: string
+          source_hash: string
+          translated: string
+        }
+        Insert: {
+          created_at?: string
+          lang: string
+          source_hash: string
+          translated: string
+        }
+        Update: {
+          created_at?: string
+          lang?: string
+          source_hash?: string
+          translated?: string
+        }
+        Relationships: []
+      }
       user_coins: {
         Row: {
           balance: number
