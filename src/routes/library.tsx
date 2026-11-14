@@ -358,7 +358,7 @@ function LibraryPage() {
                       >
                         <div className="min-w-0">
                           <p className="truncate text-sm font-medium">{r.title}</p>
-                          <p className="truncate text-xs text-muted-foreground">{r.shelf}{localityOf(r.id) ? ` · ${localityOf(r.id)}` : ""}</p>
+                          <p className="truncate text-xs text-muted-foreground">{r.shelf}</p>
                         </div>
                         <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground" />
                       </button>
@@ -409,7 +409,7 @@ function LibraryPage() {
               <h3 className="font-display text-2xl leading-tight">{s.title}</h3>
               <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">{s.blurb}</p>
               <div className="mt-6 flex items-center justify-between text-xs text-muted-foreground">
-                <span className="inline-flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> {localityOf(s.id)}</span>
+                <span />
                 <span className="inline-flex items-center gap-1 text-foreground/80 opacity-0 transition group-hover:translate-x-1 group-hover:opacity-100">
                   Open <ArrowRight className="h-3.5 w-3.5" />
                 </span>
@@ -543,7 +543,7 @@ function StoryCard({
       <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{story.blurb}</p>
 
       <div className="mt-5 flex items-center justify-between text-[11px] text-muted-foreground">
-        <span className="inline-flex items-center gap-1.5"><MapPin className="h-3 w-3" /> {localityOf(story.id)}</span>
+        <span />
         <span className="inline-flex items-center gap-1 text-foreground/70 opacity-0 transition group-hover:translate-x-0.5 group-hover:opacity-100">
           Open <ArrowRight className="h-3 w-3" />
         </span>
@@ -615,7 +615,7 @@ function StoryModal({ story, onClose }: { story: Story | null; onClose: () => vo
               </p>
 
               <div className="mt-10 flex items-center justify-between border-t border-[var(--glass-border)] pt-6 text-xs text-muted-foreground">
-                <span className="inline-flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> {localityOf(story.id)}</span>
+                <span />
                 <button
                   onClick={onClose}
                   className="btn-glossy rounded-full bg-[var(--accent)] px-5 py-2.5 text-[11px] uppercase tracking-[0.22em] text-[color:var(--accent-foreground)]"
