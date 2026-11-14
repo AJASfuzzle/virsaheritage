@@ -156,7 +156,7 @@ function RecCard({
       </div>
 
       <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
-        <span>{item.region ?? item.category ?? ""}</span>
+        <span />
         <span className="inline-flex items-center gap-1 text-foreground/80 opacity-0 transition group-hover:translate-x-0.5 group-hover:opacity-100">
           Open <ArrowRight className="h-3 w-3" />
         </span>
