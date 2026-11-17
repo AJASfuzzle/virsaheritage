@@ -606,9 +606,12 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
           <div className="border-t border-border p-6">
             <div className="flex items-center justify-between">
               <h3 className="font-medium">Ask about this monument</h3>
+              <div className="flex items-center gap-2">
+              <button aria-label="Stop speaking" onClick={stopSpeech} className="flex h-8 items-center gap-1.5 rounded-full px-3 text-xs ring-1 ring-border"><Square className="h-3.5 w-3.5" />Stop</button>
               <button aria-label={muted ? "Unmute answers" : "Mute answers"} onClick={() => { setMuted((m) => !m); stopSpeech(); }} className="grid h-8 w-8 place-items-center rounded-full ring-1 ring-border">
                 {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
               </button>
+              </div>
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
               {CHIPS.map((c) => <button key={c} onClick={() => { unlockSpeech(); sendQuestion(c); }} className="rounded-full bg-primary/10 px-3 py-1.5 text-xs text-primary ring-1 ring-primary/25">{c}</button>)}
