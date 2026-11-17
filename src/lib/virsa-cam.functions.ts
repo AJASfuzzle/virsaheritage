@@ -68,3 +68,30 @@ export const deleteCaptures = createServerFn({ method: "POST" })
     if (delErr) throw new Error(delErr.message);
     return { deleted: ids.length };
   });
+
+// virsa-cam-tts: text -> natural English speech (WAV) for one persistent <audio> element on the page
+export const virsaCamTts = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({ text: z.string().min(1).max(1500) }))
+  .handler(async ({ data }) => {
+    const key = process.env["LOVABLE_API_KEY"];
+    if (!key) return { ok: false as const, error: "Speech isn't configured." };
+    const res = await fetch("https://ai.gateway.lovable.dev/v1/audio/speech", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "google/gemini-3.1-flash-tts-preview",
+        stream_format: "audio",
+        contents: [{ role: "user", parts: [{ text: `Read this in clear, warm Indian English, like a friendly heritage tour guide: ${data.text}` }] }],
+        generationConfig: { responseModalities: ["AUDIO"], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Kore" } } } },
+      }),
+    });
+    if (!res.ok) {
+      console.error("[virsa-cam-tts]", res.status, (await res.text()).slice(0, 300));
+      return { ok: false as const, error: "tts_failed" };
+    }
+    const buf = new Uint8Array(await res.arrayBuffer());
+    let bin = "";
+    for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode(...buf.subarray(i, i + 0x8000));
+    return { ok: true as const, mime: res.headers.get("content-type") || "audio/wav", base64: btoa(bin) };
+  });

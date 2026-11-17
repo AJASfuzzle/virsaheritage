@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Camera, ChevronDown, Lock, Mic, Trash2, X, Pause, Play, RotateCcw, Send, Square, Volume2, VolumeX } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { cleanDescription, dedupeSentences, splitSentences } from "@/lib/speech-text";
-import { askMonument, deleteCaptures, pairVirsaCam, transcribeQuestion } from "@/lib/virsa-cam.functions";
+import { askMonument, deleteCaptures, pairVirsaCam, transcribeQuestion, virsaCamTts } from "@/lib/virsa-cam.functions";
 
 export const Route = createFileRoute("/virsa-cam")({
   head: () => ({
@@ -24,7 +24,7 @@ export const Route = createFileRoute("/virsa-cam")({
 
 type Lang = "en";
 type Capture = { id: string; created_at: string; image_url: string; monument_name: string | null; location: string | null; description: string | null; confidence: number | null };
-type CamStatus = { last_seen: string | null; preview_jpeg: string | null; preview_updated_at: string | null };
+type CamStatus = { last_seen: string | null };
 type Msg = { role: "user" | "assistant"; content: string };
 const LOCALES: Record<Lang, string> = { en: "en-IN" };
 const CHIPS = ["Who built it?", "What's the legend?", "When is the best time to visit?"];
@@ -37,6 +37,23 @@ function pickVoice() {
     if (best) return best;
   }
   return voices.find((v) => v.lang.toLowerCase().startsWith("en"));
+}
+// Tiny silent WAV used to unlock the audio element on a tap (phones block untapped playback)
+const SILENT_WAV = (() => {
+  if (typeof window === "undefined") return "";
+  const n = 800, b = new Uint8Array(44 + n * 2), v = new DataView(b.buffer);
+  const w = (o: number, t: string) => [...t].forEach((c, i) => b[o + i] = c.charCodeAt(0));
+  w(0, "RIFF"); v.setUint32(4, 36 + n * 2, true); w(8, "WAVEfmt "); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, 8000, true); v.setUint32(28, 16000, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, "data"); v.setUint32(40, n * 2, true);
+  let bin = ""; b.forEach((x) => bin += String.fromCharCode(x));
+  return `data:audio/wav;base64,${btoa(bin)}`;
+})();
+function chunkText(text: string) {
+  const out: string[] = [];
+  for (const sn of splitSentences(text)) {
+    if (out.length && (out[out.length - 1] + " " + sn).length <= 350) out[out.length - 1] += " " + sn; else out.push(sn);
+  }
+  return out;
 }
 const narration = (c: Capture) => cleanDescription(c.description, c.monument_name, c.location);
 
@@ -54,12 +71,12 @@ function Header() {
 
 function VirsaCamPage() {
   const { user, loading } = useAuth();
-  const [owned, setOwned] = useState<boolean | null>(null);
+  const [owned, setOwned] = useState<string | false | null>(null);
   useEffect(() => {
     if (!user) { setOwned(null); return; }
     supabase.from("camera_devices").select("id").eq("owner_user_id", user.id).limit(1)
-      .then(({ data }) => setOwned(!!data?.length));
-  }, [user]);
+      .then(({ data }) => setOwned(data?.[0]?.id ?? false));
+  }, [user, owned === null]);
 
   if (loading || (user && owned === null)) return <div className="mx-auto max-w-2xl px-5 pb-24 pt-28"><Header /></div>;
   if (!user) return (
@@ -80,8 +97,8 @@ function VirsaCamPage() {
       </div>
     </div>
   );
-  if (!owned) return <PairScreen onPaired={() => setOwned(true)} />;
-  return <CamApp userId={user.id} />;
+  if (!owned) return <PairScreen onPaired={() => setOwned(null)} />;
+  return <CamApp userId={user.id} deviceId={owned} />;
 }
 
 function PairScreen({ onPaired }: { onPaired: () => void }) {
@@ -114,7 +131,7 @@ function PairScreen({ onPaired }: { onPaired: () => void }) {
   );
 }
 
-function CamApp({ userId }: { userId: string }) {
+function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
   const [started, setStarted] = useState(false);
   const lang: Lang = "en";
   const spokenRef = useRef<Set<string>>(new Set());
@@ -149,24 +166,61 @@ function CamApp({ userId }: { userId: string }) {
   const [liveOn, setLiveOn] = useState(false);
   const online = !!status?.last_seen && now - new Date(status.last_seen).getTime() < 10_000;
 
-  const speak = useCallback((text: string) => {
-    if (!startedRef.current || !("speechSynthesis" in window)) return;
+  // Speech: generated audio clips through ONE persistent <audio>, played in order; speechSynthesis only if a clip fails
+  const tts = useServerFn(virsaCamTts);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const genRef = useRef(0);
+  const rateRef = useRef(rate);
+  rateRef.current = rate;
+  const stopSpeech = useCallback(() => {
+    genRef.current++;
+    const a = audioRef.current;
+    if (a) { a.pause(); a.onended = null; }
+    window.speechSynthesis?.cancel();
+    setSpeaking("idle");
+  }, []);
+  const fallbackSay = (text: string, gen: number) => new Promise<void>((done) => {
     const s = window.speechSynthesis;
-    s.cancel();
-    const parts = splitSentences(text);
-    if (!parts.length) return;
+    if (!s || gen !== genRef.current) return done();
     const v = pickVoice();
-    parts.forEach((part, i) => {
-      const u = new SpeechSynthesisUtterance(part);
-      u.lang = v?.lang ?? LOCALES.en;
-      if (v) u.voice = v;
-      u.rate = rate;
-      if (i === parts.length - 1) { u.onend = () => setSpeaking("idle"); u.onerror = () => setSpeaking("idle"); }
-      s.speak(u);
-    });
-    if (s.paused) s.resume();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = v?.lang ?? LOCALES.en; if (v) u.voice = v; u.rate = rateRef.current;
+    u.onend = () => done(); u.onerror = () => done();
+    s.speak(u);
+  });
+  const speakClips = useCallback(async (texts: string[]) => {
+    if (!startedRef.current) return;
+    stopSpeech();
+    const gen = genRef.current;
+    const parts = texts.map((t) => t.trim()).filter(Boolean);
+    if (!parts.length) return;
     setSpeaking("playing");
-  }, [lang, rate]);
+    const clips = parts.map((text) => tts({ data: { text: text.slice(0, 1500) } }).catch(() => ({ ok: false as const })));
+    for (let i = 0; i < parts.length; i++) {
+      const r = await clips[i];
+      if (gen !== genRef.current) return;
+      const a = audioRef.current;
+      if (r.ok && a) {
+        const bin = atob(r.base64); const bytes = new Uint8Array(bin.length);
+        for (let j = 0; j < bin.length; j++) bytes[j] = bin.charCodeAt(j);
+        const url = URL.createObjectURL(new Blob([bytes], { type: r.mime }));
+        const ok = await new Promise<boolean>((done) => {
+          a.onended = () => done(true); a.onerror = () => done(false);
+          a.src = url; a.playbackRate = rateRef.current;
+          a.play().catch(() => done(false));
+        });
+        URL.revokeObjectURL(url);
+        if (gen !== genRef.current) return;
+        if (!ok) await fallbackSay(parts[i], gen);
+      } else await fallbackSay(parts[i], gen);
+    }
+    if (gen === genRef.current) setSpeaking("idle");
+  }, [stopSpeech, tts]);
+  const speak = useCallback((text: string) => speakClips(chunkText(text)), [speakClips]);
+  const speakCapture = useCallback((c: Capture) => speakClips([
+    `This is ${c.monument_name ?? "this monument"}${c.location ? `, ${c.location}` : ""}.`, ...chunkText(narration(c)),
+  ]), [speakClips]);
+  useEffect(() => { if (audioRef.current) audioRef.current.playbackRate = rate; }, [rate]);
 
   const open = useCallback(async (c: Capture, autoplay: boolean) => {
     setCurrent(c);
@@ -175,9 +229,9 @@ function CamApp({ userId }: { userId: string }) {
     setMessages((data ?? []) as Msg[]);
     if (autoplay && c.description && !spokenRef.current.has(c.id)) {
       spokenRef.current.add(c.id);
-      speak(narration(c));
+      speakCapture(c);
     }
-  }, [speak]);
+  }, [speakCapture]);
   const openRef = useRef(open);
   openRef.current = open;
 
@@ -195,7 +249,7 @@ function CamApp({ userId }: { userId: string }) {
         else openRef.current(c, true);
       })
       .subscribe();
-    return () => { supabase.removeChannel(channel); window.speechSynthesis?.cancel(); };
+    return () => { supabase.removeChannel(channel); genRef.current++; audioRef.current?.pause(); window.speechSynthesis?.cancel(); };
   }, []);
 
   const stopWaiting = () => {
@@ -215,20 +269,15 @@ function CamApp({ userId }: { userId: string }) {
 
   // Live view: status row via realtime, 700 ms fallback refresh, 1 s clock for online check
   useEffect(() => {
-    const load = () => supabase.from("camera_status").select("last_seen,preview_jpeg,preview_updated_at").eq("id", 1).maybeSingle()
+    const load = () => supabase.from("camera_status").select("last_seen").eq("id", 1).maybeSingle()
       .then(({ data }) => { if (data) setStatus(data as CamStatus); });
     load();
     let live = false;
     const channel = supabase
       .channel(`camstatus-${Math.random().toString(36).slice(2)}`)
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "camera_status" }, (p) => {
-        // Unchanged large columns (the frame) are left out of update events, so merge instead of replace
         const n = p.new as Partial<CamStatus>;
-        setStatus((prev) => ({
-          last_seen: n.last_seen ?? prev?.last_seen ?? null,
-          preview_jpeg: n.preview_jpeg ?? prev?.preview_jpeg ?? null,
-          preview_updated_at: n.preview_updated_at ?? prev?.preview_updated_at ?? null,
-        }));
+        if (n.last_seen) setStatus({ last_seen: n.last_seen });
       })
       .subscribe((st) => { live = st === "SUBSCRIBED"; });
     const fallback = setInterval(() => { if (!live) load(); }, 700);
@@ -236,10 +285,33 @@ function CamApp({ userId }: { userId: string }) {
     return () => { supabase.removeChannel(channel); clearInterval(fallback); clearInterval(clock); stopWaiting(); };
   }, []);
 
+  // Live frames: private broadcast, double-buffered (decode off-screen, swap when loaded), newest only
+  const [frame, setFrame] = useState<string | null>(null);
+  const [fps, setFps] = useState(0);
+  useEffect(() => {
+    if (!liveOn) { setFrame(null); setFps(0); return; }
+    let next: string | null = null, loading = false, shown = 0;
+    const load = () => {
+      if (loading || !next) return;
+      const src = next; next = null; loading = true;
+      const img = new Image();
+      img.onload = img.onerror = () => { loading = false; if (img.complete && img.naturalWidth) { setFrame(src); shown++; } load(); };
+      img.src = src;
+    };
+    const ch = supabase.channel(`cam-preview-${deviceId}`, { config: { private: true } })
+      .on("broadcast", { event: "frame" }, ({ payload }) => {
+        if (typeof payload?.jpeg !== "string") return;
+        next = `data:image/jpeg;base64,${payload.jpeg}`; load();
+      })
+      .subscribe();
+    const t = setInterval(() => { setFps(shown); shown = 0; }, 1000);
+    return () => { supabase.removeChannel(ch); clearInterval(t); };
+  }, [liveOn, deviceId]);
+
   // Live view is opt-in: heartbeat only while on, visible and recently interacted with
   const turnOffLive = useCallback(() => {
     setLiveOn(false);
-    setStatus((st) => st ? { ...st, preview_jpeg: null, preview_updated_at: null } : st);
+    setFrame(null);
     supabase.rpc("virsa_cam_stop_preview").then(() => {});
   }, []);
   useEffect(() => {
@@ -265,13 +337,11 @@ function CamApp({ userId }: { userId: string }) {
 
   // Phones only allow speech started from a tap: prime it on every Start/Capture tap
   const unlockSpeech = () => {
+    stopSpeech();
+    const a = audioRef.current;
+    if (a && SILENT_WAV) { a.src = SILENT_WAV; a.play().catch(() => {}); }
     const s = window.speechSynthesis;
-    if (!s) return;
-    s.cancel();
-    const u = new SpeechSynthesisUtterance(" ");
-    u.volume = 0;
-    s.speak(u);
-    if (s.paused) s.resume();
+    if (s) { const u = new SpeechSynthesisUtterance(" "); u.volume = 0; s.speak(u); if (s.paused) s.resume(); }
   };
   const start = () => {
     startedRef.current = true;
@@ -284,7 +354,6 @@ function CamApp({ userId }: { userId: string }) {
 
   const capture = async () => {
     unlockSpeech();
-    setSpeaking("idle");
     setError(null);
     stopWaiting();
     setWaiting(true);
@@ -306,7 +375,7 @@ function CamApp({ userId }: { userId: string }) {
     }, 25_000);
   };
 
-  const backToLive = () => { window.speechSynthesis?.cancel(); setSpeaking("idle"); setView("live"); setCurrent(null); setError(null); };
+  const backToLive = () => { stopSpeech(); setView("live"); setCurrent(null); setError(null); };
 
   const sendQuestion = async (q: string) => {
     if (!current || !q.trim() || asking) return;
@@ -317,7 +386,7 @@ function CamApp({ userId }: { userId: string }) {
       const { answer } = await ask({ data: { captureId: current.id, question: q.trim(), language: lang } });
       const clean = dedupeSentences(answer);
       setMessages((m) => [...m, { role: "assistant", content: clean }]);
-      if (!muted) { unlockSpeech(); speak(clean); }
+      if (!muted) speak(clean);
     } catch {
       setMessages((m) => [...m, { role: "assistant", content: "Sorry, I couldn't answer that just now. Please try again." }]);
     } finally { setAsking(false); }
@@ -362,8 +431,7 @@ function CamApp({ userId }: { userId: string }) {
     if (listening) { stopMicRef.current?.(); return; }
     if (transcribing) return;
     setMicError(null);
-    window.speechSynthesis?.cancel();
-    setSpeaking("idle");
+    unlockSpeech();
     setListening(true);
     // Ask for mic permission up front so every browser shows its prompt
     try {
@@ -414,10 +482,13 @@ function CamApp({ userId }: { userId: string }) {
   };
 
   const s = typeof window !== "undefined" ? window.speechSynthesis : null;
+  const pauseSpeech = () => { audioRef.current?.pause(); s?.pause(); setSpeaking("paused"); };
+  const resumeSpeech = () => { const a = audioRef.current; if (a?.src && a.paused && !a.ended && a.currentTime > 0) a.play().catch(() => {}); s?.resume(); setSpeaking("playing"); };
 
   return (
     <div className="mx-auto max-w-2xl px-5 pb-24 pt-28">
       <Header />
+      <audio ref={audioRef} playsInline preload="auto" className="hidden" />
       <p className="mt-3 rounded-2xl bg-primary/5 px-4 py-3 text-xs text-muted-foreground ring-1 ring-primary/15">{PRIVACY}</p>
 
       <div className="mt-6 flex items-center gap-2 text-sm">
@@ -438,14 +509,14 @@ function CamApp({ userId }: { userId: string }) {
                 <p className="mt-3 text-sm text-muted-foreground">This will show what your VIRSA Cam sees. Only you can see it.</p>
               </div>
             </div>
-          ) : status?.preview_jpeg ? (
-            <img src={`data:image/jpeg;base64,${status.preview_jpeg}`} alt="VIRSA Cam live view" className="h-full w-full object-cover" />
+          ) : frame ? (
+            <img src={frame} alt="VIRSA Cam live view" className="absolute inset-0 h-full w-full object-cover" decoding="sync" />
           ) : (
             <div className="grid h-full place-items-center text-sm text-muted-foreground">Connecting to VIRSA Cam…</div>
           )}
           {flash && <div className="pointer-events-none absolute inset-0 animate-[camflash_0.6s_ease-out_forwards] bg-background" />}
           <span className="absolute left-3 top-3 rounded-full bg-background/70 px-3 py-1 text-xs font-medium backdrop-blur">
-            {view === "photo" ? "Snapshot" : liveOn ? <span className="font-semibold text-destructive">● LIVE</span> : "Live view off"}
+            {view === "photo" ? "Snapshot" : liveOn ? <span className="font-semibold text-destructive">● LIVE{frame ? ` · ${fps} fps` : ""}</span> : "Live view off"}
           </span>
           {view === "live" && liveOn && (
             <button onClick={turnOffLive} className="absolute right-3 top-3 rounded-full bg-background/70 px-3 py-1 text-xs backdrop-blur ring-1 ring-border">Turn off live view</button>
@@ -493,12 +564,12 @@ function CamApp({ userId }: { userId: string }) {
             <p className="mt-3 leading-relaxed text-foreground/85">{narration(current)}</p>
             <div className="mt-5 flex flex-wrap items-center gap-2">
               {speaking === "playing" ? (
-                <button aria-label="Pause" onClick={() => { s?.pause(); setSpeaking("paused"); }} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Pause className="h-4 w-4" /></button>
+                <button aria-label="Pause" onClick={pauseSpeech} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Pause className="h-4 w-4" /></button>
               ) : (
-                <button aria-label="Play" onClick={() => { if (speaking === "paused") { s?.resume(); setSpeaking("playing"); } else speak(narration(current)); }} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Play className="h-4 w-4" /></button>
+                <button aria-label="Play" onClick={() => { if (speaking === "paused") resumeSpeech(); else { unlockSpeech(); speakCapture(current); } }} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Play className="h-4 w-4" /></button>
               )}
-              <button aria-label="Stop" onClick={() => { s?.cancel(); setSpeaking("idle"); }} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Square className="h-4 w-4" /></button>
-              <button aria-label="Replay" onClick={() => speak(narration(current))} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><RotateCcw className="h-4 w-4" /></button>
+              <button aria-label="Stop" onClick={stopSpeech} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Square className="h-4 w-4" /></button>
+              <button aria-label="Replay" onClick={() => { unlockSpeech(); speakCapture(current); }} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><RotateCcw className="h-4 w-4" /></button>
               <label className="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
                 Speed {rate.toFixed(1)}×
                 <input type="range" min={0.6} max={1.6} step={0.1} value={rate} onChange={(e) => setRate(Number(e.target.value))} className="accent-[var(--primary)]" />
@@ -509,12 +580,12 @@ function CamApp({ userId }: { userId: string }) {
           <div className="border-t border-border p-6">
             <div className="flex items-center justify-between">
               <h3 className="font-medium">Ask about this monument</h3>
-              <button aria-label={muted ? "Unmute answers" : "Mute answers"} onClick={() => { setMuted((m) => !m); s?.cancel(); }} className="grid h-8 w-8 place-items-center rounded-full ring-1 ring-border">
+              <button aria-label={muted ? "Unmute answers" : "Mute answers"} onClick={() => { setMuted((m) => !m); stopSpeech(); }} className="grid h-8 w-8 place-items-center rounded-full ring-1 ring-border">
                 {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
               </button>
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
-              {CHIPS.map((c) => <button key={c} onClick={() => sendQuestion(c)} className="rounded-full bg-primary/10 px-3 py-1.5 text-xs text-primary ring-1 ring-primary/25">{c}</button>)}
+              {CHIPS.map((c) => <button key={c} onClick={() => { unlockSpeech(); sendQuestion(c); }} className="rounded-full bg-primary/10 px-3 py-1.5 text-xs text-primary ring-1 ring-primary/25">{c}</button>)}
             </div>
             <div className="mt-4 space-y-2">
               {messages.map((m, i) => (
@@ -522,7 +593,7 @@ function CamApp({ userId }: { userId: string }) {
               ))}
               {asking && <div className="w-fit rounded-2xl bg-foreground/5 px-4 py-2 text-sm text-muted-foreground">Thinking…</div>}
             </div>
-            <form onSubmit={(e) => { e.preventDefault(); sendQuestion(question); }} className="mt-4 flex gap-2">
+            <form onSubmit={(e) => { e.preventDefault(); unlockSpeech(); sendQuestion(question); }} className="mt-4 flex gap-2">
               <input value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="Type your question…" className="flex-1 rounded-full bg-foreground/5 px-4 py-2.5 text-sm ring-1 ring-border outline-none focus:ring-primary" />
               {micSupported && (
                 <button type="button" aria-label={listening ? "Tap to stop" : "Speak your question"} onClick={listen} disabled={transcribing} className={`grid h-10 w-10 place-items-center rounded-full ring-1 ${listening ? "bg-destructive text-destructive-foreground ring-destructive animate-pulse" : "ring-border"} disabled:opacity-60`}><Mic className="h-4 w-4" /></button>

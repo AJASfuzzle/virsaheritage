@@ -7,42 +7,57 @@ function authorized(request: Request) {
   return !!expected && request.headers.get("x-device-key") === expected;
 }
 
+let latestFrame: { jpeg: string; t: number } | null = null;
+
+// Shared by poll and preview: heartbeat, live-view flag and claim of a pending capture request
+async function pollState() {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { ensureDevice } = await import("@/lib/virsa-cam.server");
+  await ensureDevice();
+  const [{ data: st }, { data: dev }] = await Promise.all([
+    supabaseAdmin.from("camera_status").update({ last_seen: new Date().toISOString(), preview_jpeg: null }).eq("id", 1).select("preview_until").maybeSingle(),
+    supabaseAdmin.from("camera_devices").select("id").not("owner_user_id", "is", null).limit(1).maybeSingle(),
+  ]);
+  const preview = !!st?.preview_until && new Date(st.preview_until).getTime() > Date.now();
+  const since = new Date(Date.now() - 60_000).toISOString();
+  const { data } = await supabaseAdmin.from("camera_requests").select("id").eq("status", "pending").gte("created_at", since).order("created_at").limit(1).maybeSingle();
+  let capture = false;
+  if (data) {
+    const { data: taken } = await supabaseAdmin.from("camera_requests").update({ status: "taken" }).eq("id", data.id).eq("status", "pending").select("id");
+    capture = !!taken?.length;
+  }
+  return { capture, preview, deviceId: dev?.id as string | undefined };
+}
+
 export const Route = createFileRoute("/api/public/virsa-cam")({
   server: {
     handlers: {
       GET: async ({ request }) => {
         if (!authorized(request)) return json({ error: "Unauthorized" }, 401);
         if (new URL(request.url).searchParams.get("mode") !== "poll") return json({ error: "Unknown mode" }, 400);
-        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        const { ensureDevice } = await import("@/lib/virsa-cam.server");
-        await ensureDevice();
-        const { data: st } = await supabaseAdmin.from("camera_status").update({ last_seen: new Date().toISOString() }).eq("id", 1).select("preview_until").maybeSingle();
-        const preview = !!st?.preview_until && new Date(st.preview_until).getTime() > Date.now();
-        const since = new Date(Date.now() - 60_000).toISOString();
-        const { data } = await supabaseAdmin.from("camera_requests").select("id").eq("status", "pending").gte("created_at", since).order("created_at").limit(1).maybeSingle();
-        if (!data) return json({ capture: false, preview });
-        const { data: taken } = await supabaseAdmin.from("camera_requests").update({ status: "taken" }).eq("id", data.id).eq("status", "pending").select("id");
-        return json({ capture: !!taken?.length, preview });
+        const { capture, preview } = await pollState();
+        return json({ capture, preview });
       },
       POST: async ({ request }) => {
         if (!authorized(request)) return json({ error: "Unauthorized" }, 401);
         const url = new URL(request.url);
         if (url.searchParams.get("mode") === "preview") {
+          // Frames are never stored in the database: relayed to the owner over a private broadcast, latest kept in memory.
           const frame = new Uint8Array(await request.arrayBuffer());
-          if (!frame.length || frame.length > 300_000) return json({ error: "Send a small JPEG under 300 KB" }, 400);
+          const state = await pollState();
+          if (!frame.length || frame.length > 300_000) return json({ capture: state.capture, preview: state.preview, error: "Send a small JPEG under 300 KB" }, 400);
+          if (!state.preview) { latestFrame = null; return json({ capture: state.capture, preview: false }); }
           let bin = "";
           for (let i = 0; i < frame.length; i += 0x8000) bin += String.fromCharCode(...frame.subarray(i, i + 0x8000));
-          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-          const now = new Date().toISOString();
-          const { data: st } = await supabaseAdmin.from("camera_status").select("preview_until").eq("id", 1).maybeSingle();
-          if (!st?.preview_until || new Date(st.preview_until).getTime() <= Date.now()) {
-            // Live view is off: never keep frames
-            await supabaseAdmin.from("camera_status").update({ preview_jpeg: null, preview_updated_at: null, last_seen: now }).eq("id", 1);
-            return json({ ok: false, preview: false });
+          latestFrame = { jpeg: btoa(bin), t: Date.now() };
+          if (state.deviceId) {
+            await fetch(`${process.env.SUPABASE_URL}/realtime/v1/api/broadcast`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json", apikey: process.env.SUPABASE_SERVICE_ROLE_KEY!, Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}` },
+              body: JSON.stringify({ messages: [{ topic: `cam-preview-${state.deviceId}`, event: "frame", payload: latestFrame, private: true }] }),
+            }).then(async (r) => { if (!r.ok) console.error("[virsa-cam] broadcast", r.status, (await r.text()).slice(0, 200)); }).catch((e) => console.error("[virsa-cam] broadcast", e));
           }
-          const { error } = await supabaseAdmin.from("camera_status").update({ preview_jpeg: btoa(bin), preview_updated_at: now, last_seen: now }).eq("id", 1);
-          if (error) return json({ error: error.message }, 500);
-          return json({ ok: true });
+          return json({ capture: state.capture, preview: state.preview });
         }
         if (url.searchParams.get("mode") !== "upload") return json({ error: "Unknown mode" }, 400);
         const bytes = new Uint8Array(await request.arrayBuffer());
