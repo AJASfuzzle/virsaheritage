@@ -268,7 +268,6 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
   const speakCapture = useCallback((c: Capture) => speakClips([
     `This is ${c.monument_name ?? "this monument"}${c.location ? `, ${c.location}` : ""}.`, ...chunkText(narration(c)),
   ], "Description"), [speakClips]);
-  const replayLast = () => { const l = lastSpokenRef.current; if (l) speakClips(l.texts, l.label); else if (current) speakCapture(current); };
   useEffect(() => { if (audioRef.current) audioRef.current.playbackRate = rate; }, [rate]);
   useEffect(() => { lastSpokenRef.current = null; }, [current?.id]);
 
@@ -435,7 +434,7 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
     setMessages((m) => [...m, { role: "user", content: question }, { role: "assistant", content: "" }]);
     setAsking(true); setThinking(true);
     const setAnswer = (t: string) => setMessages((m) => { const n = [...m]; n[n.length - 1] = { role: "assistant", content: t }; return n; });
-    const queue = muted ? null : startQueue("Answer", () => setThinking(false));
+    const queue = muted ? null : startQueue(`answer-${messages.length + 1}`, () => setThinking(false));
     try {
       const { data: { session } } = await supabase.auth.getSession();
       const res = await fetch("/api/virsa-cam-ask", {
@@ -560,6 +559,23 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
   const pauseSpeech = () => { audioRef.current?.pause(); s?.pause(); setSpeaking("paused"); };
   const resumeSpeech = () => { const a = audioRef.current; if (a?.src && a.paused && !a.ended && a.currentTime > 0) a.play().catch(() => {}); s?.resume(); setSpeaking("playing"); };
 
+  const controls = (key: string, start: () => void, small = false) => {
+    const active = nowReading === key;
+    const state = active ? speaking : "idle";
+    const cls = `grid ${small ? "h-8 w-8" : "h-10 w-10"} place-items-center rounded-full ring-1 ring-border`;
+    const ic = small ? "h-3.5 w-3.5" : "h-4 w-4";
+    return (<>
+      {state === "playing" ? (
+        <button aria-label="Pause" onClick={pauseSpeech} className={cls}><Pause className={ic} /></button>
+      ) : (
+        <button aria-label="Play" onClick={() => { if (state === "paused") resumeSpeech(); else { unlockSpeech(); start(); } }} className={cls}><Play className={ic} /></button>
+      )}
+      <button aria-label="Stop" onClick={() => { if (active) { stopSpeech(); setNowReading(null); } }} className={cls}><Square className={ic} /></button>
+      <button aria-label="Replay" onClick={() => { unlockSpeech(); start(); }} className={cls}><RotateCcw className={ic} /></button>
+    </>);
+  };
+
+
   return (
     <div className="mx-auto max-w-2xl px-5 pb-24 pt-28">
       <Header />
@@ -638,14 +654,7 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
             <p className="text-sm text-primary">{current.location}</p>
             <p className="mt-3 leading-relaxed text-foreground/85">{narration(current)}</p>
             <div className="mt-5 flex flex-wrap items-center gap-2">
-              {speaking === "playing" ? (
-                <button aria-label="Pause" onClick={pauseSpeech} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Pause className="h-4 w-4" /></button>
-              ) : (
-                <button aria-label="Play" onClick={() => { if (speaking === "paused") resumeSpeech(); else { unlockSpeech(); replayLast(); } }} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Play className="h-4 w-4" /></button>
-              )}
-              <button aria-label="Stop" onClick={stopSpeech} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Square className="h-4 w-4" /></button>
-              <button aria-label="Replay" onClick={() => { unlockSpeech(); replayLast(); }} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><RotateCcw className="h-4 w-4" /></button>
-              {nowReading && <span className="text-xs text-muted-foreground">Reading: {nowReading.toLowerCase()}</span>}
+              {controls("Description", () => speakCapture(current))}
               <label className="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
                 Speed {rate.toFixed(1)}×
                 <input type="range" min={0.6} max={1.6} step={0.1} value={rate} onChange={(e) => setRate(Number(e.target.value))} className="accent-[var(--primary)]" />
@@ -662,20 +671,6 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
               </button>
               </div>
             </div>
-            <div className="mt-3 flex flex-wrap items-center gap-2">
-              {speaking === "playing" ? (
-                <button aria-label="Pause" onClick={pauseSpeech} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Pause className="h-4 w-4" /></button>
-              ) : (
-                <button aria-label="Play" onClick={() => { if (speaking === "paused") resumeSpeech(); else { unlockSpeech(); replayLast(); } }} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Play className="h-4 w-4" /></button>
-              )}
-              <button aria-label="Stop" onClick={stopSpeech} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Square className="h-4 w-4" /></button>
-              <button aria-label="Replay" onClick={() => { unlockSpeech(); replayLast(); }} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><RotateCcw className="h-4 w-4" /></button>
-              {nowReading && <span className="text-xs text-muted-foreground">Reading: {nowReading.toLowerCase()}</span>}
-              <label className="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
-                Speed {rate.toFixed(1)}×
-                <input type="range" min={0.6} max={1.6} step={0.1} value={rate} onChange={(e) => setRate(Number(e.target.value))} className="accent-[var(--primary)]" />
-              </label>
-            </div>
             <div className="mt-3 flex flex-wrap gap-2">
               {CHIPS.map((c) => <button key={c} onClick={() => { unlockSpeech(); sendQuestion(c); }} className="rounded-full bg-primary/10 px-3 py-1.5 text-xs text-primary ring-1 ring-primary/25">{c}</button>)}
             </div>
@@ -685,7 +680,7 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
                 <div key={i} className={`max-w-[85%] rounded-2xl px-4 py-2 text-sm ${m.role === "user" ? "ml-auto bg-primary text-primary-foreground" : "bg-foreground/5"}`}>
                   {m.content}
                   {m.role === "assistant" && !(asking && i === messages.length - 1) && (
-                    <button aria-label="Replay answer" onClick={() => { unlockSpeech(); speakClips(splitSentences(m.content), "Answer"); }} className="ml-2 inline-grid h-6 w-6 place-items-center rounded-full align-middle ring-1 ring-border"><RotateCcw className="h-3 w-3" /></button>
+                    <div className="mt-2 flex items-center gap-2">{controls(`answer-${i}`, () => speakClips(splitSentences(m.content), `answer-${i}`), true)}</div>
                   )}
                 </div>
                 ) : null
