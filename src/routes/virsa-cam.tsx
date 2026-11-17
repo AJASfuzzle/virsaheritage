@@ -5,6 +5,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Camera, ChevronDown, Lock, Mic, Trash2, X, Pause, Play, RotateCcw, Send, Square, Volume2, VolumeX } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { cleanDescription, dedupeSentences, splitSentences } from "@/lib/speech-text";
 import { askMonument, deleteCaptures, pairVirsaCam, transcribeQuestion } from "@/lib/virsa-cam.functions";
 
 export const Route = createFileRoute("/virsa-cam")({
@@ -21,20 +22,23 @@ export const Route = createFileRoute("/virsa-cam")({
   component: VirsaCamPage,
 });
 
-type Lang = "en" | "hi" | "pa";
+type Lang = "en";
 type Capture = { id: string; created_at: string; image_url: string; monument_name: string | null; location: string | null; description: string | null; confidence: number | null };
 type CamStatus = { last_seen: string | null; preview_jpeg: string | null; preview_updated_at: string | null };
 type Msg = { role: "user" | "assistant"; content: string };
-const LOCALES: Record<Lang, string> = { en: "en-IN", hi: "hi-IN", pa: "pa-IN" };
+const LOCALES: Record<Lang, string> = { en: "en-IN" };
 const CHIPS = ["Who built it?", "What's the legend?", "When is the best time to visit?"];
 
-function pickVoice(locale: string) {
+function pickVoice() {
   const voices = window.speechSynthesis.getVoices();
-  const base = locale.split("-")[0];
-  return voices.find((v) => v.lang === locale && /google|natural|neural/i.test(v.name))
-    ?? voices.find((v) => v.lang.replace("_", "-") === locale)
-    ?? voices.find((v) => v.lang.toLowerCase().startsWith(base));
+  for (const loc of ["en-IN", "en-GB", "en-US"]) {
+    const m = voices.filter((v) => v.lang.replace("_", "-").toLowerCase() === loc.toLowerCase());
+    const best = m.find((v) => /google|natural|neural|enhanced|premium/i.test(v.name)) ?? m[0];
+    if (best) return best;
+  }
+  return voices.find((v) => v.lang.toLowerCase().startsWith("en"));
 }
+const narration = (c: Capture) => cleanDescription(c.description, c.monument_name, c.location);
 
 const PRIVACY = "VIRSA Cam only looks when you ask it to. Live view is off unless you turn it on, and your photos are visible only to you.";
 
@@ -112,7 +116,9 @@ function PairScreen({ onPaired }: { onPaired: () => void }) {
 
 function CamApp({ userId }: { userId: string }) {
   const [started, setStarted] = useState(false);
-  const [lang, setLang] = useState<Lang>("en");
+  const lang: Lang = "en";
+  const spokenRef = useRef<Set<string>>(new Set());
+  const articleRef = useRef<HTMLElement | null>(null);
   const [waiting, setWaiting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [history, setHistory] = useState<Capture[]>([]);
@@ -147,14 +153,18 @@ function CamApp({ userId }: { userId: string }) {
     if (!startedRef.current || !("speechSynthesis" in window)) return;
     const s = window.speechSynthesis;
     s.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = LOCALES[lang];
-    const v = pickVoice(LOCALES[lang]);
-    if (v) u.voice = v;
-    u.rate = rate;
-    u.onend = () => setSpeaking("idle");
-    u.onerror = () => setSpeaking("idle");
-    s.speak(u);
+    const parts = splitSentences(text);
+    if (!parts.length) return;
+    const v = pickVoice();
+    parts.forEach((part, i) => {
+      const u = new SpeechSynthesisUtterance(part);
+      u.lang = v?.lang ?? LOCALES.en;
+      if (v) u.voice = v;
+      u.rate = rate;
+      if (i === parts.length - 1) { u.onend = () => setSpeaking("idle"); u.onerror = () => setSpeaking("idle"); }
+      s.speak(u);
+    });
+    if (s.paused) s.resume();
     setSpeaking("playing");
   }, [lang, rate]);
 
@@ -163,7 +173,10 @@ function CamApp({ userId }: { userId: string }) {
     setWaiting(false);
     const { data } = await supabase.from("capture_messages").select("role,content").eq("capture_id", c.id).order("created_at");
     setMessages((data ?? []) as Msg[]);
-    if (autoplay && c.description) speak(`${c.monument_name ?? ""}. ${c.description}`);
+    if (autoplay && c.description && !spokenRef.current.has(c.id)) {
+      spokenRef.current.add(c.id);
+      speak(narration(c));
+    }
   }, [speak]);
   const openRef = useRef(open);
   openRef.current = open;
@@ -250,14 +263,28 @@ function CamApp({ userId }: { userId: string }) {
   }, [liveOn, turnOffLive]);
   useEffect(() => () => { supabase.rpc("virsa_cam_stop_preview").then(() => {}); }, []);
 
+  // Phones only allow speech started from a tap: prime it on every Start/Capture tap
+  const unlockSpeech = () => {
+    const s = window.speechSynthesis;
+    if (!s) return;
+    s.cancel();
+    const u = new SpeechSynthesisUtterance(" ");
+    u.volume = 0;
+    s.speak(u);
+    if (s.paused) s.resume();
+  };
   const start = () => {
     startedRef.current = true;
     setStarted(true);
-    const u = new SpeechSynthesisUtterance(" ");
-    window.speechSynthesis?.speak(u); // unlocks audio on mobile
+    unlockSpeech();
   };
+  useEffect(() => {
+    if (current?.id) setTimeout(() => articleRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+  }, [current?.id]);
 
   const capture = async () => {
+    unlockSpeech();
+    setSpeaking("idle");
     setError(null);
     stopWaiting();
     setWaiting(true);
@@ -288,8 +315,9 @@ function CamApp({ userId }: { userId: string }) {
     setAsking(true);
     try {
       const { answer } = await ask({ data: { captureId: current.id, question: q.trim(), language: lang } });
-      setMessages((m) => [...m, { role: "assistant", content: answer }]);
-      if (!muted) speak(answer);
+      const clean = dedupeSentences(answer);
+      setMessages((m) => [...m, { role: "assistant", content: clean }]);
+      if (!muted) { unlockSpeech(); speak(clean); }
     } catch {
       setMessages((m) => [...m, { role: "assistant", content: "Sorry, I couldn't answer that just now. Please try again." }]);
     } finally { setAsking(false); }
@@ -431,14 +459,6 @@ function CamApp({ userId }: { userId: string }) {
         <button onClick={backToLive} className="mt-3 w-full rounded-2xl py-3 text-sm ring-1 ring-border hover:bg-foreground/5">Back to live view</button>
       )}
 
-      <div className="mt-6 flex gap-2" data-i18n-skip>
-        {(["en", "hi", "pa"] as Lang[]).map((l) => (
-          <button key={l} onClick={() => setLang(l)}
-            className={`rounded-full px-4 py-1.5 text-sm ring-1 ring-border ${lang === l ? "bg-primary text-primary-foreground" : "hover:bg-foreground/5"}`}>
-            {l === "en" ? "English" : l === "hi" ? "हिन्दी" : "ਪੰਜਾਬੀ"}
-          </button>
-        ))}
-      </div>
 
       {!started ? (
         <div className="mt-8 rounded-3xl glass p-8 text-center">
@@ -463,22 +483,22 @@ function CamApp({ userId }: { userId: string }) {
       )}
 
       {current && (
-        <article className="relative mt-8 overflow-hidden rounded-3xl glass">
+        <article ref={articleRef} className="relative mt-8 scroll-mt-24 overflow-hidden rounded-3xl glass">
           <button aria-label="Close" onClick={backToLive} className="absolute right-3 top-3 z-10 grid h-9 w-9 place-items-center rounded-full bg-background/80 ring-1 ring-border backdrop-blur hover:bg-background"><X className="h-4 w-4" /></button>
           <img src={current.image_url} alt={current.monument_name ?? "Captured photo"} className="aspect-[4/3] w-full object-cover" />
           <style>{`@keyframes camflash{from{opacity:1}to{opacity:0}}`}</style>
           <div className="p-6">
             <h2 className="font-display text-2xl">{current.monument_name}</h2>
             <p className="text-sm text-primary">{current.location}</p>
-            <p className="mt-3 leading-relaxed text-foreground/85">{current.description}</p>
+            <p className="mt-3 leading-relaxed text-foreground/85">{narration(current)}</p>
             <div className="mt-5 flex flex-wrap items-center gap-2">
               {speaking === "playing" ? (
                 <button aria-label="Pause" onClick={() => { s?.pause(); setSpeaking("paused"); }} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Pause className="h-4 w-4" /></button>
               ) : (
-                <button aria-label="Play" onClick={() => { if (speaking === "paused") { s?.resume(); setSpeaking("playing"); } else speak(`${current.monument_name}. ${current.description}`); }} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Play className="h-4 w-4" /></button>
+                <button aria-label="Play" onClick={() => { if (speaking === "paused") { s?.resume(); setSpeaking("playing"); } else speak(narration(current)); }} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Play className="h-4 w-4" /></button>
               )}
               <button aria-label="Stop" onClick={() => { s?.cancel(); setSpeaking("idle"); }} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Square className="h-4 w-4" /></button>
-              <button aria-label="Replay" onClick={() => speak(`${current.monument_name}. ${current.description}`)} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><RotateCcw className="h-4 w-4" /></button>
+              <button aria-label="Replay" onClick={() => speak(narration(current))} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><RotateCcw className="h-4 w-4" /></button>
               <label className="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
                 Speed {rate.toFixed(1)}×
                 <input type="range" min={0.6} max={1.6} step={0.1} value={rate} onChange={(e) => setRate(Number(e.target.value))} className="accent-[var(--primary)]" />

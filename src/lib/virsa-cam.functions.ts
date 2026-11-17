@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-const lang = z.enum(["en", "hi", "pa"]);
+const lang = z.literal("en").default("en");
 
 export const askMonument = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -35,7 +35,7 @@ export const transcribeQuestion = createServerFn({ method: "POST" })
     const form = new FormData();
     form.append("file", new Blob([bytes], { type }), `question.${ext}`);
     form.append("model", "openai/gpt-transcribe");
-    if (data.language !== "pa") form.append("languages", data.language); // pa isn't an accepted hint; auto-detect
+    form.append("languages", "en");
     const res = await fetch("https://ai.gateway.lovable.dev/v1/audio/transcriptions", {
       method: "POST", headers: { Authorization: `Bearer ${key}` }, body: form,
     });

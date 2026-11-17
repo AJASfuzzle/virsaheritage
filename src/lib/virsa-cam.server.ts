@@ -3,8 +3,8 @@ import { Output, streamText } from "ai";
 import { z } from "zod";
 import { createLovableAiGatewayRunIdFetch } from "./translation-run-id.server.ts";
 
-const LANGS: Record<string, string> = { en: "English", hi: "Hindi (Devanagari script)", pa: "Punjabi (Gurmukhi script)" };
-export const langName = (l: string) => LANGS[l] ?? "English";
+// VIRSA Cam is English-only.
+export const langName = (_l: string) => "English";
 
 const identifySchema = z.object({
   monument_name: z.string(),
@@ -43,7 +43,7 @@ async function qwen(messages: unknown[], json: boolean) {
 }
 
 const identifyPrompt = (lang: string) =>
-  `You are VIRSA's heritage guide. Identify the Indian monument in this photo. Reply in ${langName(lang)} for description, location and name. Write an engaging ~120-word spoken tour-guide description. confidence is 0-1. If it is not a monument, or you are unsure (confidence < 0.5), say so politely in the description and suggest trying a clearer photo. Return JSON with keys monument_name, location, description, confidence.`;
+  `You are VIRSA's heritage guide. Identify the Indian monument in this photo. Reply in ${langName(lang)} for description, location and name. Write an engaging ~120-word spoken tour-guide description that does not start by repeating the name or location and never repeats a sentence. confidence is 0-1. If it is not a monument, or you are unsure (confidence < 0.5), say so politely in the description and suggest trying a clearer photo. Return JSON with keys monument_name, location, description, confidence.`;
 
 export async function sha256Hex(text: string) {
   const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
@@ -101,7 +101,7 @@ export async function identifyAndSave(bytes: Uint8Array, mime: string, lang = "e
   }
   const { data, error } = await sb.from("captures").insert({
     image_url: signed.data.signedUrl, monument_name: result.monument_name, location: result.location,
-    description: result.description, language: lang, confidence: result.confidence, user_id: userId,
+    description: result.description, language: "en", confidence: result.confidence, user_id: userId,
   }).select().single();
   if (error) throw new Error(error.message);
   return { id: data.id, ...result };

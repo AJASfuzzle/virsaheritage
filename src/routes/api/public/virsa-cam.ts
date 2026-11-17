@@ -53,7 +53,7 @@ export const Route = createFileRoute("/api/public/virsa-cam")({
           // Attach to the most recent capture request this upload fulfils; none -> unowned, visible to nobody
           const since = new Date(Date.now() - 3 * 60_000).toISOString();
           const { data: req } = await supabaseAdmin.from("camera_requests").select("id,user_id").eq("status", "taken").is("capture_id", null).gte("created_at", since).order("created_at", { ascending: false }).limit(1).maybeSingle();
-          const r = await identifyAndSave(bytes, "image/jpeg", url.searchParams.get("lang") ?? "en", req?.user_id ?? null);
+          const r = await identifyAndSave(bytes, "image/jpeg", "en", req?.user_id ?? null);
           if (req) await supabaseAdmin.from("camera_requests").update({ capture_id: r.id }).eq("id", req.id);
           return json({ monument_name: r.monument_name, location: r.location, description: r.description, confidence: r.confidence });
         } catch (e) {
