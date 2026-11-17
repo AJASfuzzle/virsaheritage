@@ -14,6 +14,8 @@ export const Route = createFileRoute("/api/public/virsa-cam")({
         if (!authorized(request)) return json({ error: "Unauthorized" }, 401);
         if (new URL(request.url).searchParams.get("mode") !== "poll") return json({ error: "Unknown mode" }, 400);
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { ensureDevice } = await import("@/lib/virsa-cam.server");
+        await ensureDevice();
         const { data: st } = await supabaseAdmin.from("camera_status").update({ last_seen: new Date().toISOString() }).eq("id", 1).select("preview_until").maybeSingle();
         const preview = !!st?.preview_until && new Date(st.preview_until).getTime() > Date.now();
         const since = new Date(Date.now() - 60_000).toISOString();
@@ -32,6 +34,12 @@ export const Route = createFileRoute("/api/public/virsa-cam")({
           for (let i = 0; i < frame.length; i += 0x8000) bin += String.fromCharCode(...frame.subarray(i, i + 0x8000));
           const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
           const now = new Date().toISOString();
+          const { data: st } = await supabaseAdmin.from("camera_status").select("preview_until").eq("id", 1).maybeSingle();
+          if (!st?.preview_until || new Date(st.preview_until).getTime() <= Date.now()) {
+            // Live view is off: never keep frames
+            await supabaseAdmin.from("camera_status").update({ preview_jpeg: null, preview_updated_at: null, last_seen: now }).eq("id", 1);
+            return json({ ok: false, preview: false });
+          }
           const { error } = await supabaseAdmin.from("camera_status").update({ preview_jpeg: btoa(bin), preview_updated_at: now, last_seen: now }).eq("id", 1);
           if (error) return json({ error: error.message }, 500);
           return json({ ok: true });
@@ -41,7 +49,12 @@ export const Route = createFileRoute("/api/public/virsa-cam")({
         if (!bytes.length || bytes.length > 10_000_000) return json({ error: "Send a JPEG under 10 MB" }, 400);
         try {
           const { identifyAndSave } = await import("@/lib/virsa-cam.server");
-          const r = await identifyAndSave(bytes, "image/jpeg", url.searchParams.get("lang") ?? "en");
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+          // Attach to the most recent capture request this upload fulfils; none -> unowned, visible to nobody
+          const since = new Date(Date.now() - 3 * 60_000).toISOString();
+          const { data: req } = await supabaseAdmin.from("camera_requests").select("id,user_id").eq("status", "taken").is("capture_id", null).gte("created_at", since).order("created_at", { ascending: false }).limit(1).maybeSingle();
+          const r = await identifyAndSave(bytes, "image/jpeg", url.searchParams.get("lang") ?? "en", req?.user_id ?? null);
+          if (req) await supabaseAdmin.from("camera_requests").update({ capture_id: r.id }).eq("id", req.id);
           return json({ monument_name: r.monument_name, location: r.location, description: r.description, confidence: r.confidence });
         } catch (e) {
           console.error("[virsa-cam] upload failed", e);

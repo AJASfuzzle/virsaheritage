@@ -45,9 +45,37 @@ async function qwen(messages: unknown[], json: boolean) {
 const identifyPrompt = (lang: string) =>
   `You are VIRSA's heritage guide. Identify the Indian monument in this photo. Reply in ${langName(lang)} for description, location and name. Write an engaging ~120-word spoken tour-guide description. confidence is 0-1. If it is not a monument, or you are unsure (confidence < 0.5), say so politely in the description and suggest trying a clearer photo. Return JSON with keys monument_name, location, description, confidence.`;
 
-export async function identifyAndSave(bytes: Uint8Array, mime: string, lang = "en") {
+export async function sha256Hex(text: string) {
+  const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return [...new Uint8Array(d)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+/** Make sure the configured device has a row (unowned until someone pairs it). */
+export async function ensureDevice() {
+  const key = process.env["VIRSA_CAM_DEVICE_KEY"];
+  if (!key) throw new Error("Device not configured");
   const sb = await admin();
-  const path = `${Date.now()}-${crypto.randomUUID()}.jpg`;
+  const hash = await sha256Hex(key);
+  await sb.from("camera_devices").upsert({ device_key_hash: hash }, { onConflict: "device_key_hash", ignoreDuplicates: true });
+  return hash;
+}
+
+export async function pairDevice(userId: string, code: string) {
+  const key = process.env["VIRSA_CAM_DEVICE_KEY"];
+  if (!key || (await sha256Hex(code.trim())) !== (await sha256Hex(key))) throw new Error("That pairing code doesn't match a VIRSA Cam.");
+  const hash = await ensureDevice();
+  const sb = await admin();
+  const { data: dev } = await sb.from("camera_devices").select("id,owner_user_id").eq("device_key_hash", hash).single();
+  if (dev?.owner_user_id && dev.owner_user_id !== userId) throw new Error("This VIRSA Cam is already paired to another account.");
+  if (!dev?.owner_user_id) {
+    await sb.from("camera_devices").update({ owner_user_id: userId, paired_at: new Date().toISOString() }).eq("id", dev!.id).is("owner_user_id", null);
+  }
+  return { ok: true };
+}
+
+export async function identifyAndSave(bytes: Uint8Array, mime: string, lang = "en", userId: string | null = null) {
+  const sb = await admin();
+  const path = `${userId ?? "unowned"}/${Date.now()}-${crypto.randomUUID()}.jpg`;
   const up = await sb.storage.from("captures").upload(path, bytes, { contentType: mime || "image/jpeg" });
   if (up.error) throw new Error(up.error.message);
   const signed = await sb.storage.from("captures").createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
@@ -73,15 +101,15 @@ export async function identifyAndSave(bytes: Uint8Array, mime: string, lang = "e
   }
   const { data, error } = await sb.from("captures").insert({
     image_url: signed.data.signedUrl, monument_name: result.monument_name, location: result.location,
-    description: result.description, language: lang, confidence: result.confidence,
+    description: result.description, language: lang, confidence: result.confidence, user_id: userId,
   }).select().single();
   if (error) throw new Error(error.message);
   return { id: data.id, ...result };
 }
 
-export async function askAboutCapture(captureId: string, question: string, lang = "en") {
+export async function askAboutCapture(userId: string, captureId: string, question: string, lang = "en") {
   const sb = await admin();
-  const { data: cap } = await sb.from("captures").select("*").eq("id", captureId).single();
+  const { data: cap } = await sb.from("captures").select("*").eq("id", captureId).eq("user_id", userId).single();
   if (!cap) throw new Error("Capture not found.");
   const { data: prev } = await sb.from("capture_messages").select("role,content").eq("capture_id", captureId).order("created_at").limit(20);
   const system = `You are a friendly, knowledgeable VIRSA heritage guide. Talk ONLY about this monument: ${cap.monument_name} (${cap.location}). Context: ${cap.description}. Cover history, architecture, builders, legends, best time to visit and nearby heritage when asked. If asked about anything else, gently steer back. Answer in ${langName(lang)} in 2-4 short, spoken-friendly sentences, no lists or markdown.`;
@@ -100,8 +128,8 @@ export async function askAboutCapture(captureId: string, question: string, lang 
     answer = (await r.text).trim();
   }
   await sb.from("capture_messages").insert([
-    { capture_id: captureId, role: "user", content: question },
-    { capture_id: captureId, role: "assistant", content: answer },
+    { capture_id: captureId, role: "user", content: question, user_id: userId },
+    { capture_id: captureId, role: "assistant", content: answer, user_id: userId },
   ]);
   return { answer };
 }

@@ -1,9 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useAuth } from "@/hooks/use-auth";
+import konark from "@/assets/konark.png.asset.json";
 import { useServerFn } from "@tanstack/react-start";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Camera, Mic, Pause, Play, RotateCcw, Send, Square, Volume2, VolumeX } from "lucide-react";
+import { Camera, Lock, Mic, Pause, Play, RotateCcw, Send, Square, Volume2, VolumeX } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { askMonument } from "@/lib/virsa-cam.functions";
+import { askMonument, pairVirsaCam } from "@/lib/virsa-cam.functions";
 
 export const Route = createFileRoute("/virsa-cam")({
   head: () => ({
@@ -34,7 +36,81 @@ function pickVoice(locale: string) {
     ?? voices.find((v) => v.lang.toLowerCase().startsWith(base));
 }
 
+const PRIVACY = "VIRSA Cam only looks when you ask it to. Live view is off unless you turn it on, and your photos are visible only to you.";
+
+function Header() {
+  return (
+    <>
+      <p className="text-xs uppercase tracking-[0.3em] text-primary">Live monument guide</p>
+      <h1 className="mt-2 font-display text-4xl sm:text-5xl">VIRSA <span className="text-gradient-ember italic">Cam</span></h1>
+      <p className="mt-3 text-muted-foreground">Point VIRSA Cam at a monument, capture it, and listen to its story. Then ask the guide anything.</p>
+    </>
+  );
+}
+
 function VirsaCamPage() {
+  const { user, loading } = useAuth();
+  const [owned, setOwned] = useState<boolean | null>(null);
+  useEffect(() => {
+    if (!user) { setOwned(null); return; }
+    supabase.from("camera_devices").select("id").eq("owner_user_id", user.id).limit(1)
+      .then(({ data }) => setOwned(!!data?.length));
+  }, [user]);
+
+  if (loading || (user && owned === null)) return <div className="mx-auto max-w-2xl px-5 pb-24 pt-28"><Header /></div>;
+  if (!user) return (
+    <div className="mx-auto max-w-2xl px-5 pb-24 pt-28">
+      <Header />
+      <div className="mt-8 overflow-hidden rounded-3xl glass">
+        <div className="relative aspect-[16/9]">
+          <img src={konark.url} alt="Konark Sun Temple seen through VIRSA Cam" className="h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/10 to-transparent" />
+        </div>
+        <div className="p-8 text-center">
+          <Lock className="mx-auto h-8 w-8 text-primary" />
+          <p className="mt-3 font-medium">VIRSA Cam needs an account</p>
+          <p className="mt-1 text-sm text-muted-foreground">Pair your own VIRSA Cam, capture monuments and keep a private history of every story you hear.</p>
+          <Link to="/auth" search={{ redirect: "/virsa-cam" }} className="btn-glossy mt-5 inline-block rounded-full gradient-ember px-8 py-3 font-medium text-primary-foreground">Sign in to use VIRSA Cam</Link>
+          <p className="mt-5 text-xs text-muted-foreground">{PRIVACY}</p>
+        </div>
+      </div>
+    </div>
+  );
+  if (!owned) return <PairScreen onPaired={() => setOwned(true)} />;
+  return <CamApp userId={user.id} />;
+}
+
+function PairScreen({ onPaired }: { onPaired: () => void }) {
+  const pair = useServerFn(pairVirsaCam);
+  const [code, setCode] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBusy(true); setErr(null);
+    try {
+      const r = await pair({ data: { code } });
+      if (r.ok) onPaired(); else setErr((r as { error?: string }).error ?? "Pairing failed");
+    } catch { setErr("Pairing failed. Please try again."); } finally { setBusy(false); }
+  };
+  return (
+    <div className="mx-auto max-w-2xl px-5 pb-24 pt-28">
+      <Header />
+      <form onSubmit={submit} className="mt-8 rounded-3xl glass p-8">
+        <Camera className="h-8 w-8 text-primary" />
+        <h2 className="mt-3 font-display text-2xl">Connect your VIRSA Cam</h2>
+        <p className="mt-1 text-sm text-muted-foreground">Enter the pairing code that came with your camera. Once paired, only you can use it.</p>
+        <input value={code} onChange={(e) => setCode(e.target.value)} placeholder="Pairing code" autoComplete="off"
+          className="mt-5 w-full rounded-full bg-foreground/5 px-5 py-3 text-sm ring-1 ring-border outline-none focus:ring-primary" />
+        {err && <p className="mt-3 text-sm text-destructive">{err}</p>}
+        <button type="submit" disabled={busy || code.length < 4} className="btn-glossy mt-5 w-full rounded-full gradient-ember py-3 font-medium text-primary-foreground disabled:opacity-60">{busy ? "Pairing…" : "Pair VIRSA Cam"}</button>
+        <p className="mt-5 text-xs text-muted-foreground">{PRIVACY}</p>
+      </form>
+    </div>
+  );
+}
+
+function CamApp({ userId }: { userId: string }) {
   const [started, setStarted] = useState(false);
   const [lang, setLang] = useState<Lang>("en");
   const [waiting, setWaiting] = useState(false);
@@ -56,6 +132,7 @@ function VirsaCamPage() {
   const [view, setView] = useState<"live" | "photo">("live");
   const [flash, setFlash] = useState(false);
   const waitRef = useRef<{ since: string; timer?: ReturnType<typeof setTimeout>; poll?: ReturnType<typeof setInterval> } | null>(null);
+  const [liveOn, setLiveOn] = useState(false);
   const online = !!status?.last_seen && now - new Date(status.last_seen).getTime() < 10_000;
 
   const speak = useCallback((text: string) => {
@@ -86,11 +163,11 @@ function VirsaCamPage() {
   useEffect(() => {
     setMicSupported(!!((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition));
     window.speechSynthesis?.getVoices();
-    supabase.from("captures").select("*").order("created_at", { ascending: false }).limit(20)
+    supabase.from("captures").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(20)
       .then(({ data }) => setHistory((data ?? []) as Capture[]));
     const channel = supabase
       .channel(`captures-${Math.random().toString(36).slice(2)}`)
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "captures" }, (payload) => {
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "captures", filter: `user_id=eq.${userId}` }, (payload) => {
         const c = payload.new as Capture;
         setHistory((h) => [c, ...h.filter((x) => x.id !== c.id)]);
         if (waitRef.current) arrivedRef.current(c);
@@ -138,18 +215,32 @@ function VirsaCamPage() {
     return () => { supabase.removeChannel(channel); clearInterval(fallback); clearInterval(clock); stopWaiting(); };
   }, []);
 
-  // Ask the device for preview frames while this page is visible
-  useEffect(() => {
-    let t: ReturnType<typeof setInterval> | undefined;
-    const ping = () => { supabase.rpc("virsa_cam_request_preview").then(() => {}); };
-    const sync = () => {
-      clearInterval(t); t = undefined;
-      if (document.visibilityState === "visible") { ping(); t = setInterval(ping, 5000); }
-    };
-    sync();
-    document.addEventListener("visibilitychange", sync);
-    return () => { clearInterval(t); document.removeEventListener("visibilitychange", sync); };
+  // Live view is opt-in: heartbeat only while on, visible and recently interacted with
+  const turnOffLive = useCallback(() => {
+    setLiveOn(false);
+    setStatus((st) => st ? { ...st, preview_jpeg: null, preview_updated_at: null } : st);
+    supabase.rpc("virsa_cam_stop_preview").then(() => {});
   }, []);
+  useEffect(() => {
+    if (!liveOn) return;
+    let last = Date.now();
+    const touch = () => { last = Date.now(); };
+    const evs = ["pointerdown", "pointermove", "keydown", "scroll", "touchstart"] as const;
+    evs.forEach((e) => window.addEventListener(e, touch, { passive: true }));
+    const ping = () => { supabase.rpc("virsa_cam_request_preview").then(() => {}); };
+    ping();
+    const t = setInterval(() => {
+      if (Date.now() - last > 60_000) turnOffLive(); else ping();
+    }, 5000);
+    const onVis = () => { if (document.visibilityState !== "visible") turnOffLive(); };
+    document.addEventListener("visibilitychange", onVis);
+    return () => {
+      clearInterval(t);
+      evs.forEach((e) => window.removeEventListener(e, touch));
+      document.removeEventListener("visibilitychange", onVis);
+    };
+  }, [liveOn, turnOffLive]);
+  useEffect(() => () => { supabase.rpc("virsa_cam_stop_preview").then(() => {}); }, []);
 
   const start = () => {
     startedRef.current = true;
@@ -163,7 +254,7 @@ function VirsaCamPage() {
     stopWaiting();
     setWaiting(true);
     const since = new Date().toISOString();
-    const { error } = await supabase.from("camera_requests").insert({ status: "pending" });
+    const { error } = await supabase.from("camera_requests").insert({ status: "pending", user_id: userId });
     if (error) { setWaiting(false); setError("Couldn't reach VIRSA Cam. Please try again."); return; }
     const w: NonNullable<typeof waitRef.current> = { since };
     waitRef.current = w;
@@ -213,9 +304,8 @@ function VirsaCamPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-5 pb-24 pt-28">
-      <p className="text-xs uppercase tracking-[0.3em] text-primary">Live monument guide</p>
-      <h1 className="mt-2 font-display text-4xl sm:text-5xl">VIRSA <span className="text-gradient-ember italic">Cam</span></h1>
-      <p className="mt-3 text-muted-foreground">Point VIRSA Cam at a monument, capture it, and listen to its story. Then ask the guide anything.</p>
+      <Header />
+      <p className="mt-3 rounded-2xl bg-primary/5 px-4 py-3 text-xs text-muted-foreground ring-1 ring-primary/15">{PRIVACY}</p>
 
       <div className="mt-6 flex items-center gap-2 text-sm">
         <span className={`h-2.5 w-2.5 rounded-full ${online ? "bg-emerald-500 shadow-[0_0_8px] shadow-emerald-500" : "bg-muted-foreground/50"}`} />
@@ -228,6 +318,13 @@ function VirsaCamPage() {
         <div className="relative aspect-[4/3] overflow-hidden rounded-[1.25rem] bg-background">
           {view === "photo" && current ? (
             <img src={current.image_url} alt={current.monument_name ?? "Captured photo"} className="h-full w-full object-cover" />
+          ) : !liveOn ? (
+            <div className="grid h-full place-items-center p-6 text-center">
+              <div>
+                <button onClick={() => setLiveOn(true)} disabled={!online} className="btn-glossy rounded-full gradient-ember px-6 py-3 font-medium text-primary-foreground disabled:opacity-60">Turn on live view</button>
+                <p className="mt-3 text-sm text-muted-foreground">This will show what your VIRSA Cam sees. Only you can see it.</p>
+              </div>
+            </div>
           ) : status?.preview_jpeg ? (
             <img src={`data:image/jpeg;base64,${status.preview_jpeg}`} alt="VIRSA Cam live view" className="h-full w-full object-cover" />
           ) : (
@@ -235,8 +332,11 @@ function VirsaCamPage() {
           )}
           {flash && <div className="pointer-events-none absolute inset-0 animate-[camflash_0.6s_ease-out_forwards] bg-background" />}
           <span className="absolute left-3 top-3 rounded-full bg-background/70 px-3 py-1 text-xs font-medium backdrop-blur">
-            {view === "photo" ? "Snapshot" : <><span className="mr-1.5 inline-block h-2 w-2 animate-pulse rounded-full bg-destructive" />Live view</>}
+            {view === "photo" ? "Snapshot" : liveOn ? <span className="font-semibold text-destructive">● LIVE</span> : "Live view off"}
           </span>
+          {view === "live" && liveOn && (
+            <button onClick={turnOffLive} className="absolute right-3 top-3 rounded-full bg-background/70 px-3 py-1 text-xs backdrop-blur ring-1 ring-border">Turn off live view</button>
+          )}
           {view === "photo" && current && !current.description && (
             <div className="absolute inset-x-0 bottom-0 bg-background/75 py-2 text-center text-sm backdrop-blur">Identifying the monument…</div>
           )}
@@ -330,6 +430,7 @@ function VirsaCamPage() {
       {history.length > 0 && (
         <section className="mt-10">
           <h3 className="font-medium">Past captures</h3>
+          <p className="text-xs text-muted-foreground">Your captures are private to you.</p>
           <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
             {history.map((h) => (
               <button key={h.id} onClick={() => { setView("photo"); open(h, false); }} className={`overflow-hidden rounded-2xl text-left ring-1 ${current?.id === h.id ? "ring-primary" : "ring-border"}`}>

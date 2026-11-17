@@ -35,21 +35,51 @@ export type Database = {
         }
         Relationships: []
       }
+      camera_devices: {
+        Row: {
+          device_key_hash: string
+          id: string
+          name: string
+          owner_user_id: string | null
+          paired_at: string | null
+        }
+        Insert: {
+          device_key_hash: string
+          id?: string
+          name?: string
+          owner_user_id?: string | null
+          paired_at?: string | null
+        }
+        Update: {
+          device_key_hash?: string
+          id?: string
+          name?: string
+          owner_user_id?: string | null
+          paired_at?: string | null
+        }
+        Relationships: []
+      }
       camera_requests: {
         Row: {
+          capture_id: string | null
           created_at: string
           id: string
           status: string
+          user_id: string | null
         }
         Insert: {
+          capture_id?: string | null
           created_at?: string
           id?: string
           status?: string
+          user_id?: string | null
         }
         Update: {
+          capture_id?: string | null
           created_at?: string
           id?: string
           status?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -84,6 +114,7 @@ export type Database = {
           created_at: string
           id: string
           role: string
+          user_id: string | null
         }
         Insert: {
           capture_id: string
@@ -91,6 +122,7 @@ export type Database = {
           created_at?: string
           id?: string
           role: string
+          user_id?: string | null
         }
         Update: {
           capture_id?: string
@@ -98,6 +130,7 @@ export type Database = {
           created_at?: string
           id?: string
           role?: string
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -119,6 +152,7 @@ export type Database = {
           language: string
           location: string | null
           monument_name: string | null
+          user_id: string | null
         }
         Insert: {
           confidence?: number | null
@@ -129,6 +163,7 @@ export type Database = {
           language?: string
           location?: string | null
           monument_name?: string | null
+          user_id?: string | null
         }
         Update: {
           confidence?: number | null
@@ -139,6 +174,7 @@ export type Database = {
           language?: string
           location?: string | null
           monument_name?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -666,8 +702,10 @@ export type Database = {
         Args: { _force?: boolean; _lat: number; _lng: number; _site_id: string }
         Returns: Json
       }
+      owns_virsa_cam: { Args: { _uid: string }; Returns: boolean }
       redeem_reward: { Args: { _reward_id: string }; Returns: Json }
       virsa_cam_request_preview: { Args: never; Returns: undefined }
+      virsa_cam_stop_preview: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
