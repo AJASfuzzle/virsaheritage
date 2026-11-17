@@ -72,7 +72,7 @@ export const deleteCaptures = createServerFn({ method: "POST" })
 // virsa-cam-tts: text -> natural English speech (WAV) for one persistent <audio> element on the page
 export const virsaCamTts = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator(z.object({ text: z.string().min(1).max(1500) }))
+  .inputValidator(z.object({ text: z.string().min(1).max(3000), language: z.string().max(40).default("English") }))
   .handler(async ({ data }) => {
     const key = process.env["LOVABLE_API_KEY"];
     if (!key) return { ok: false as const, error: "Speech isn't configured." };
@@ -82,7 +82,7 @@ export const virsaCamTts = createServerFn({ method: "POST" })
       body: JSON.stringify({
         model: "google/gemini-3.1-flash-tts-preview",
         stream_format: "audio",
-        contents: [{ role: "user", parts: [{ text: `Read this in clear, warm Indian English, like a friendly heritage tour guide: ${data.text}` }] }],
+        contents: [{ role: "user", parts: [{ text: data.language === "English" ? `Read this in clear, warm Indian English, like a friendly heritage tour guide: ${data.text}` : `Read this aloud naturally in ${data.language}, warmly, like a friendly heritage tour guide: ${data.text}` }] }],
         generationConfig: { responseModalities: ["AUDIO"], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Kore" } } } },
       }),
     });

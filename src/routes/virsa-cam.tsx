@@ -6,6 +6,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Camera, ChevronDown, Lock, Mic, Trash2, X, Pause, Play, RotateCcw, Send, Square, Volume2, VolumeX } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { cleanDescription, dedupeSentences, splitSentences } from "@/lib/speech-text";
+import { useLanguage } from "@/i18n/LanguageProvider";
+import { LANGUAGE_NAMES, translateBatch } from "@/lib/translate.functions";
 import { askMonument, deleteCaptures, pairVirsaCam, transcribeQuestion, virsaCamTts } from "@/lib/virsa-cam.functions";
 
 export const Route = createFileRoute("/virsa-cam")({
@@ -48,12 +50,34 @@ const SILENT_WAV = (() => {
   let bin = ""; b.forEach((x) => bin += String.fromCharCode(x));
   return `data:audio/wav;base64,${btoa(bin)}`;
 })();
+// First chunk is one short sentence so it is ready almost instantly; later chunks are larger
 function chunkText(text: string) {
   const out: string[] = [];
   for (const sn of splitSentences(text)) {
-    if (out.length && (out[out.length - 1] + " " + sn).length <= 350) out[out.length - 1] += " " + sn; else out.push(sn);
+    if (out.length > 1 && (out[out.length - 1] + " " + sn).length <= 350) out[out.length - 1] += " " + sn; else out.push(sn);
   }
   return out;
+}
+// Pick a real microphone with echo cancellation, never a loopback / "Stereo Mix" device that captures laptop audio
+const LOOPBACK = /stereo mix|loopback|what u hear|wave out|monitor of|blackhole|soundflower|virtual|cable output|vb-audio/i;
+async function micConstraints(): Promise<MediaTrackConstraints> {
+  const base: MediaTrackConstraints = { echoCancellation: true, noiseSuppression: true, autoGainControl: true, channelCount: 1 };
+  try {
+    const devs = (await navigator.mediaDevices.enumerateDevices()).filter((d) => d.kind === "audioinput");
+    const def = devs.find((d) => d.deviceId === "default") ?? devs[0];
+    if (def && LOOPBACK.test(def.label)) {
+      const real = devs.find((d) => d.deviceId !== "default" && d.deviceId !== "communications" && !LOOPBACK.test(d.label));
+      if (real) return { ...base, deviceId: { exact: real.deviceId } };
+    }
+  } catch { /* labels unavailable: use defaults */ }
+  return base;
+}
+async function defaultIsLoopback() {
+  try {
+    const devs = (await navigator.mediaDevices.enumerateDevices()).filter((d) => d.kind === "audioinput");
+    const def = devs.find((d) => d.deviceId === "default") ?? devs[0];
+    return !!def && LOOPBACK.test(def.label);
+  } catch { return false; }
 }
 const narration = (c: Capture) => cleanDescription(c.description, c.monument_name, c.location);
 
@@ -168,6 +192,10 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
 
   // Speech: generated audio clips through ONE persistent <audio>, played in order; speechSynthesis only if a clip fails
   const tts = useServerFn(virsaCamTts);
+  const translate = useServerFn(translateBatch);
+  const { lang: siteLang } = useLanguage();
+  const siteLangRef = useRef(siteLang);
+  siteLangRef.current = siteLang;
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const genRef = useRef(0);
   const rateRef = useRef(rate);
@@ -195,7 +223,18 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
     const parts = texts.map((t) => t.trim()).filter(Boolean);
     if (!parts.length) return;
     setSpeaking("playing");
-    const clips = parts.map((text) => tts({ data: { text: text.slice(0, 1500) } }).catch(() => ({ ok: false as const })));
+    // Speak in the site's selected language: translate each part first (cached server-side), then voice it
+    const code = siteLangRef.current as string;
+    const language = code === "en" ? "English" : (LANGUAGE_NAMES as Record<string, string>)[code] ?? "English";
+    let spoken = parts;
+    if (code !== "en") {
+      try {
+        const r = await translate({ data: { targetLang: code, texts: parts } });
+        spoken = parts.map((p, i) => r.translations?.[i] || p);
+      } catch { /* fall back to English text */ }
+      if (gen !== genRef.current) return;
+    }
+    const clips = spoken.map((text) => tts({ data: { text: text.slice(0, 3000), language } }).catch(() => ({ ok: false as const })));
     for (let i = 0; i < parts.length; i++) {
       const r = await clips[i];
       if (gen !== genRef.current) return;
@@ -211,11 +250,11 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
         });
         URL.revokeObjectURL(url);
         if (gen !== genRef.current) return;
-        if (!ok) await fallbackSay(parts[i], gen);
-      } else await fallbackSay(parts[i], gen);
+        if (!ok) await fallbackSay(spoken[i], gen);
+      } else await fallbackSay(spoken[i], gen);
     }
     if (gen === genRef.current) setSpeaking("idle");
-  }, [stopSpeech, tts]);
+  }, [stopSpeech, tts, translate]);
   const speak = useCallback((text: string) => speakClips(chunkText(text)), [speakClips]);
   const speakCapture = useCallback((c: Capture) => speakClips([
     `This is ${c.monument_name ?? "this monument"}${c.location ? `, ${c.location}` : ""}.`, ...chunkText(narration(c)),
@@ -225,12 +264,12 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
   const open = useCallback(async (c: Capture, autoplay: boolean) => {
     setCurrent(c);
     setWaiting(false);
-    const { data } = await supabase.from("capture_messages").select("role,content").eq("capture_id", c.id).order("created_at");
-    setMessages((data ?? []) as Msg[]);
     if (autoplay && c.description && !spokenRef.current.has(c.id)) {
       spokenRef.current.add(c.id);
       speakCapture(c);
     }
+    const { data } = await supabase.from("capture_messages").select("role,content").eq("capture_id", c.id).order("created_at");
+    setMessages((data ?? []) as Msg[]);
   }, [speakCapture]);
   const openRef = useRef(open);
   openRef.current = open;
@@ -398,7 +437,7 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
 
   const recordFallback = async () => {
     let stream: MediaStream;
-    try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+    try { stream = await navigator.mediaDevices.getUserMedia({ audio: await micConstraints() }); }
     catch { setListening(false); setMicError(BLOCKED); return; }
     if (typeof MediaRecorder === "undefined") { stream.getTracks().forEach((t) => t.stop()); setListening(false); setMicError(MISSED); return; }
     const mime = ["audio/mp4", "audio/webm;codecs=opus", "audio/webm", "audio/ogg;codecs=opus"].find((m) => MediaRecorder.isTypeSupported?.(m)) ?? "";
@@ -435,7 +474,7 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
     setListening(true);
     // Ask for mic permission up front so every browser shows its prompt
     try {
-      const st = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const st = await navigator.mediaDevices.getUserMedia({ audio: await micConstraints() });
       st.getTracks().forEach((t) => t.stop());
     } catch (e) {
       setListening(false);
@@ -443,7 +482,8 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
       return;
     }
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SR) { recordFallback(); return; }
+    // Browser recognition always uses the system default input; if that is a loopback device, record from the real mic instead
+    if (!SR || await defaultIsLoopback()) { recordFallback(); return; }
     let got = false, fellBack = false;
     const rec = new SR();
     rec.lang = LOCALES[lang];

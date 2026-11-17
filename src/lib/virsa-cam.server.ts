@@ -76,10 +76,15 @@ export async function pairDevice(userId: string, code: string) {
 export async function identifyAndSave(bytes: Uint8Array, mime: string, lang = "en", userId: string | null = null) {
   const sb = await admin();
   const path = `${userId ?? "unowned"}/${Date.now()}-${crypto.randomUUID()}.jpg`;
-  const up = await sb.storage.from("captures").upload(path, bytes, { contentType: mime || "image/jpeg" });
-  if (up.error) throw new Error(up.error.message);
-  const signed = await sb.storage.from("captures").createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
-  if (signed.error) throw new Error(signed.error.message);
+  // Upload in parallel with identification so the result arrives sooner
+  const saving = sb.storage.from("captures").upload(path, bytes, { contentType: mime || "image/jpeg" });
+  const savingUrl = saving.then(async (up) => {
+    if (up.error) throw new Error(up.error.message);
+    const signed = await sb.storage.from("captures").createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
+    if (signed.error) throw new Error(signed.error.message);
+    return signed;
+  });
+  savingUrl.catch(() => {});
 
   let b64 = "";
   for (let i = 0; i < bytes.length; i += 0x8000) b64 += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
@@ -99,6 +104,7 @@ export async function identifyAndSave(bytes: Uint8Array, mime: string, lang = "e
     });
     result = await r.output;
   }
+  const signed = await savingUrl;
   const { data, error } = await sb.from("captures").insert({
     image_url: signed.data.signedUrl, monument_name: result.monument_name, location: result.location,
     description: result.description, language: "en", confidence: result.confidence, user_id: userId,
