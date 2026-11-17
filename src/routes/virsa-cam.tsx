@@ -3,9 +3,9 @@ import { useAuth } from "@/hooks/use-auth";
 import konark from "@/assets/konark.png.asset.json";
 import { useServerFn } from "@tanstack/react-start";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Camera, Lock, Mic, Pause, Play, RotateCcw, Send, Square, Volume2, VolumeX } from "lucide-react";
+import { Camera, ChevronDown, Lock, Mic, Trash2, X, Pause, Play, RotateCcw, Send, Square, Volume2, VolumeX } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { askMonument, pairVirsaCam } from "@/lib/virsa-cam.functions";
+import { askMonument, deleteCaptures, pairVirsaCam, transcribeQuestion } from "@/lib/virsa-cam.functions";
 
 export const Route = createFileRoute("/virsa-cam")({
   head: () => ({
@@ -125,6 +125,14 @@ function CamApp({ userId }: { userId: string }) {
   const [asking, setAsking] = useState(false);
   const [listening, setListening] = useState(false);
   const [micSupported, setMicSupported] = useState(false);
+  const [transcribing, setTranscribing] = useState(false);
+  const [micError, setMicError] = useState<string | null>(null);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const stopMicRef = useRef<(() => void) | null>(null);
+  const transcribe = useServerFn(transcribeQuestion);
+  const removeCaptures = useServerFn(deleteCaptures);
   const startedRef = useRef(false);
   const ask = useServerFn(askMonument);
   const [status, setStatus] = useState<CamStatus | null>(null);
@@ -161,7 +169,7 @@ function CamApp({ userId }: { userId: string }) {
   openRef.current = open;
 
   useEffect(() => {
-    setMicSupported(!!((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition));
+    setMicSupported(!!navigator.mediaDevices?.getUserMedia || !!((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition));
     window.speechSynthesis?.getVoices();
     supabase.from("captures").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(20)
       .then(({ data }) => setHistory((data ?? []) as Capture[]));
@@ -287,17 +295,94 @@ function CamApp({ userId }: { userId: string }) {
     } finally { setAsking(false); }
   };
 
-  const listen = () => {
+  // Voice questions: browser speech recognition first, recorded audio + server transcription as fallback
+  const BLOCKED = "Microphone blocked — allow it in your browser settings";
+  const MISSED = "Didn't catch that, try again";
+
+  const recordFallback = async () => {
+    let stream: MediaStream;
+    try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+    catch { setListening(false); setMicError(BLOCKED); return; }
+    if (typeof MediaRecorder === "undefined") { stream.getTracks().forEach((t) => t.stop()); setListening(false); setMicError(MISSED); return; }
+    const mime = ["audio/mp4", "audio/webm;codecs=opus", "audio/webm", "audio/ogg;codecs=opus"].find((m) => MediaRecorder.isTypeSupported?.(m)) ?? "";
+    const rec = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+    const chunks: Blob[] = [];
+    rec.ondataavailable = (e) => { if (e.data.size) chunks.push(e.data); };
+    const timer = setTimeout(() => { if (rec.state === "recording") rec.stop(); }, 15_000);
+    rec.onstop = async () => {
+      clearTimeout(timer);
+      stream.getTracks().forEach((t) => t.stop());
+      stopMicRef.current = null;
+      setListening(false);
+      const type = rec.mimeType || mime || "audio/webm";
+      const blob = new Blob(chunks, { type });
+      if (blob.size < 1500) { setMicError(MISSED); return; }
+      setTranscribing(true);
+      try {
+        const buf = new Uint8Array(await blob.arrayBuffer());
+        let bin = "";
+        for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode(...buf.subarray(i, i + 0x8000));
+        const r = await transcribe({ data: { base64: btoa(bin), mime: type, language: lang } });
+        if (r.ok) { setQuestion(r.text); sendQuestion(r.text); } else setMicError(r.error);
+      } catch { setMicError(MISSED); } finally { setTranscribing(false); }
+    };
+    stopMicRef.current = () => { if (rec.state === "recording") rec.stop(); };
+    rec.start();
+  };
+
+  const listen = async () => {
+    if (listening) { stopMicRef.current?.(); return; }
+    if (transcribing) return;
+    setMicError(null);
+    window.speechSynthesis?.cancel();
+    setSpeaking("idle");
+    setListening(true);
+    // Ask for mic permission up front so every browser shows its prompt
+    try {
+      const st = await navigator.mediaDevices.getUserMedia({ audio: true });
+      st.getTracks().forEach((t) => t.stop());
+    } catch (e) {
+      setListening(false);
+      setMicError((e as DOMException)?.name === "NotFoundError" ? "No microphone found on this device." : BLOCKED);
+      return;
+    }
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SR) return;
+    if (!SR) { recordFallback(); return; }
+    let got = false, fellBack = false;
     const rec = new SR();
     rec.lang = LOCALES[lang];
     rec.interimResults = false;
-    rec.onresult = (e: any) => sendQuestion(e.results[0][0].transcript);
-    rec.onend = () => setListening(false);
-    rec.onerror = () => setListening(false);
-    setListening(true);
-    rec.start();
+    rec.maxAlternatives = 1;
+    rec.onresult = (e: any) => {
+      const text = String(e.results?.[0]?.[0]?.transcript ?? "").trim();
+      if (text) { got = true; setQuestion(text); sendQuestion(text); }
+    };
+    rec.onerror = (e: any) => {
+      if (e.error === "not-allowed") { setMicError(BLOCKED); return; }
+      if (e.error === "no-speech" || e.error === "aborted") return;
+      // network / service-not-allowed / language-not-supported etc. -> record instead
+      fellBack = true;
+      recordFallback();
+    };
+    rec.onend = () => {
+      if (fellBack) return;
+      stopMicRef.current = null;
+      setListening(false);
+      if (!got) setMicError((m) => m ?? MISSED);
+    };
+    stopMicRef.current = () => { try { rec.stop(); } catch { /* already stopped */ } };
+    try { rec.start(); } catch { fellBack = true; recordFallback(); }
+  };
+
+  const doDelete = async (opts: { ids?: string[]; all?: boolean }) => {
+    setDeleting(true);
+    try {
+      await removeCaptures({ data: opts });
+      const gone = (id: string) => opts.all || opts.ids?.includes(id);
+      setHistory((h) => h.filter((x) => !gone(x.id)));
+      if (current && gone(current.id)) backToLive();
+    } catch { setError("Couldn't delete that capture. Please try again."); }
+    finally { setDeleting(false); setConfirmId(null); }
   };
 
   const s = typeof window !== "undefined" ? window.speechSynthesis : null;
@@ -378,7 +463,8 @@ function CamApp({ userId }: { userId: string }) {
       )}
 
       {current && (
-        <article className="mt-8 overflow-hidden rounded-3xl glass">
+        <article className="relative mt-8 overflow-hidden rounded-3xl glass">
+          <button aria-label="Close" onClick={backToLive} className="absolute right-3 top-3 z-10 grid h-9 w-9 place-items-center rounded-full bg-background/80 ring-1 ring-border backdrop-blur hover:bg-background"><X className="h-4 w-4" /></button>
           <img src={current.image_url} alt={current.monument_name ?? "Captured photo"} className="aspect-[4/3] w-full object-cover" />
           <style>{`@keyframes camflash{from{opacity:1}to{opacity:0}}`}</style>
           <div className="p-6">
@@ -419,26 +505,62 @@ function CamApp({ userId }: { userId: string }) {
             <form onSubmit={(e) => { e.preventDefault(); sendQuestion(question); }} className="mt-4 flex gap-2">
               <input value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="Type your question…" className="flex-1 rounded-full bg-foreground/5 px-4 py-2.5 text-sm ring-1 ring-border outline-none focus:ring-primary" />
               {micSupported && (
-                <button type="button" aria-label="Speak your question" onClick={listen} className={`grid h-10 w-10 place-items-center rounded-full ring-1 ring-border ${listening ? "bg-primary text-primary-foreground animate-pulse" : ""}`}><Mic className="h-4 w-4" /></button>
+                <button type="button" aria-label={listening ? "Tap to stop" : "Speak your question"} onClick={listen} disabled={transcribing} className={`grid h-10 w-10 place-items-center rounded-full ring-1 ${listening ? "bg-destructive text-destructive-foreground ring-destructive animate-pulse" : "ring-border"} disabled:opacity-60`}><Mic className="h-4 w-4" /></button>
               )}
               <button type="submit" aria-label="Send" disabled={asking} className="grid h-10 w-10 place-items-center rounded-full gradient-ember text-primary-foreground"><Send className="h-4 w-4" /></button>
             </form>
+            {(listening || transcribing || micError) && (
+              <p className={`mt-2 text-xs ${micError && !listening ? "text-destructive" : "text-muted-foreground"}`} aria-live="polite">
+                {listening ? <><span className="font-medium text-destructive">● Listening…</span> Tap to stop</> : transcribing ? "Working out what you said…" : micError}
+              </p>
+            )}
           </div>
         </article>
       )}
 
       {history.length > 0 && (
         <section className="mt-10">
-          <h3 className="font-medium">Past captures</h3>
-          <p className="text-xs text-muted-foreground">Your captures are private to you.</p>
-          <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {history.map((h) => (
-              <button key={h.id} onClick={() => { setView("photo"); open(h, false); }} className={`overflow-hidden rounded-2xl text-left ring-1 ${current?.id === h.id ? "ring-primary" : "ring-border"}`}>
-                <img src={h.image_url} alt="" className="aspect-square w-full object-cover" loading="lazy" />
-                <p className="truncate px-3 py-2 text-xs">{h.monument_name ?? "Unknown"}</p>
-              </button>
+          <div className="flex items-center justify-between gap-3">
+            <button onClick={() => setHistoryOpen((o) => !o)} aria-expanded={historyOpen} className="flex items-center gap-1.5 font-medium">
+              Past captures <span className="text-sm text-muted-foreground">({history.length})</span>
+              <ChevronDown className={`h-4 w-4 transition-transform ${historyOpen ? "rotate-180" : ""}`} />
+            </button>
+            {historyOpen && (confirmId === "all" ? (
+              <span className="flex items-center gap-2 text-xs">
+                Delete all captures?
+                <button disabled={deleting} onClick={() => doDelete({ all: true })} className="rounded-full bg-destructive px-3 py-1 text-destructive-foreground">{deleting ? "Deleting…" : "Delete all"}</button>
+                <button onClick={() => setConfirmId(null)} className="rounded-full px-3 py-1 ring-1 ring-border">Cancel</button>
+              </span>
+            ) : (
+              <button onClick={() => setConfirmId("all")} className="flex items-center gap-1 text-xs text-destructive"><Trash2 className="h-3.5 w-3.5" /> Delete all</button>
             ))}
           </div>
+          <p className="text-xs text-muted-foreground">Your captures are private to you.</p>
+          {historyOpen && (
+            <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {history.map((h) => (
+                <div key={h.id} className={`relative overflow-hidden rounded-2xl ring-1 ${current?.id === h.id ? "ring-primary" : "ring-border"}`}>
+                  <button onClick={() => { setView("photo"); open(h, false); }} className="block w-full text-left">
+                    <img src={h.image_url} alt="" className="aspect-square w-full object-cover" loading="lazy" />
+                    <p className="truncate px-3 py-2 pr-10 text-xs">{h.monument_name ?? "Unknown"}</p>
+                  </button>
+                  {confirmId === h.id ? (
+                    <div className="absolute inset-0 grid place-items-center bg-background/85 p-3 text-center backdrop-blur">
+                      <div>
+                        <p className="text-xs font-medium">Delete this capture?</p>
+                        <div className="mt-2 flex justify-center gap-2">
+                          <button disabled={deleting} onClick={() => doDelete({ ids: [h.id] })} className="rounded-full bg-destructive px-3 py-1 text-xs text-destructive-foreground">{deleting ? "…" : "Delete"}</button>
+                          <button onClick={() => setConfirmId(null)} className="rounded-full px-3 py-1 text-xs ring-1 ring-border">Cancel</button>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <button aria-label="Delete capture" onClick={() => setConfirmId(h.id)} className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-background/80 ring-1 ring-border backdrop-blur hover:text-destructive"><Trash2 className="h-3.5 w-3.5" /></button>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </section>
       )}
     </div>
