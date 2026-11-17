@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Camera, Mic, Pause, Play, RotateCcw, Send, Smartphone, Square, Volume2, VolumeX } from "lucide-react";
+import { Camera, Mic, Pause, Play, RotateCcw, Send, Square, Volume2, VolumeX } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { askMonument, identifyPhoneUpload } from "@/lib/virsa-cam.functions";
+import { askMonument } from "@/lib/virsa-cam.functions";
 
 export const Route = createFileRoute("/virsa-cam")({
   head: () => ({
@@ -21,6 +21,7 @@ export const Route = createFileRoute("/virsa-cam")({
 
 type Lang = "en" | "hi" | "pa";
 type Capture = { id: string; created_at: string; image_url: string; monument_name: string | null; location: string | null; description: string | null; confidence: number | null };
+type CamStatus = { last_seen: string | null; preview_jpeg: string | null; preview_updated_at: string | null };
 type Msg = { role: "user" | "assistant"; content: string };
 const LOCALES: Record<Lang, string> = { en: "en-IN", hi: "hi-IN", pa: "pa-IN" };
 const CHIPS = ["Who built it?", "What's the legend?", "When is the best time to visit?"];
@@ -49,9 +50,13 @@ function VirsaCamPage() {
   const [listening, setListening] = useState(false);
   const [micSupported, setMicSupported] = useState(false);
   const startedRef = useRef(false);
-  const fileRef = useRef<HTMLInputElement>(null);
   const ask = useServerFn(askMonument);
-  const identify = useServerFn(identifyPhoneUpload);
+  const [status, setStatus] = useState<CamStatus | null>(null);
+  const [now, setNow] = useState(() => Date.now());
+  const [view, setView] = useState<"live" | "photo">("live");
+  const [flash, setFlash] = useState(false);
+  const waitRef = useRef<{ since: string; timer?: ReturnType<typeof setTimeout>; poll?: ReturnType<typeof setInterval> } | null>(null);
+  const online = !!status?.last_seen && now - new Date(status.last_seen).getTime() < 10_000;
 
   const speak = useCallback((text: string) => {
     if (!startedRef.current || !("speechSynthesis" in window)) return;
@@ -88,10 +93,62 @@ function VirsaCamPage() {
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "captures" }, (payload) => {
         const c = payload.new as Capture;
         setHistory((h) => [c, ...h.filter((x) => x.id !== c.id)]);
-        openRef.current(c, true);
+        if (waitRef.current) arrivedRef.current(c);
+        else openRef.current(c, true);
       })
       .subscribe();
     return () => { supabase.removeChannel(channel); window.speechSynthesis?.cancel(); };
+  }, []);
+
+  const stopWaiting = () => {
+    if (waitRef.current) { clearTimeout(waitRef.current.timer); clearInterval(waitRef.current.poll); }
+    waitRef.current = null;
+  };
+  const arrived = (c: Capture) => {
+    stopWaiting();
+    setHistory((h) => [c, ...h.filter((x) => x.id !== c.id)]);
+    setView("photo");
+    setFlash(true);
+    setTimeout(() => setFlash(false), 600);
+    openRef.current(c, true);
+  };
+  const arrivedRef = useRef(arrived);
+  arrivedRef.current = arrived;
+
+  // Live view: status row via realtime, 700 ms fallback refresh, 1 s clock for online check
+  useEffect(() => {
+    const load = () => supabase.from("camera_status").select("last_seen,preview_jpeg,preview_updated_at").eq("id", 1).maybeSingle()
+      .then(({ data }) => { if (data) setStatus(data as CamStatus); });
+    load();
+    let live = false;
+    const channel = supabase
+      .channel(`camstatus-${Math.random().toString(36).slice(2)}`)
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "camera_status" }, (p) => {
+        // Unchanged large columns (the frame) are left out of update events, so merge instead of replace
+        const n = p.new as Partial<CamStatus>;
+        setStatus((prev) => ({
+          last_seen: n.last_seen ?? prev?.last_seen ?? null,
+          preview_jpeg: n.preview_jpeg ?? prev?.preview_jpeg ?? null,
+          preview_updated_at: n.preview_updated_at ?? prev?.preview_updated_at ?? null,
+        }));
+      })
+      .subscribe((st) => { live = st === "SUBSCRIBED"; });
+    const fallback = setInterval(() => { if (!live) load(); }, 700);
+    const clock = setInterval(() => setNow(Date.now()), 1000);
+    return () => { supabase.removeChannel(channel); clearInterval(fallback); clearInterval(clock); stopWaiting(); };
+  }, []);
+
+  // Ask the device for preview frames while this page is visible
+  useEffect(() => {
+    let t: ReturnType<typeof setInterval> | undefined;
+    const ping = () => { supabase.rpc("virsa_cam_request_preview").then(() => {}); };
+    const sync = () => {
+      clearInterval(t); t = undefined;
+      if (document.visibilityState === "visible") { ping(); t = setInterval(ping, 5000); }
+    };
+    sync();
+    document.addEventListener("visibilitychange", sync);
+    return () => { clearInterval(t); document.removeEventListener("visibilitychange", sync); };
   }, []);
 
   const start = () => {
@@ -103,29 +160,27 @@ function VirsaCamPage() {
 
   const capture = async () => {
     setError(null);
+    stopWaiting();
     setWaiting(true);
+    const since = new Date().toISOString();
     const { error } = await supabase.from("camera_requests").insert({ status: "pending" });
-    if (error) { setWaiting(false); setError("Couldn't reach VIRSA Cam. Please try again."); }
-    setTimeout(() => setWaiting((w) => { if (w) setError("VIRSA Cam didn't respond. Is it switched on?"); return false; }), 75_000);
+    if (error) { setWaiting(false); setError("Couldn't reach VIRSA Cam. Please try again."); return; }
+    const w: NonNullable<typeof waitRef.current> = { since };
+    waitRef.current = w;
+    // Polling backup in case realtime is unavailable
+    w.poll = setInterval(async () => {
+      const { data } = await supabase.from("captures").select("*").gt("created_at", since).order("created_at", { ascending: false }).limit(1).maybeSingle();
+      if (data && waitRef.current === w) arrivedRef.current(data as Capture);
+    }, 2000);
+    w.timer = setTimeout(() => {
+      if (waitRef.current !== w) return;
+      stopWaiting();
+      setWaiting(false);
+      setError("VIRSA Cam didn't respond. Check it's online and try again.");
+    }, 25_000);
   };
 
-  const onFile = async (file?: File) => {
-    if (!file) return;
-    setError(null);
-    setWaiting(true);
-    try {
-      const buf = new Uint8Array(await file.arrayBuffer());
-      let bin = "";
-      for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode(...buf.subarray(i, i + 0x8000));
-      await identify({ data: { base64: btoa(bin), mime: file.type, language: lang } });
-      // realtime insert opens the result
-    } catch {
-      setWaiting(false);
-      setError("We couldn't identify that photo. Please try again.");
-    } finally {
-      if (fileRef.current) fileRef.current.value = "";
-    }
-  };
+  const backToLive = () => { window.speechSynthesis?.cancel(); setSpeaking("idle"); setView("live"); setCurrent(null); setError(null); };
 
   const sendQuestion = async (q: string) => {
     if (!current || !q.trim() || asking) return;
@@ -162,6 +217,35 @@ function VirsaCamPage() {
       <h1 className="mt-2 font-display text-4xl sm:text-5xl">VIRSA <span className="text-gradient-ember italic">Cam</span></h1>
       <p className="mt-3 text-muted-foreground">Point VIRSA Cam at a monument, capture it, and listen to its story. Then ask the guide anything.</p>
 
+      <div className="mt-6 flex items-center gap-2 text-sm">
+        <span className={`h-2.5 w-2.5 rounded-full ${online ? "bg-emerald-500 shadow-[0_0_8px] shadow-emerald-500" : "bg-muted-foreground/50"}`} />
+        <span className={online ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground"}>
+          {online ? "VIRSA Cam online" : "VIRSA Cam offline – power it on and connect it to Wi-Fi"}
+        </span>
+      </div>
+
+      <div className="relative mt-4 overflow-hidden rounded-3xl p-1.5 gradient-ember shadow-xl">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-[1.25rem] bg-background">
+          {view === "photo" && current ? (
+            <img src={current.image_url} alt={current.monument_name ?? "Captured photo"} className="h-full w-full object-cover" />
+          ) : status?.preview_jpeg ? (
+            <img src={`data:image/jpeg;base64,${status.preview_jpeg}`} alt="VIRSA Cam live view" className="h-full w-full object-cover" />
+          ) : (
+            <div className="grid h-full place-items-center text-sm text-muted-foreground">Connecting to VIRSA Cam…</div>
+          )}
+          {flash && <div className="pointer-events-none absolute inset-0 animate-[camflash_0.6s_ease-out_forwards] bg-background" />}
+          <span className="absolute left-3 top-3 rounded-full bg-background/70 px-3 py-1 text-xs font-medium backdrop-blur">
+            {view === "photo" ? "Snapshot" : <><span className="mr-1.5 inline-block h-2 w-2 animate-pulse rounded-full bg-destructive" />Live view</>}
+          </span>
+          {view === "photo" && current && !current.description && (
+            <div className="absolute inset-x-0 bottom-0 bg-background/75 py-2 text-center text-sm backdrop-blur">Identifying the monument…</div>
+          )}
+        </div>
+      </div>
+      {view === "photo" && (
+        <button onClick={backToLive} className="mt-3 w-full rounded-2xl py-3 text-sm ring-1 ring-border hover:bg-foreground/5">Back to live view</button>
+      )}
+
       <div className="mt-6 flex gap-2" data-i18n-skip>
         {(["en", "hi", "pa"] as Lang[]).map((l) => (
           <button key={l} onClick={() => setLang(l)}
@@ -180,22 +264,23 @@ function VirsaCamPage() {
         </div>
       ) : (
         <div className="mt-8 space-y-3">
-          <button onClick={capture} disabled={waiting}
+          <button onClick={capture} disabled={waiting || !online}
             className="btn-glossy flex w-full items-center justify-center gap-3 rounded-3xl gradient-ember py-6 text-lg font-semibold text-primary-foreground disabled:opacity-60">
-            <Camera className="h-6 w-6" /> {waiting ? "VIRSA Cam is taking a photo…" : "Capture monument"}
+            <Camera className="h-6 w-6" /> {waiting ? "VIRSA Cam is taking a photo…" : online ? "Capture monument" : "VIRSA Cam is offline"}
           </button>
-          <button onClick={() => fileRef.current?.click()} disabled={waiting}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl py-3 text-sm ring-1 ring-border hover:bg-foreground/5 disabled:opacity-60">
-            <Smartphone className="h-4 w-4" /> Use phone camera
-          </button>
-          <input ref={fileRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => onFile(e.target.files?.[0])} />
-          {error && <p className="text-sm text-destructive">{error}</p>}
+          {error && (
+            <div className="flex items-center justify-between gap-3 rounded-2xl bg-destructive/10 px-4 py-3 text-sm text-destructive">
+              <span>{error}</span>
+              <button onClick={capture} disabled={!online} className="rounded-full px-3 py-1 ring-1 ring-destructive/40 disabled:opacity-50">Retry</button>
+            </div>
+          )}
         </div>
       )}
 
       {current && (
         <article className="mt-8 overflow-hidden rounded-3xl glass">
           <img src={current.image_url} alt={current.monument_name ?? "Captured photo"} className="aspect-[4/3] w-full object-cover" />
+          <style>{`@keyframes camflash{from{opacity:1}to{opacity:0}}`}</style>
           <div className="p-6">
             <h2 className="font-display text-2xl">{current.monument_name}</h2>
             <p className="text-sm text-primary">{current.location}</p>
@@ -247,7 +332,7 @@ function VirsaCamPage() {
           <h3 className="font-medium">Past captures</h3>
           <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
             {history.map((h) => (
-              <button key={h.id} onClick={() => open(h, false)} className={`overflow-hidden rounded-2xl text-left ring-1 ${current?.id === h.id ? "ring-primary" : "ring-border"}`}>
+              <button key={h.id} onClick={() => { setView("photo"); open(h, false); }} className={`overflow-hidden rounded-2xl text-left ring-1 ${current?.id === h.id ? "ring-primary" : "ring-border"}`}>
                 <img src={h.image_url} alt="" className="aspect-square w-full object-cover" loading="lazy" />
                 <p className="truncate px-3 py-2 text-xs">{h.monument_name ?? "Unknown"}</p>
               </button>

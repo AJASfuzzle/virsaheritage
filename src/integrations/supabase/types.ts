@@ -53,6 +53,30 @@ export type Database = {
         }
         Relationships: []
       }
+      camera_status: {
+        Row: {
+          id: number
+          last_seen: string | null
+          preview_jpeg: string | null
+          preview_until: string | null
+          preview_updated_at: string | null
+        }
+        Insert: {
+          id?: number
+          last_seen?: string | null
+          preview_jpeg?: string | null
+          preview_until?: string | null
+          preview_updated_at?: string | null
+        }
+        Update: {
+          id?: number
+          last_seen?: string | null
+          preview_jpeg?: string | null
+          preview_until?: string | null
+          preview_updated_at?: string | null
+        }
+        Relationships: []
+      }
       capture_messages: {
         Row: {
           capture_id: string
@@ -643,6 +667,7 @@ export type Database = {
         Returns: Json
       }
       redeem_reward: { Args: { _reward_id: string }; Returns: Json }
+      virsa_cam_request_preview: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never

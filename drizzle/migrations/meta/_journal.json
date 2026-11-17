@@ -22,6 +22,13 @@
       "when": 1794949077730,
       "tag": "0002_virsa_cam",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794950831068,
+      "tag": "0003_virsa_cam_live_view",
+      "breakpoints": true
     }
   ]
 }
