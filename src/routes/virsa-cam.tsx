@@ -657,11 +657,24 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
             <div className="flex items-center justify-between">
               <h3 className="font-medium">Ask about this monument</h3>
               <div className="flex items-center gap-2">
-              <button aria-label="Stop speaking" onClick={stopSpeech} className="flex h-8 items-center gap-1.5 rounded-full px-3 text-xs ring-1 ring-border"><Square className="h-3.5 w-3.5" />Stop</button>
               <button aria-label={muted ? "Unmute answers" : "Mute answers"} onClick={() => { setMuted((m) => !m); stopSpeech(); }} className="grid h-8 w-8 place-items-center rounded-full ring-1 ring-border">
                 {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
               </button>
               </div>
+            </div>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              {speaking === "playing" ? (
+                <button aria-label="Pause" onClick={pauseSpeech} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Pause className="h-4 w-4" /></button>
+              ) : (
+                <button aria-label="Play" onClick={() => { if (speaking === "paused") resumeSpeech(); else { unlockSpeech(); replayLast(); } }} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Play className="h-4 w-4" /></button>
+              )}
+              <button aria-label="Stop" onClick={stopSpeech} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Square className="h-4 w-4" /></button>
+              <button aria-label="Replay" onClick={() => { unlockSpeech(); replayLast(); }} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><RotateCcw className="h-4 w-4" /></button>
+              {nowReading && <span className="text-xs text-muted-foreground">Reading: {nowReading.toLowerCase()}</span>}
+              <label className="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
+                Speed {rate.toFixed(1)}×
+                <input type="range" min={0.6} max={1.6} step={0.1} value={rate} onChange={(e) => setRate(Number(e.target.value))} className="accent-[var(--primary)]" />
+              </label>
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
               {CHIPS.map((c) => <button key={c} onClick={() => { unlockSpeech(); sendQuestion(c); }} className="rounded-full bg-primary/10 px-3 py-1.5 text-xs text-primary ring-1 ring-primary/25">{c}</button>)}
