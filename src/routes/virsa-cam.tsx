@@ -210,42 +210,67 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
     u.onend = () => done(); u.onerror = () => done();
     s.speak(u);
   });
-  const speakClips = useCallback(async (texts: string[]) => {
-    if (!startedRef.current) return;
+  // Ordered speech queue: clips are generated in parallel as text arrives, played one by one (no gaps/overlaps/repeats)
+  const lastSpokenRef = useRef<{ label: string; texts: string[] } | null>(null);
+  const [nowReading, setNowReading] = useState<string | null>(null);
+  const startQueue = useCallback((label: string, onStart?: () => void) => {
     stopSpeech();
     const gen = genRef.current;
-    const parts = texts.map((t) => t.trim()).filter(Boolean);
-    if (!parts.length) return;
-    setSpeaking("playing");
-    // VIRSA Cam speaks English only
-    const language = "English";
-    const spoken = parts;
-    const clips = spoken.map((text) => tts({ data: { text: text.slice(0, 3000), language } }).catch(() => ({ ok: false as const })));
-    for (let i = 0; i < parts.length; i++) {
-      const r = await clips[i];
-      if (gen !== genRef.current) return;
-      const a = audioRef.current;
-      if (r.ok && a) {
-        const bin = atob(r.base64); const bytes = new Uint8Array(bin.length);
-        for (let j = 0; j < bin.length; j++) bytes[j] = bin.charCodeAt(j);
-        const url = URL.createObjectURL(new Blob([bytes], { type: r.mime }));
-        const ok = await new Promise<boolean>((done) => {
-          a.onended = () => done(true); a.onerror = () => done(false);
-          a.src = url; a.playbackRate = rateRef.current;
-          a.play().catch(() => done(false));
-        });
-        URL.revokeObjectURL(url);
+    const texts: string[] = [];
+    const clips: Promise<{ ok: true; base64: string; mime: string } | { ok: false }>[] = [];
+    const seen = new Set<string>();
+    let ended = false; let wake: (() => void) | null = null;
+    const push = (t: string) => {
+      const text = t.trim(); const k = text.toLowerCase();
+      if (!text || seen.has(k) || gen !== genRef.current) return;
+      seen.add(k); texts.push(text);
+      clips.push(tts({ data: { text: text.slice(0, 3000), language: "English" } }).catch(() => ({ ok: false as const })));
+      wake?.();
+    };
+    const end = () => { ended = true; lastSpokenRef.current = { label, texts }; wake?.(); };
+    if (!startedRef.current) return { push: () => {}, end: () => {}, gen };
+    setSpeaking("playing"); setNowReading(label);
+    (async () => {
+      let i = 0;
+      for (;;) {
         if (gen !== genRef.current) return;
-        if (!ok) await fallbackSay(spoken[i], gen);
-      } else await fallbackSay(spoken[i], gen);
-    }
-    if (gen === genRef.current) setSpeaking("idle");
+        if (i >= clips.length) {
+          if (ended) break;
+          await new Promise<void>((r) => { wake = r; }); wake = null; continue;
+        }
+        const r = await clips[i];
+        if (gen !== genRef.current) return;
+        if (i === 0) onStart?.();
+        const a = audioRef.current;
+        if (r.ok && a) {
+          const bin = atob(r.base64); const bytes = new Uint8Array(bin.length);
+          for (let j = 0; j < bin.length; j++) bytes[j] = bin.charCodeAt(j);
+          const url = URL.createObjectURL(new Blob([bytes], { type: r.mime }));
+          const ok = await new Promise<boolean>((done) => {
+            a.onended = () => done(true); a.onerror = () => done(false);
+            a.src = url; a.playbackRate = rateRef.current;
+            a.play().catch(() => done(false));
+          });
+          URL.revokeObjectURL(url);
+          if (gen !== genRef.current) return;
+          if (!ok) await fallbackSay(texts[i], gen);
+        } else await fallbackSay(texts[i], gen);
+        i++;
+      }
+      if (gen === genRef.current) { setSpeaking("idle"); setNowReading(null); }
+    })();
+    return { push, end, gen };
   }, [stopSpeech, tts]);
+  const speakClips = useCallback((texts: string[], label = "Answer") => {
+    const q = startQueue(label); texts.forEach(q.push); q.end();
+  }, [startQueue]);
   const speak = useCallback((text: string) => speakClips(chunkText(text)), [speakClips]);
   const speakCapture = useCallback((c: Capture) => speakClips([
     `This is ${c.monument_name ?? "this monument"}${c.location ? `, ${c.location}` : ""}.`, ...chunkText(narration(c)),
-  ]), [speakClips]);
+  ], "Description"), [speakClips]);
+  const replayLast = () => { const l = lastSpokenRef.current; if (l) speakClips(l.texts, l.label); else if (current) speakCapture(current); };
   useEffect(() => { if (audioRef.current) audioRef.current.playbackRate = rate; }, [rate]);
+  useEffect(() => { lastSpokenRef.current = null; }, [current?.id]);
 
   const open = useCallback(async (c: Capture, autoplay: boolean) => {
     setCurrent(c);
@@ -402,18 +427,42 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
 
   const backToLive = () => { stopSpeech(); setView("live"); setCurrent(null); setError(null); };
 
+  const [thinking, setThinking] = useState(false);
   const sendQuestion = async (q: string) => {
     if (!current || !q.trim() || asking) return;
+    const question = q.trim();
     setQuestion("");
-    setMessages((m) => [...m, { role: "user", content: q }]);
-    setAsking(true);
+    setMessages((m) => [...m, { role: "user", content: question }, { role: "assistant", content: "" }]);
+    setAsking(true); setThinking(true);
+    const setAnswer = (t: string) => setMessages((m) => { const n = [...m]; n[n.length - 1] = { role: "assistant", content: t }; return n; });
+    const queue = muted ? null : startQueue("Answer", () => setThinking(false));
     try {
-      const { answer } = await ask({ data: { captureId: current.id, question: q.trim(), language: lang } });
-      const clean = dedupeSentences(answer);
-      setMessages((m) => [...m, { role: "assistant", content: clean }]);
-      if (!muted) speak(clean);
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch("/api/virsa-cam-ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${session?.access_token ?? ""}` },
+        body: JSON.stringify({ captureId: current.id, question }),
+      });
+      if (!res.ok || !res.body) throw new Error(String(res.status));
+      const reader = res.body.getReader(); const dec = new TextDecoder();
+      let full = ""; let spokenUpTo = 0;
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        full += dec.decode(value, { stream: true });
+        setAnswer(full);
+        // hand each finished sentence to speech as soon as it's complete
+        const re = /[.!?]["')\]]*\s+/g; re.lastIndex = spokenUpTo; let m: RegExpExecArray | null;
+        while ((m = re.exec(full))) { queue?.push(full.slice(spokenUpTo, m.index + m[0].length)); spokenUpTo = m.index + m[0].length; }
+      }
+      queue?.push(full.slice(spokenUpTo));
+      if (!full.trim()) throw new Error("empty");
+      setAnswer(dedupeSentences(full.trim()));
+      queue?.end();
+      if (!queue) setThinking(false);
     } catch {
-      setMessages((m) => [...m, { role: "assistant", content: "Sorry, I couldn't answer that just now. Please try again." }]);
+      queue?.end(); stopSpeech(); setThinking(false);
+      setAnswer("Sorry, I couldn't answer that just now. Please try again.");
     } finally { setAsking(false); }
   };
 
@@ -592,10 +641,11 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
               {speaking === "playing" ? (
                 <button aria-label="Pause" onClick={pauseSpeech} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Pause className="h-4 w-4" /></button>
               ) : (
-                <button aria-label="Play" onClick={() => { if (speaking === "paused") resumeSpeech(); else { unlockSpeech(); speakCapture(current); } }} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Play className="h-4 w-4" /></button>
+                <button aria-label="Play" onClick={() => { if (speaking === "paused") resumeSpeech(); else { unlockSpeech(); replayLast(); } }} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Play className="h-4 w-4" /></button>
               )}
               <button aria-label="Stop" onClick={stopSpeech} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><Square className="h-4 w-4" /></button>
-              <button aria-label="Replay" onClick={() => { unlockSpeech(); speakCapture(current); }} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><RotateCcw className="h-4 w-4" /></button>
+              <button aria-label="Replay" onClick={() => { unlockSpeech(); replayLast(); }} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-border"><RotateCcw className="h-4 w-4" /></button>
+              {nowReading && <span className="text-xs text-muted-foreground">Reading: {nowReading.toLowerCase()}</span>}
               <label className="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
                 Speed {rate.toFixed(1)}×
                 <input type="range" min={0.6} max={1.6} step={0.1} value={rate} onChange={(e) => setRate(Number(e.target.value))} className="accent-[var(--primary)]" />
@@ -618,9 +668,16 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
             </div>
             <div className="mt-4 space-y-2">
               {messages.map((m, i) => (
-                <div key={i} className={`max-w-[85%] rounded-2xl px-4 py-2 text-sm ${m.role === "user" ? "ml-auto bg-primary text-primary-foreground" : "bg-foreground/5"}`}>{m.content}</div>
+                m.content ? (
+                <div key={i} className={`max-w-[85%] rounded-2xl px-4 py-2 text-sm ${m.role === "user" ? "ml-auto bg-primary text-primary-foreground" : "bg-foreground/5"}`}>
+                  {m.content}
+                  {m.role === "assistant" && !(asking && i === messages.length - 1) && (
+                    <button aria-label="Replay answer" onClick={() => { unlockSpeech(); speakClips(splitSentences(m.content), "Answer"); }} className="ml-2 inline-grid h-6 w-6 place-items-center rounded-full align-middle ring-1 ring-border"><RotateCcw className="h-3 w-3" /></button>
+                  )}
+                </div>
+                ) : null
               ))}
-              {asking && <div className="w-fit rounded-2xl bg-foreground/5 px-4 py-2 text-sm text-muted-foreground">Thinking…</div>}
+              {thinking && <div className="w-fit rounded-2xl bg-foreground/5 px-4 py-2 text-sm text-muted-foreground">Thinking…</div>}
             </div>
             <form onSubmit={(e) => { e.preventDefault(); unlockSpeech(); sendQuestion(question); }} className="mt-4 flex gap-2">
               <input value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="Type your question…" className="flex-1 rounded-full bg-foreground/5 px-4 py-2.5 text-sm ring-1 ring-border outline-none focus:ring-primary" />

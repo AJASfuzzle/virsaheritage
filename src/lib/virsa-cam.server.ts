@@ -139,3 +139,37 @@ export async function askAboutCapture(userId: string, captureId: string, questio
   ]);
   return { answer };
 }
+
+// Streaming answers: fast model, text streamed as it is generated, saved when finished.
+export async function streamAnswer(userId: string, captureId: string, question: string) {
+  const sb = await admin();
+  const [{ data: cap }, { data: prev }] = await Promise.all([
+    sb.from("captures").select("*").eq("id", captureId).eq("user_id", userId).single(),
+    sb.from("capture_messages").select("role,content").eq("capture_id", captureId).order("created_at").limit(20),
+  ]);
+  if (!cap) throw new Error("Capture not found.");
+  const system = `You are a friendly, knowledgeable VIRSA heritage guide. Talk ONLY about this monument: ${cap.monument_name} (${cap.location}). Context: ${cap.description}. Cover history, architecture, builders, legends, best time to visit and nearby heritage when asked. If asked about anything else, gently steer back. Answer in English in 2-4 short, spoken-friendly sentences, no lists or markdown.`;
+  const history = (prev ?? []).map((m) => ({ role: m.role as "user" | "assistant", content: m.content }));
+  const r = streamText({
+    model: lovable().responses("openai/gpt-5.6-luna"),
+    maxRetries: 0,
+    system,
+    messages: [{ role: "user", content: [{ type: "image", image: new URL(cap.image_url) }, { type: "text", text: "This is the photo of the monument." }] }, ...history, { role: "user", content: question }],
+    providerOptions: opts(),
+  });
+  const enc = new TextEncoder();
+  return new ReadableStream<Uint8Array>({
+    async start(ctrl) {
+      let answer = "";
+      try {
+        for await (const t of r.textStream) { answer += t; ctrl.enqueue(enc.encode(t)); }
+      } catch (e) { console.error("[virsa-cam-ask]", e); }
+      answer = answer.trim();
+      if (answer) await sb.from("capture_messages").insert([
+        { capture_id: captureId, role: "user", content: question, user_id: userId },
+        { capture_id: captureId, role: "assistant", content: answer, user_id: userId },
+      ]);
+      ctrl.close();
+    },
+  });
+}

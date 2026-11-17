@@ -23,6 +23,7 @@ import { Route as TrailsRouteImport } from './routes/trails'
 import { Route as VirsaCamRouteImport } from './routes/virsa-cam'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as ApiVirsaCamAskRouteImport } from './routes/api/virsa-cam-ask'
 import { Route as EchoesIndexRouteImport } from './routes/echoes.index'
 import { Route as EchoesPostIdRouteImport } from './routes/echoes.$postId'
 import { Route as TrailsIndexRouteImport } from './routes/trails.index'
@@ -101,6 +102,11 @@ const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiVirsaCamAskRoute = ApiVirsaCamAskRouteImport.update({
+  id: '/api/virsa-cam-ask',
+  path: '/api/virsa-cam-ask',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EchoesIndexRoute = EchoesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -158,6 +164,7 @@ export interface FileRoutesByFullPath {
   '/virsa-cam': typeof VirsaCamRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/api/virsa-cam-ask': typeof ApiVirsaCamAskRoute
   '/echoes/$postId': typeof EchoesPostIdRoute
   '/trails/$slug': typeof TrailsSlugRoute
   '/echoes/': typeof EchoesIndexRoute
@@ -179,6 +186,7 @@ export interface FileRoutesByTo {
   '/virsa-cam': typeof VirsaCamRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/api/virsa-cam-ask': typeof ApiVirsaCamAskRoute
   '/echoes/$postId': typeof EchoesPostIdRoute
   '/trails/$slug': typeof TrailsSlugRoute
   '/echoes': typeof EchoesIndexRoute
@@ -204,6 +212,7 @@ export interface FileRoutesById {
   '/virsa-cam': typeof VirsaCamRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/api/virsa-cam-ask': typeof ApiVirsaCamAskRoute
   '/echoes/$postId': typeof EchoesPostIdRoute
   '/trails/$slug': typeof TrailsSlugRoute
   '/echoes/': typeof EchoesIndexRoute
@@ -229,6 +238,7 @@ export interface FileRouteTypes {
     | '/virsa-cam'
     | '/dashboard'
     | '/settings'
+    | '/api/virsa-cam-ask'
     | '/echoes/$postId'
     | '/trails/$slug'
     | '/echoes/'
@@ -250,6 +260,7 @@ export interface FileRouteTypes {
     | '/virsa-cam'
     | '/dashboard'
     | '/settings'
+    | '/api/virsa-cam-ask'
     | '/echoes/$postId'
     | '/trails/$slug'
     | '/echoes'
@@ -274,6 +285,7 @@ export interface FileRouteTypes {
     | '/virsa-cam'
     | '/_authenticated/dashboard'
     | '/_authenticated/settings'
+    | '/api/virsa-cam-ask'
     | '/echoes/$postId'
     | '/trails/$slug'
     | '/echoes/'
@@ -297,6 +309,7 @@ export interface RootRouteChildren {
   LibraryRoute: typeof LibraryRoute
   TrailsRoute: typeof TrailsRouteWithChildren
   VirsaCamRoute: typeof VirsaCamRoute
+  ApiVirsaCamAskRoute: typeof ApiVirsaCamAskRoute
   ApiPublicVirsaCamRoute: typeof ApiPublicVirsaCamRoute
 }
 
@@ -399,6 +412,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/settings'
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/api/virsa-cam-ask': {
+      id: '/api/virsa-cam-ask'
+      path: '/api/virsa-cam-ask'
+      fullPath: '/api/virsa-cam-ask'
+      preLoaderRoute: typeof ApiVirsaCamAskRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/echoes/': {
       id: '/echoes/'
@@ -517,6 +537,7 @@ const rootRouteChildren: RootRouteChildren = {
   LibraryRoute: LibraryRoute,
   TrailsRoute: TrailsRouteWithChildren,
   VirsaCamRoute: VirsaCamRoute,
+  ApiVirsaCamAskRoute: ApiVirsaCamAskRoute,
   ApiPublicVirsaCamRoute: ApiPublicVirsaCamRoute,
 }
 export const routeTree = rootRouteImport
