@@ -35,6 +35,89 @@ export type Database = {
         }
         Relationships: []
       }
+      camera_requests: {
+        Row: {
+          created_at: string
+          id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      capture_messages: {
+        Row: {
+          capture_id: string
+          content: string
+          created_at: string
+          id: string
+          role: string
+        }
+        Insert: {
+          capture_id: string
+          content: string
+          created_at?: string
+          id?: string
+          role: string
+        }
+        Update: {
+          capture_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capture_messages_capture_id_fkey"
+            columns: ["capture_id"]
+            isOneToOne: false
+            referencedRelation: "captures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      captures: {
+        Row: {
+          confidence: number | null
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string
+          language: string
+          location: string | null
+          monument_name: string | null
+        }
+        Insert: {
+          confidence?: number | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url: string
+          language?: string
+          location?: string | null
+          monument_name?: string | null
+        }
+        Update: {
+          confidence?: number | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string
+          language?: string
+          location?: string | null
+          monument_name?: string | null
+        }
+        Relationships: []
+      }
       coin_ledger: {
         Row: {
           created_at: string

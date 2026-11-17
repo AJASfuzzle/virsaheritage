@@ -17,6 +17,7 @@ const links = [
   { to: "/kitab", label: "Kitab" },
   { to: "/khazane", label: "Khazane" },
   { to: "/echoes", label: "Echoes" },
+  { to: "/virsa-cam", label: "VIRSA Cam" },
 ] as const;
 
 export function Navbar() {

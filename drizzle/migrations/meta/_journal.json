@@ -15,6 +15,13 @@
       "when": 1794692114069,
       "tag": "0001_create_translation_cache",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794949077730,
+      "tag": "0002_virsa_cam",
+      "breakpoints": true
     }
   ]
 }

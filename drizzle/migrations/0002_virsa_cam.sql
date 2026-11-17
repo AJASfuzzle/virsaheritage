@@ -1,0 +1,17 @@
+CREATE TABLE public.camera_requests (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), created_at timestamptz NOT NULL DEFAULT now(), status text NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','taken')));
+CREATE TABLE public.captures (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), created_at timestamptz NOT NULL DEFAULT now(), image_url text NOT NULL, monument_name text, location text, description text, language text NOT NULL DEFAULT 'en', confidence real);
+CREATE TABLE public.capture_messages (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), created_at timestamptz NOT NULL DEFAULT now(), capture_id uuid NOT NULL REFERENCES public.captures(id) ON DELETE CASCADE, role text NOT NULL CHECK (role IN ('user','assistant')), content text NOT NULL);
+CREATE INDEX ON public.capture_messages(capture_id, created_at);
+GRANT INSERT ON public.camera_requests TO anon, authenticated;
+GRANT ALL ON public.camera_requests TO service_role;
+GRANT SELECT ON public.captures TO anon, authenticated;
+GRANT ALL ON public.captures TO service_role;
+GRANT SELECT ON public.capture_messages TO anon, authenticated;
+GRANT ALL ON public.capture_messages TO service_role;
+ALTER TABLE public.camera_requests ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.captures ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.capture_messages ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anyone can request a pending capture" ON public.camera_requests FOR INSERT TO anon, authenticated WITH CHECK (status = 'pending');
+CREATE POLICY "Captures are public" ON public.captures FOR SELECT TO anon, authenticated USING (true);
+CREATE POLICY "Capture chat is public" ON public.capture_messages FOR SELECT TO anon, authenticated USING (true);
+ALTER PUBLICATION supabase_realtime ADD TABLE public.captures;
