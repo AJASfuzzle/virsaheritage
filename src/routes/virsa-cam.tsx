@@ -6,8 +6,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Camera, ChevronDown, Lock, Mic, Trash2, X, Pause, Play, RotateCcw, Send, Square, Volume2, VolumeX } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { cleanDescription, dedupeSentences, splitSentences } from "@/lib/speech-text";
-import { useLanguage } from "@/i18n/LanguageProvider";
-import { LANGUAGE_NAMES, translateBatch } from "@/lib/translate.functions";
 import { askMonument, deleteCaptures, pairVirsaCam, transcribeQuestion, virsaCamTts } from "@/lib/virsa-cam.functions";
 
 export const Route = createFileRoute("/virsa-cam")({
@@ -192,10 +190,6 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
 
   // Speech: generated audio clips through ONE persistent <audio>, played in order; speechSynthesis only if a clip fails
   const tts = useServerFn(virsaCamTts);
-  const translate = useServerFn(translateBatch);
-  const { lang: siteLang } = useLanguage();
-  const siteLangRef = useRef(siteLang);
-  siteLangRef.current = siteLang;
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const genRef = useRef(0);
   const rateRef = useRef(rate);
@@ -223,17 +217,9 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
     const parts = texts.map((t) => t.trim()).filter(Boolean);
     if (!parts.length) return;
     setSpeaking("playing");
-    // Speak in the site's selected language: translate each part first (cached server-side), then voice it
-    const code = siteLangRef.current as string;
-    const language = code === "en" ? "English" : (LANGUAGE_NAMES as Record<string, string>)[code] ?? "English";
-    let spoken = parts;
-    if (code !== "en") {
-      try {
-        const r = await translate({ data: { targetLang: code, texts: parts } });
-        spoken = parts.map((p, i) => r.translations?.[i] || p);
-      } catch { /* fall back to English text */ }
-      if (gen !== genRef.current) return;
-    }
+    // VIRSA Cam speaks English only
+    const language = "English";
+    const spoken = parts;
     const clips = spoken.map((text) => tts({ data: { text: text.slice(0, 3000), language } }).catch(() => ({ ok: false as const })));
     for (let i = 0; i < parts.length; i++) {
       const r = await clips[i];
@@ -254,7 +240,7 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
       } else await fallbackSay(spoken[i], gen);
     }
     if (gen === genRef.current) setSpeaking("idle");
-  }, [stopSpeech, tts, translate]);
+  }, [stopSpeech, tts]);
   const speak = useCallback((text: string) => speakClips(chunkText(text)), [speakClips]);
   const speakCapture = useCallback((c: Capture) => speakClips([
     `This is ${c.monument_name ?? "this monument"}${c.location ? `, ${c.location}` : ""}.`, ...chunkText(narration(c)),
