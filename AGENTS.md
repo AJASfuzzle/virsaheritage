@@ -1,5 +1,5 @@
 # Architecture rules
-- Echoes search filters posts before pagination through the caller's RLS-scoped client, and uses URL search state plus a shared literal matcher for public display-only seeds, so search never expands access.
+- Echoes browsing and search use an anonymous RLS-scoped client and filter published rows before pagination; public author RPC projects only names/avatar/username of published authors, while draft management uses authenticated owner-scoped functions.
 - Keep Kitab entries and filter logic in the shared catalogue and derive all displayed language totals from it, so archive and homepage counts cannot drift; new facts retain source URLs and unsupported fields stay absent.
 - Global localization uses the root LanguageProvider and AutoTranslator; track originals per Text node rather than per parent to preserve mixed inline content.
 - Translation jobs and caches are keyed by language; never cache failed English fallbacks as successful translations.

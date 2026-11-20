@@ -3,7 +3,7 @@ import { z } from "zod";
 import { createClient } from "@supabase/supabase-js";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { Database } from "@/integrations/supabase/types";
-import { echoSearchFilter, echoSearchPattern } from "@/lib/echoes-search";
+import { echoCategories, echoSearchFilter, echoSearchPattern } from "@/lib/echoes-search";
 
 const BUCKET = "echoes-media";
 const SIGNED_URL_TTL = 60 * 60; // 1 hour
@@ -16,10 +16,17 @@ const mediaItem = z.object({
 });
 
 function publicClient() {
+  const key = process.env['SUPABASE_PUBLISHABLE_KEY']!;
   return createClient<Database>(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_PUBLISHABLE_KEY!,
-    { auth: { storage: undefined, persistSession: false, autoRefreshToken: false } }
+    process.env['SUPABASE_URL']!,
+    key,
+    { auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
+      global: { fetch: (input, init) => {
+        const headers = new Headers(init?.headers);
+        if (key.startsWith("sb_") && headers.get("Authorization") === `Bearer ${key}`) headers.delete("Authorization");
+        headers.set("apikey", key);
+        return fetch(input, { ...init, headers });
+      } } }
   );
 }
 
@@ -154,6 +161,7 @@ export const createPost = createServerFn({ method: "POST" })
     location?: string;
     tags?: string[];
     submitToLibrary?: boolean;
+    status?: "draft" | "published";
   }) =>
     z.object({
       title: z.string().max(140).optional(),
@@ -165,6 +173,7 @@ export const createPost = createServerFn({ method: "POST" })
       location: z.string().max(160).optional(),
       tags: z.array(z.string().max(40)).max(15).optional(),
       submitToLibrary: z.boolean().optional(),
+      status: z.enum(["draft", "published"]).default("published"),
     }).parse(input)
   )
   .handler(async ({ data, context }) => {
@@ -178,6 +187,7 @@ export const createPost = createServerFn({ method: "POST" })
       .from("echo_posts")
       .insert({
         author_id: userId,
+        status: data.status,
         title: data.title ?? null,
         caption: data.caption ?? null,
         story: data.story ?? null,
@@ -420,6 +430,7 @@ export const listLibraryEchoes = createServerFn({ method: "GET" })
       .from("echo_posts")
       .select("id, title, caption, media, category, state, created_at, author_id, likes_count")
       .eq("submitted_to_library", true)
+      .eq("status", "published")
       .order("submitted_to_library_at", { ascending: false })
       .limit(data.limit);
     if (error) throw new Error(error.message);
@@ -438,4 +449,79 @@ export const listLibraryEchoes = createServerFn({ method: "GET" })
       })
     );
     return enriched;
+  });
+
+const publicFeedInput = z.object({
+  search: z.string().trim().max(500).default(""),
+  category: z.string().optional(), authorId: z.string().uuid().optional(),
+  offset: z.number().int().min(0).default(0), limit: z.number().int().min(1).max(50).default(24),
+});
+
+async function publicAuthors(sb: Sb, posts: any[]) {
+  const { data, error } = await sb.rpc("echo_public_authors");
+  if (error) throw new Error(error.message);
+  const authors = new Map((data ?? []).map((a) => [a.id, a]));
+  return Promise.all(posts.map(async (post) => {
+    const author = authors.get(post.author_id);
+    let avatar = author?.avatar_url ?? null;
+    if (avatar && !avatar.startsWith("https://")) {
+      const signed = await signMedia(sb, [{ path: avatar, type: "image" }]);
+      avatar = signed[0]?.url ?? null;
+    }
+    return { ...post, author: author ? { ...author, avatar_url: avatar } : null,
+      media_signed: await signMedia(sb, post.media), liked_by_me: false, saved_by_me: false };
+  }));
+}
+
+export const listPublishedEchoes = createServerFn({ method: "GET" })
+  .inputValidator((input: z.input<typeof publicFeedInput>) => publicFeedInput.parse(input))
+  .handler(async ({ data }) => {
+    const sb = publicClient();
+    let query = sb.from("echo_posts").select("*", { count: "exact" }).eq("status", "published")
+      .order("created_at", { ascending: false }).order("id");
+    if (data.authorId) query = query.eq("author_id", data.authorId);
+    if (data.category && data.category !== "All") query = query.in("category", echoCategories(data.category));
+    if (data.search) {
+      const { data: authors, error } = await sb.rpc("echo_public_authors");
+      if (error) throw new Error(error.message);
+      const ids = (authors ?? []).filter((a) => a.full_name?.toLowerCase().includes(data.search.toLowerCase())).map((a) => a.id);
+      query = query.or(echoSearchFilter(data.search, ids));
+    }
+    const { data: posts, count, error } = await query.range(data.offset, data.offset + data.limit - 1);
+    if (error) throw new Error(error.message);
+    return { posts: await publicAuthors(sb, posts ?? []), total: count ?? 0 };
+  });
+
+export const getPublishedEcho = createServerFn({ method: "GET" })
+  .inputValidator((input: { postId: string }) => z.object({ postId: z.string().uuid() }).parse(input))
+  .handler(async ({ data }) => {
+    const sb = publicClient();
+    const { data: post, error } = await sb.from("echo_posts").select("*").eq("id", data.postId).eq("status", "published").maybeSingle();
+    if (error) throw new Error(error.message);
+    return post ? (await publicAuthors(sb, [post]))[0] : null;
+  });
+
+export const getEchoAuthor = createServerFn({ method: "GET" })
+  .inputValidator((input: { authorId: string }) => z.object({ authorId: z.string().uuid() }).parse(input))
+  .handler(async ({ data }) => {
+    const { data: authors, error } = await publicClient().rpc("echo_public_authors");
+    if (error) throw new Error(error.message);
+    return (authors ?? []).find((a) => a.id === data.authorId) ?? null;
+  });
+
+export const listMyEchoes = createServerFn({ method: "GET" }).middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase.from("echo_posts").select("*").eq("author_id", context.userId).order("created_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    return data ?? [];
+  });
+
+export const editEcho = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth])
+  .inputValidator((input: { id: string; title: string; caption: string; story: string; status: "draft" | "published" }) =>
+    z.object({ id: z.string().uuid(), title: z.string().max(140), caption: z.string().max(2200), story: z.string().max(20000), status: z.enum(["draft", "published"]) }).parse(input))
+  .handler(async ({ data, context }) => {
+    const { id, ...fields } = data;
+    const { data: updated, error } = await context.supabase.from("echo_posts").update(fields).eq("id", id).eq("author_id", context.userId).select("id").single();
+    if (error) throw new Error(error.message);
+    return updated;
   });

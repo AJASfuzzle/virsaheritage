@@ -1,0 +1,10 @@
+ALTER TABLE public.echo_posts ADD COLUMN status text NOT NULL DEFAULT 'published' CHECK (status IN ('draft', 'published'));
+GRANT SELECT ON public.echo_posts TO anon, authenticated;
+GRANT INSERT, UPDATE, DELETE ON public.echo_posts TO authenticated;
+GRANT ALL ON public.echo_posts TO service_role;
+ALTER TABLE public.echo_posts ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anyone reads published echoes" ON public.echo_posts FOR SELECT TO anon, authenticated USING (status = 'published');
+CREATE OR REPLACE FUNCTION public.echo_public_authors() RETURNS TABLE (id uuid, full_name text, avatar_url text, username text) LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$ SELECT p.id, p.full_name, p.avatar_url, p.username FROM public.profiles p WHERE EXISTS (SELECT 1 FROM public.echo_posts e WHERE e.author_id = p.id AND e.status = 'published'); $$;
+REVOKE ALL ON FUNCTION public.echo_public_authors() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.echo_public_authors() TO anon, authenticated, service_role;
+CREATE INDEX echo_posts_published_created ON public.echo_posts (created_at DESC, id) WHERE status = 'published';

@@ -6,6 +6,20 @@ type SearchableEcho = {
   author?: { full_name?: string | null } | null;
 };
 
+export function echoCategories(category: string) {
+  const aliases: Record<string, string[]> = {
+    Food: ["Cuisine", "Recipes", "Food Heritage"],
+    Heritage: ["Traditions", "Architecture", "Photographs", "Heritage"],
+    "Music & Performance": ["Music", "Music & Performance"],
+    Language: ["Languages", "Language"],
+  };
+  return aliases[category] ?? [category];
+}
+
+export function canReadEcho(status: string, authorId: string, viewerId: string | null) {
+  return status === "published" || authorId === viewerId;
+}
+
 export function matchesEcho(post: SearchableEcho, query: string, category = "All") {
   if (category !== "All" && post.category?.toLowerCase() !== category.toLowerCase()) return false;
   const needle = query.trim().toLowerCase();

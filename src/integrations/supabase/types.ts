@@ -308,6 +308,7 @@ export type Database = {
           media_type: string
           saves_count: number
           state: string | null
+          status: string
           story: string | null
           submitted_to_library: boolean
           submitted_to_library_at: string | null
@@ -328,6 +329,7 @@ export type Database = {
           media_type?: string
           saves_count?: number
           state?: string | null
+          status?: string
           story?: string | null
           submitted_to_library?: boolean
           submitted_to_library_at?: string | null
@@ -348,6 +350,7 @@ export type Database = {
           media_type?: string
           saves_count?: number
           state?: string | null
+          status?: string
           story?: string | null
           submitted_to_library?: boolean
           submitted_to_library_at?: string | null
@@ -701,6 +704,15 @@ export type Database = {
       checkin_at_site: {
         Args: { _force?: boolean; _lat: number; _lng: number; _site_id: string }
         Returns: Json
+      }
+      echo_public_authors: {
+        Args: never
+        Returns: {
+          avatar_url: string
+          full_name: string
+          id: string
+          username: string
+        }[]
       }
       owns_virsa_cam: { Args: { _uid: string }; Returns: boolean }
       redeem_reward: { Args: { _reward_id: string }; Returns: Json }

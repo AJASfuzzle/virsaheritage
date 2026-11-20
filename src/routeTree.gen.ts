@@ -28,10 +28,15 @@ import { Route as EchoesIndexRouteImport } from './routes/echoes.index'
 import { Route as EchoesPostIdRouteImport } from './routes/echoes.$postId'
 import { Route as TrailsIndexRouteImport } from './routes/trails.index'
 import { Route as TrailsSlugRouteImport } from './routes/trails.$slug'
+import { Route as AuthenticatedEchoesDashboardRouteImport } from './routes/_authenticated/echoes.dashboard'
+import { Route as AuthenticatedEchoesNewRouteImport } from './routes/_authenticated/echoes.new'
+import { Route as AuthenticatedEchoesProfileRouteImport } from './routes/_authenticated/echoes.profile'
 import { Route as AuthenticatedEchoesSavedRouteImport } from './routes/_authenticated/echoes.saved'
 import { Route as AuthenticatedEchoesSettingsRouteImport } from './routes/_authenticated/echoes.settings'
 import { Route as ApiPublicVirsaCamRouteImport } from './routes/api/public/virsa-cam'
+import { Route as EchoesAuthorAuthorIdRouteImport } from './routes/echoes.author.$authorId'
 import { Route as EchoesProfileUserIdRouteImport } from './routes/echoes.profile.$userId'
+import { Route as AuthenticatedEchoesEditPostIdRouteImport } from './routes/_authenticated/echoes.edit.$postId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -127,6 +132,23 @@ const TrailsSlugRoute = TrailsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => TrailsRoute,
 } as any)
+const AuthenticatedEchoesDashboardRoute =
+  AuthenticatedEchoesDashboardRouteImport.update({
+    id: '/echoes/dashboard',
+    path: '/echoes/dashboard',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedEchoesNewRoute = AuthenticatedEchoesNewRouteImport.update({
+  id: '/echoes/new',
+  path: '/echoes/new',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedEchoesProfileRoute =
+  AuthenticatedEchoesProfileRouteImport.update({
+    id: '/echoes/profile',
+    path: '/echoes/profile',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedEchoesSavedRoute =
   AuthenticatedEchoesSavedRouteImport.update({
     id: '/echoes/saved',
@@ -144,11 +166,22 @@ const ApiPublicVirsaCamRoute = ApiPublicVirsaCamRouteImport.update({
   path: '/api/public/virsa-cam',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EchoesAuthorAuthorIdRoute = EchoesAuthorAuthorIdRouteImport.update({
+  id: '/author/$authorId',
+  path: '/author/$authorId',
+  getParentRoute: () => EchoesRoute,
+} as any)
 const EchoesProfileUserIdRoute = EchoesProfileUserIdRouteImport.update({
   id: '/profile/$userId',
   path: '/profile/$userId',
   getParentRoute: () => EchoesRoute,
 } as any)
+const AuthenticatedEchoesEditPostIdRoute =
+  AuthenticatedEchoesEditPostIdRouteImport.update({
+    id: '/echoes/edit/$postId',
+    path: '/echoes/edit/$postId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -169,10 +202,15 @@ export interface FileRoutesByFullPath {
   '/trails/$slug': typeof TrailsSlugRoute
   '/echoes/': typeof EchoesIndexRoute
   '/trails/': typeof TrailsIndexRoute
+  '/echoes/dashboard': typeof AuthenticatedEchoesDashboardRoute
+  '/echoes/new': typeof AuthenticatedEchoesNewRoute
+  '/echoes/profile': typeof AuthenticatedEchoesProfileRoute
   '/echoes/saved': typeof AuthenticatedEchoesSavedRoute
   '/echoes/settings': typeof AuthenticatedEchoesSettingsRoute
   '/api/public/virsa-cam': typeof ApiPublicVirsaCamRoute
+  '/echoes/author/$authorId': typeof EchoesAuthorAuthorIdRoute
   '/echoes/profile/$userId': typeof EchoesProfileUserIdRoute
+  '/echoes/edit/$postId': typeof AuthenticatedEchoesEditPostIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -191,10 +229,15 @@ export interface FileRoutesByTo {
   '/trails/$slug': typeof TrailsSlugRoute
   '/echoes': typeof EchoesIndexRoute
   '/trails': typeof TrailsIndexRoute
+  '/echoes/dashboard': typeof AuthenticatedEchoesDashboardRoute
+  '/echoes/new': typeof AuthenticatedEchoesNewRoute
+  '/echoes/profile': typeof AuthenticatedEchoesProfileRoute
   '/echoes/saved': typeof AuthenticatedEchoesSavedRoute
   '/echoes/settings': typeof AuthenticatedEchoesSettingsRoute
   '/api/public/virsa-cam': typeof ApiPublicVirsaCamRoute
+  '/echoes/author/$authorId': typeof EchoesAuthorAuthorIdRoute
   '/echoes/profile/$userId': typeof EchoesProfileUserIdRoute
+  '/echoes/edit/$postId': typeof AuthenticatedEchoesEditPostIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -217,10 +260,15 @@ export interface FileRoutesById {
   '/trails/$slug': typeof TrailsSlugRoute
   '/echoes/': typeof EchoesIndexRoute
   '/trails/': typeof TrailsIndexRoute
+  '/_authenticated/echoes/dashboard': typeof AuthenticatedEchoesDashboardRoute
+  '/_authenticated/echoes/new': typeof AuthenticatedEchoesNewRoute
+  '/_authenticated/echoes/profile': typeof AuthenticatedEchoesProfileRoute
   '/_authenticated/echoes/saved': typeof AuthenticatedEchoesSavedRoute
   '/_authenticated/echoes/settings': typeof AuthenticatedEchoesSettingsRoute
   '/api/public/virsa-cam': typeof ApiPublicVirsaCamRoute
+  '/echoes/author/$authorId': typeof EchoesAuthorAuthorIdRoute
   '/echoes/profile/$userId': typeof EchoesProfileUserIdRoute
+  '/_authenticated/echoes/edit/$postId': typeof AuthenticatedEchoesEditPostIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -243,10 +291,15 @@ export interface FileRouteTypes {
     | '/trails/$slug'
     | '/echoes/'
     | '/trails/'
+    | '/echoes/dashboard'
+    | '/echoes/new'
+    | '/echoes/profile'
     | '/echoes/saved'
     | '/echoes/settings'
     | '/api/public/virsa-cam'
+    | '/echoes/author/$authorId'
     | '/echoes/profile/$userId'
+    | '/echoes/edit/$postId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -265,10 +318,15 @@ export interface FileRouteTypes {
     | '/trails/$slug'
     | '/echoes'
     | '/trails'
+    | '/echoes/dashboard'
+    | '/echoes/new'
+    | '/echoes/profile'
     | '/echoes/saved'
     | '/echoes/settings'
     | '/api/public/virsa-cam'
+    | '/echoes/author/$authorId'
     | '/echoes/profile/$userId'
+    | '/echoes/edit/$postId'
   id:
     | '__root__'
     | '/'
@@ -290,10 +348,15 @@ export interface FileRouteTypes {
     | '/trails/$slug'
     | '/echoes/'
     | '/trails/'
+    | '/_authenticated/echoes/dashboard'
+    | '/_authenticated/echoes/new'
+    | '/_authenticated/echoes/profile'
     | '/_authenticated/echoes/saved'
     | '/_authenticated/echoes/settings'
     | '/api/public/virsa-cam'
+    | '/echoes/author/$authorId'
     | '/echoes/profile/$userId'
+    | '/_authenticated/echoes/edit/$postId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -448,6 +511,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrailsSlugRouteImport
       parentRoute: typeof TrailsRoute
     }
+    '/_authenticated/echoes/dashboard': {
+      id: '/_authenticated/echoes/dashboard'
+      path: '/echoes/dashboard'
+      fullPath: '/echoes/dashboard'
+      preLoaderRoute: typeof AuthenticatedEchoesDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/echoes/new': {
+      id: '/_authenticated/echoes/new'
+      path: '/echoes/new'
+      fullPath: '/echoes/new'
+      preLoaderRoute: typeof AuthenticatedEchoesNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/echoes/profile': {
+      id: '/_authenticated/echoes/profile'
+      path: '/echoes/profile'
+      fullPath: '/echoes/profile'
+      preLoaderRoute: typeof AuthenticatedEchoesProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/echoes/saved': {
       id: '/_authenticated/echoes/saved'
       path: '/echoes/saved'
@@ -469,6 +553,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicVirsaCamRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/echoes/author/$authorId': {
+      id: '/echoes/author/$authorId'
+      path: '/author/$authorId'
+      fullPath: '/echoes/author/$authorId'
+      preLoaderRoute: typeof EchoesAuthorAuthorIdRouteImport
+      parentRoute: typeof EchoesRoute
+    }
     '/echoes/profile/$userId': {
       id: '/echoes/profile/$userId'
       path: '/profile/$userId'
@@ -476,21 +567,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EchoesProfileUserIdRouteImport
       parentRoute: typeof EchoesRoute
     }
+    '/_authenticated/echoes/edit/$postId': {
+      id: '/_authenticated/echoes/edit/$postId'
+      path: '/echoes/edit/$postId'
+      fullPath: '/echoes/edit/$postId'
+      preLoaderRoute: typeof AuthenticatedEchoesEditPostIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedEchoesDashboardRoute: typeof AuthenticatedEchoesDashboardRoute
+  AuthenticatedEchoesNewRoute: typeof AuthenticatedEchoesNewRoute
+  AuthenticatedEchoesProfileRoute: typeof AuthenticatedEchoesProfileRoute
   AuthenticatedEchoesSavedRoute: typeof AuthenticatedEchoesSavedRoute
   AuthenticatedEchoesSettingsRoute: typeof AuthenticatedEchoesSettingsRoute
+  AuthenticatedEchoesEditPostIdRoute: typeof AuthenticatedEchoesEditPostIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedEchoesDashboardRoute: AuthenticatedEchoesDashboardRoute,
+  AuthenticatedEchoesNewRoute: AuthenticatedEchoesNewRoute,
+  AuthenticatedEchoesProfileRoute: AuthenticatedEchoesProfileRoute,
   AuthenticatedEchoesSavedRoute: AuthenticatedEchoesSavedRoute,
   AuthenticatedEchoesSettingsRoute: AuthenticatedEchoesSettingsRoute,
+  AuthenticatedEchoesEditPostIdRoute: AuthenticatedEchoesEditPostIdRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -499,12 +605,14 @@ const AuthenticatedRouteRouteWithChildren =
 interface EchoesRouteChildren {
   EchoesPostIdRoute: typeof EchoesPostIdRoute
   EchoesIndexRoute: typeof EchoesIndexRoute
+  EchoesAuthorAuthorIdRoute: typeof EchoesAuthorAuthorIdRoute
   EchoesProfileUserIdRoute: typeof EchoesProfileUserIdRoute
 }
 
 const EchoesRouteChildren: EchoesRouteChildren = {
   EchoesPostIdRoute: EchoesPostIdRoute,
   EchoesIndexRoute: EchoesIndexRoute,
+  EchoesAuthorAuthorIdRoute: EchoesAuthorAuthorIdRoute,
   EchoesProfileUserIdRoute: EchoesProfileUserIdRoute,
 }
 

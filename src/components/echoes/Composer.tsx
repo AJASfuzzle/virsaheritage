@@ -42,6 +42,7 @@ export function Composer({ onPosted }: { onPosted?: (id: string) => void }) {
   const [submitToLib, setSubmitToLib] = useState(false);
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const nextStatus = useRef<"draft" | "published">("published");
 
   const reset = () => {
     files.forEach((f) => URL.revokeObjectURL(f.preview));
@@ -99,12 +100,13 @@ export function Composer({ onPosted }: { onPosted?: (id: string) => void }) {
           location: location.trim() || undefined,
           tags,
           submitToLibrary: submitToLib,
+          status: nextStatus.current,
         },
       });
       return res;
     },
     onSuccess: (res: any) => {
-      toast.success("Echo published");
+      toast.success(nextStatus.current === "draft" ? "Draft saved" : "Echo published");
       qc.invalidateQueries({ queryKey: ["echoes-feed"] });
       qc.invalidateQueries({ queryKey: ["library-echoes"] });
       reset();
@@ -235,7 +237,8 @@ export function Composer({ onPosted }: { onPosted?: (id: string) => void }) {
 
       <div className="mt-6 flex items-center justify-end gap-2">
         <Button variant="ghost" onClick={reset} disabled={submit.isPending}>Clear</Button>
-        <Button onClick={() => submit.mutate()} disabled={submit.isPending} className="gradient-ember text-primary-foreground">
+        <Button variant="outline" onClick={() => { nextStatus.current = "draft"; submit.mutate(); }} disabled={submit.isPending}>Save draft</Button>
+        <Button onClick={() => { nextStatus.current = "published"; submit.mutate(); }} disabled={submit.isPending} className="gradient-ember text-primary-foreground">
           {submit.isPending ? (
             <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {uploading ? "Uploading…" : "Publishing…"}</>
           ) : (

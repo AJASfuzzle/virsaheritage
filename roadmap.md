@@ -12,4 +12,9 @@
 # Echoes search
 - [x] Add debounced URL search above categories and clickable author names without changing access rules.
 - [x] Run four search-rule tests; verify signed-in URL persistence, empty state, category control, clear, and full-width mobile search.
-- [ ] Verify Aarav Anand's real results and author-click flow: blocked by existing author-only post visibility; switching to Aarav's account was declined. Privacy remains unchanged.
+- [x] Verify Aarav Anand's real results and author-click flow after the requested published/public visibility update.
+
+# Echoes browse and publishing separation
+- [x] Public published feed, server search, author pages and private draft rules.
+- [x] Separate publishing, editable owner profile, owner dashboard and sign-in return links.
+- [x] Verify Aarav results signed out/in, combined filters, author page, mobile layout, publishing return/newest placement, private draft saving, editing/publishing and deletion; temporary test echoes removed.

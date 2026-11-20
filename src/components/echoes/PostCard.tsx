@@ -48,7 +48,7 @@ function initials(name?: string | null) {
   return base.slice(0, 2).toUpperCase();
 }
 
-export function PostCard({ post, currentUserId, onAuthorSearch }: { post: EchoPost; currentUserId?: string | null; onAuthorSearch?: (name: string) => void }) {
+export function PostCard({ post, currentUserId, onAuthorSearch, browse = false }: { post: EchoPost; currentUserId?: string | null; onAuthorSearch?: (name: string) => void; browse?: boolean }) {
   const router = useRouter();
   const qc = useQueryClient();
   const likeFn = useServerFn(toggleLike);
@@ -104,7 +104,7 @@ export function PostCard({ post, currentUserId, onAuthorSearch }: { post: EchoPo
   const isAuthor = currentUserId === post.author_id;
   const m = post.media_signed?.[0];
   const authorName = post.author?.full_name ?? "Anonymous keeper";
-  const authorHref = `/echoes/profile/${post.author_id}`;
+  const authorHref = `/echoes/author/${post.author_id}`;
 
   return (
     <motion.article
@@ -143,17 +143,18 @@ export function PostCard({ post, currentUserId, onAuthorSearch }: { post: EchoPo
 
       {/* media or text */}
       {m?.url ? (
-        <div className="mt-4 aspect-[4/5] w-full overflow-hidden bg-black/40">
+        <div className={cn("mt-4 w-full overflow-hidden bg-background/40", browse ? "aspect-[16/10]" : "aspect-[4/5]")}>
           {m.type === "video" ? (
             <video src={m.url} controls className="h-full w-full object-cover" />
           ) : (
-            <img src={m.url} alt={post.title ?? "Echo"} loading="lazy" className="h-full w-full object-cover" />
+            browse ? <Link to="/echoes/$postId" params={{ postId: post.id }} className="block h-full w-full"><img src={m.url} alt={post.title ?? "Echo"} loading="lazy" className="h-full w-full object-cover" /></Link>
+              : <img src={m.url} alt={post.title ?? "Echo"} loading="lazy" className="h-full w-full object-cover" />
           )}
         </div>
       ) : post.story ? (
         <div className="mx-5 mt-5 rounded-2xl border border-[var(--glass-border)] bg-background/40 p-6">
-          <p className="font-display text-2xl leading-tight">{post.title ?? "An echo"}</p>
-          <p className="mt-3 line-clamp-6 text-pretty text-sm text-foreground/85">{post.story}</p>
+          <Link to="/echoes/$postId" params={{ postId: post.id }} className="font-display text-2xl leading-tight hover:underline">{post.title ?? "An echo"}</Link>
+          <p className={cn("mt-3 whitespace-pre-wrap text-pretty text-sm text-foreground/85", browse && "line-clamp-4")}>{post.story}</p>
         </div>
       ) : null}
 
@@ -203,7 +204,7 @@ export function PostCard({ post, currentUserId, onAuthorSearch }: { post: EchoPo
       {/* caption */}
       {(post.title || post.caption) && (
         <div className="px-5 pb-5 pt-2">
-          {post.title && <h3 className="font-display text-lg leading-tight">{post.title}</h3>}
+          {post.title && <h3 className="font-display text-lg leading-tight"><Link to="/echoes/$postId" params={{ postId: post.id }} className="hover:underline">{post.title}</Link></h3>}
           {post.caption && (
             <p className="mt-1 text-pretty text-sm text-foreground/85">
               {onAuthorSearch ? (

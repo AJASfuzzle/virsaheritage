@@ -1,9 +1,20 @@
 import { describe, expect, it } from "vitest";
-import { echoSearchFilter, echoSearchPattern, matchesEcho } from "./echoes-search";
+import { canReadEcho, echoCategories, echoSearchFilter, echoSearchPattern, matchesEcho } from "./echoes-search";
 
 const post = { author: { full_name: "Aarav Anand" }, title: "Holi memories", caption: "A family celebration", story: "Grandmother's colours", category: "Festivals" };
 
 describe("Echoes search", () => {
+  it("published echoes are public and drafts are author-only", () => {
+    expect(canReadEcho("published", "aarav", null)).toBe(true);
+    expect(canReadEcho("draft", "aarav", "aarav")).toBe(true);
+    expect(canReadEcho("draft", "aarav", "another-user")).toBe(false);
+    expect(canReadEcho("draft", "aarav", null)).toBe(false);
+  });
+  it("browse filters include existing stored category names", () => {
+    expect(echoCategories("Food")).toContain("Cuisine");
+    expect(echoCategories("Language")).toContain("Languages");
+    expect(echoCategories("Music & Performance")).toContain("Music");
+  });
   it("matches Aarav Anand by full name and lowercase partial name", () => {
     expect(matchesEcho(post, "Aarav Anand")).toBe(true);
     expect(matchesEcho(post, "aarav")).toBe(true);

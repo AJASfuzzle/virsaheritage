@@ -1,18 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useEffect, useMemo, useState } from "react";
-import { Sparkles, BookmarkCheck, UserRound, LayoutDashboard, Search, X, Library as LibraryIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Sparkles, UserRound, LayoutDashboard, Search, X, Plus } from "lucide-react";
 import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { matchesEcho } from "@/lib/echoes-search";
-import { listFeed } from "@/lib/echoes.functions";
-import { Composer } from "@/components/echoes/Composer";
+import { listPublishedEchoes } from "@/lib/echoes.functions";
 import { PostCard, type EchoPost } from "@/components/echoes/PostCard";
 import { useAuth } from "@/hooks/use-auth";
-import { getSeedPosts } from "@/lib/seed-echoes";
 
 export const Route = createFileRoute("/echoes/")({
   validateSearch: zodValidator(z.object({ q: fallback(z.string(), "").default("") })),
@@ -29,7 +26,7 @@ export const Route = createFileRoute("/echoes/")({
   component: EchoesIndex,
 });
 
-const FILTERS = ["All", "Festivals", "Food Heritage", "Crafts", "Music & Performance", "Dance", "Oral Histories", "Language", "Family Stories"];
+const FILTERS = ["All", "Festivals", "Food", "Heritage", "Crafts", "Music & Performance", "Dance", "Oral Histories", "Language", "Family Stories"];
 
 function EchoesIndex() {
   const { user } = useAuth();
@@ -45,29 +42,18 @@ function EchoesIndex() {
     }, 300);
     return () => clearTimeout(timeout);
   }, [search, q, navigate]);
-  function selectSearch(value: string) {
-    setSearch(value);
-    void navigate({ search: (prev) => ({ ...prev, q: value }), resetScroll: false });
-  }
-  const [filter, setFilter] = useState<string>("All");
-  const fetchFeed = useServerFn(listFeed);
-  const { data: realData, isLoading } = useQuery({
-    queryKey: ["echoes-feed", filter, searchQuery],
-    queryFn: () => fetchFeed({ data: { limit: 24, category: filter === "All" ? undefined : filter, search: searchQuery } }),
-    enabled: !!user,
+  const [filter, setFilter] = useState("All");
+  const fetchFeed = useServerFn(listPublishedEchoes);
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
+    queryKey: ["echoes-feed", "public", filter, searchQuery],
+    initialPageParam: 0,
+    queryFn: ({ pageParam }) => fetchFeed({ data: { offset: pageParam, limit: 24, category: filter, search: searchQuery } }),
+    getNextPageParam: (last, pages) => {
+      const loaded = pages.reduce((total, page) => total + page.posts.length, 0);
+      return loaded < last.total ? loaded : undefined;
+    },
   });
-
-  const seeds = useMemo(() => {
-    const all = getSeedPosts();
-    return all.filter((p) => matchesEcho(p, searchQuery, filter));
-  }, [filter, searchQuery]);
-
-  // Merge: real posts first (when present), then seed posts. Sort by created_at desc.
-  const feed = useMemo(() => {
-    const real = (realData ?? []) as EchoPost[];
-    const merged = [...real, ...seeds];
-    return merged.sort((a, b) => +new Date(b.created_at) - +new Date(a.created_at));
-  }, [realData, seeds]);
+  const feed = (data?.pages.flatMap((page) => page.posts) ?? []) as EchoPost[];
 
   return (
     <div className="pt-24 sm:pt-28">
@@ -81,37 +67,11 @@ function EchoesIndex() {
           A slower place. Share a photograph, a recipe, a song, a story - and let it become part of a living archive.
         </p>
         <div className="mt-5 flex flex-wrap gap-2">
-          {user ? (
-            <>
-              <Link to="/dashboard" className="inline-flex items-center gap-1.5 rounded-full glass px-4 py-2 text-xs hover:bg-white/10">
-                <LayoutDashboard className="h-3.5 w-3.5" /> Your dashboard
-              </Link>
-              <Link to="/echoes/profile/$userId" params={{ userId: user.id }} className="inline-flex items-center gap-1.5 rounded-full glass px-4 py-2 text-xs hover:bg-white/10">
-                <UserRound className="h-3.5 w-3.5" /> Your profile
-              </Link>
-              <Link to="/echoes/saved" className="inline-flex items-center gap-1.5 rounded-full glass px-4 py-2 text-xs hover:bg-white/10">
-                <BookmarkCheck className="h-3.5 w-3.5" /> Saved
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link to="/auth" search={{ mode: "signin" }} className="inline-flex items-center rounded-full gradient-ember px-4 py-2 text-xs font-medium text-primary-foreground">
-                Sign in to contribute
-              </Link>
-              <Link to="/library" className="inline-flex items-center gap-1.5 rounded-full glass px-4 py-2 text-xs hover:bg-white/10">
-                <LibraryIcon className="h-3.5 w-3.5" /> Visit the Library
-              </Link>
-            </>
-          )}
+          <Button asChild className="gradient-ember text-primary-foreground"><Link to={user ? "/echoes/new" : "/auth"} search={user ? {} : { mode: "signin", redirect: "/echoes/new" }}><Plus /> Publish your echo</Link></Button>
+          <Button asChild variant="outline"><Link to={user ? "/echoes/profile" : "/auth"} search={user ? {} : { mode: "signin", redirect: "/echoes/profile" }}><UserRound /> My profile</Link></Button>
+          <Button asChild variant="outline"><Link to={user ? "/echoes/dashboard" : "/auth"} search={user ? {} : { mode: "signin", redirect: "/echoes/dashboard" }}><LayoutDashboard /> Dashboard</Link></Button>
         </div>
       </section>
-
-      {/* composer */}
-      {user && (
-        <section className="mx-auto max-w-2xl px-5 pb-10">
-          <Composer />
-        </section>
-      )}
 
       {/* filters */}
       <section className="mx-auto max-w-2xl px-5 pb-4">
@@ -127,7 +87,7 @@ function EchoesIndex() {
           />
           {search && (
             <Button variant="ghost" size="icon" aria-label="Clear search" title="Clear search"
-              onClick={() => selectSearch("")}
+              onClick={() => { setSearch(""); void navigate({ search: { q: "" }, resetScroll: false }); }}
               className="absolute right-1.5 top-1/2 -translate-y-1/2 text-muted-foreground">
               <X />
             </Button>
@@ -135,31 +95,31 @@ function EchoesIndex() {
         </div>
         <div className="-mx-1 flex gap-1 overflow-x-auto pb-1">
           {FILTERS.map((f) => (
-            <button
+            <Button variant="ghost"
               key={f}
               onClick={() => setFilter(f)}
               className={`shrink-0 rounded-full px-4 py-1.5 text-xs whitespace-nowrap transition ${filter === f ? "bg-primary/15 text-primary" : "text-muted-foreground hover:bg-white/5"}`}
             >
               {f}
-            </button>
+            </Button>
           ))}
         </div>
       </section>
 
       {/* feed */}
       <section className="mx-auto max-w-2xl space-y-6 px-5 pb-32">
-        {isLoading && user && (
+        {isLoading && (
           <div className="space-y-6">
             {[0, 1].map((i) => (
               <div key={i} className="h-[520px] animate-pulse rounded-3xl bg-white/5" />
             ))}
           </div>
         )}
-        {feed.length === 0 && !isLoading && (
+        {feed.length === 0 && !isLoading && !error && (
           <div className="rounded-3xl border border-dashed border-white/15 bg-background/30 p-10 text-center text-sm text-muted-foreground">
             <Sparkles className="mx-auto h-5 w-5 text-primary" />
             {searchQuery ? (
-              <p className="mt-3" role="status">No echoes match "{searchQuery}". Try a different name or word.</p>
+              <p className="mt-3" role="status">No echoes match "{searchQuery}".</p>
             ) : (<>
               <p className="mt-3 font-display text-lg text-foreground">Nothing in this corner yet</p>
               <p className="mt-1">Try a different filter, or share the first echo here.</p>
@@ -167,18 +127,12 @@ function EchoesIndex() {
           </div>
         )}
         {feed.map((p) => (
-          <PostCard key={p.id} post={p} currentUserId={user?.id ?? null} onAuthorSearch={selectSearch} />
+          <PostCard key={p.id} post={p} currentUserId={user?.id ?? null} browse />
         ))}
 
-        {!user && feed.length > 0 && (
-          <div className="rounded-3xl border border-[var(--glass-border)] bg-[var(--card)] p-8 text-center">
-            <p className="font-display text-xl">Your first echo starts here.</p>
-            <p className="mt-2 text-sm text-muted-foreground">Sign in to share the traditions that shaped you, and to keep echoes you love.</p>
-            <Link to="/auth" search={{ mode: "signin" }} className="mt-4 inline-flex rounded-full gradient-ember px-5 py-2.5 text-sm font-medium text-primary-foreground">
-              Sign in to contribute
-            </Link>
-          </div>
-        )}
+        {error && <p role="alert" className="text-destructive">Couldn't load echoes. Please try again.</p>}
+        {hasNextPage && <Button variant="outline" onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>{isFetchingNextPage ? "Loading…" : "Load more echoes"}</Button>}
+
       </section>
     </div>
   );

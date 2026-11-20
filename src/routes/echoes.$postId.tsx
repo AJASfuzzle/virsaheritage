@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { ArrowLeft, Send } from "lucide-react";
-import { getPost, listComments, addComment } from "@/lib/echoes.functions";
+import { getPost, getPublishedEcho, listComments, addComment } from "@/lib/echoes.functions";
 import { getSeedPostById, isSeedId } from "@/lib/seed-echoes";
 import { PostCard, type EchoPost } from "@/components/echoes/PostCard";
 import { useAuth } from "@/hooks/use-auth";
@@ -15,6 +15,11 @@ export const Route = createFileRoute("/echoes/$postId")({
   head: ({ params }) => ({
     meta: [
       { title: `Echo · ${params.postId.slice(0, 6)} | VIRSA` },
+      { name: "description", content: "Read a shared cultural memory in VIRSA Echoes." },
+      { property: "og:title", content: "A shared echo | VIRSA" },
+      { property: "og:description", content: "Read a shared cultural memory in VIRSA Echoes." },
+      { property: "og:type", content: "article" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: PostPage,
@@ -49,14 +54,15 @@ function PostPage() {
   const router = useRouter();
   const qc = useQueryClient();
   const fetchPost = useServerFn(getPost);
+  const fetchPublic = useServerFn(getPublishedEcho);
   const fetchComments = useServerFn(listComments);
   const addCommentFn = useServerFn(addComment);
 
   const seed = isSeedId(postId) ? getSeedPostById(postId) : null;
   const { data: postData, isLoading } = useQuery({
-    queryKey: ["echo-post", postId],
-    queryFn: () => fetchPost({ data: { postId } }),
-    enabled: !!user && !seed,
+    queryKey: ["echo-post", postId, user?.id ?? "public"],
+    queryFn: () => user ? fetchPost({ data: { postId } }) : fetchPublic({ data: { postId } }),
+    enabled: !seed,
   });
   const post = (seed as any) ?? postData;
   const { data: comments } = useQuery({
@@ -105,7 +111,7 @@ function PostPage() {
       setContent("");
       if (!seed) {
         qc.invalidateQueries({ queryKey: ["echo-comments", postId] });
-        qc.invalidateQueries({ queryKey: ["echo-post", postId] });
+        qc.invalidateQueries({ queryKey: ["echo-post", postId, user?.id ?? "public"] });
       }
     },
     onError: (e: any) => toast.error(e?.message ?? "Couldn't post comment"),

@@ -19,6 +19,10 @@ export const Route = createFileRoute("/auth")({
     meta: [
       { title: "Sign in - VIRSA Heritage" },
       { name: "description", content: "Sign in to track your trails, earn Virsa Coins and redeem treasures from Khazane." },
+      { property: "og:title", content: "Sign in | VIRSA Heritage" },
+      { property: "og:description", content: "Sign in to publish echoes and manage your heritage memories." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: AuthPage,
@@ -55,7 +59,7 @@ function AuthPage() {
   const [form, setForm] = useState({ fullName: "", email: "", password: "" });
 
   const strength = passwordStrength(form.password);
-  const redirectTo = search.redirect && search.redirect.startsWith("/") ? search.redirect : "/dashboard";
+  const redirectTo = search.redirect && search.redirect.startsWith("/") && !search.redirect.startsWith("//") ? search.redirect : "/dashboard";
 
   useEffect(() => {
     if (!loading && user) {
@@ -113,7 +117,7 @@ function AuthPage() {
     setBusy(true);
     try {
       const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin + redirectTo,
+        redirect_uri: `${window.location.origin}/auth?mode=signin&redirect=${encodeURIComponent(redirectTo)}`,
       });
       if (result.error) {
         toast.error(result.error.message || "Google sign-in failed");
