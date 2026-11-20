@@ -1,9 +1,10 @@
 import { motion, useInView, useMotionValue, useTransform, animate } from "framer-motion";
 import { useEffect, useRef } from "react";
+import { LANGUAGE_COUNT } from "@/lib/kitab-languages";
 
 const stats = [
   { value: 2000, suffix: "+", label: "Memories Preserved" },
-  { value: 63, suffix: "+", label: "Languages Documented" },
+  { value: LANGUAGE_COUNT, suffix: "+", label: "Languages Documented" },
   { value: 390, suffix: "+", label: "Stories Archived" },
   { value: 28, suffix: "/28", label: "States & UTs Covered" },
   { value: 100, suffix: "+", label: "Community Contributions" },

@@ -13,6 +13,8 @@ export const Route = createFileRoute("/")({
           "VIRSA preserves India's languages, stories, recipes, festivals and traditions on an AI-powered cultural memory map.",
       },
       { property: "og:title", content: "VIRSA - India's Living Memory & Heritage Atlas" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       {
         property: "og:description",
         content:
