@@ -2,11 +2,11 @@ import { motion, useInView, useMotionValue, useTransform, animate } from "framer
 import { useEffect, useRef } from "react";
 
 const stats = [
-  { value: 12480, suffix: "+", label: "Memories Preserved" },
-  { value: 247, suffix: "", label: "Languages Documented" },
-  { value: 6300, suffix: "+", label: "Stories Archived" },
+  { value: 500, suffix: "+", label: "Memories Preserved" },
+  { value: 63, suffix: "", label: "Languages Documented" },
+  { value: 390, suffix: "+", label: "Stories Archived" },
   { value: 28, suffix: "/28", label: "States & UTs Covered" },
-  { value: 1840, suffix: "+", label: "Community Contributors" },
+  { value: 100, suffix: "+", label: "Community Contributions" },
   { value: 125, suffix: " yrs", label: "Years Represented" },
 ];
 
