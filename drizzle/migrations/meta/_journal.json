@@ -57,6 +57,13 @@
       "when": 1795161148692,
       "tag": "0007_echoes_published_and_private_drafts",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1795162800259,
+      "tag": "0008_profiles_insert_own",
+      "breakpoints": true
     }
   ]
 }
