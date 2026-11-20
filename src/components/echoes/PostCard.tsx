@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { toggleLike, toggleSave, submitToLibrary } from "@/lib/echoes.functions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 export type EchoPost = {
   id: string;
@@ -47,7 +48,7 @@ function initials(name?: string | null) {
   return base.slice(0, 2).toUpperCase();
 }
 
-export function PostCard({ post, currentUserId }: { post: EchoPost; currentUserId?: string | null }) {
+export function PostCard({ post, currentUserId, onAuthorSearch }: { post: EchoPost; currentUserId?: string | null; onAuthorSearch?: (name: string) => void }) {
   const router = useRouter();
   const qc = useQueryClient();
   const likeFn = useServerFn(toggleLike);
@@ -122,7 +123,11 @@ export function PostCard({ post, currentUserId }: { post: EchoPost; currentUserI
           )}
         </Link>
         <div className="min-w-0 flex-1">
-          <Link to={authorHref} className="block text-sm font-medium leading-tight hover:underline">{authorName}</Link>
+          {onAuthorSearch ? (
+            <Button variant="link" onClick={() => onAuthorSearch(authorName)} className="h-auto max-w-full justify-start whitespace-normal p-0 text-left text-sm font-medium leading-tight text-foreground">{authorName}</Button>
+          ) : (
+            <Link to={authorHref} className="block text-sm font-medium leading-tight hover:underline">{authorName}</Link>
+          )}
           <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
             <span>{timeAgo(post.created_at)}</span>
             {post.location && <><span>·</span><MapPin className="h-3 w-3" /><span className="truncate">{post.location}</span></>}
@@ -201,7 +206,11 @@ export function PostCard({ post, currentUserId }: { post: EchoPost; currentUserI
           {post.title && <h3 className="font-display text-lg leading-tight">{post.title}</h3>}
           {post.caption && (
             <p className="mt-1 text-pretty text-sm text-foreground/85">
-              <Link to={authorHref} className="mr-1.5 font-medium text-foreground hover:underline">{authorName}</Link>
+              {onAuthorSearch ? (
+                <Button variant="link" onClick={() => onAuthorSearch(authorName)} className="mr-1.5 inline h-auto whitespace-normal p-0 text-left font-medium text-foreground">{authorName}</Button>
+              ) : (
+                <Link to={authorHref} className="mr-1.5 font-medium text-foreground hover:underline">{authorName}</Link>
+              )}
               {post.caption}
             </p>
           )}

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createClient } from "@supabase/supabase-js";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { Database } from "@/integrations/supabase/types";
+import { echoSearchFilter, echoSearchPattern } from "@/lib/echoes-search";
 
 const BUCKET = "echoes-media";
 const SIGNED_URL_TTL = 60 * 60; // 1 hour
@@ -208,13 +209,14 @@ export const deletePost = createServerFn({ method: "POST" })
 
 export const listFeed = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { limit?: number; category?: string; state?: string; authorId?: string; libraryOnly?: boolean }) =>
+  .inputValidator((input: { limit?: number; category?: string; state?: string; authorId?: string; libraryOnly?: boolean; search?: string }) =>
     z.object({
       limit: z.number().int().min(1).max(50).default(20),
       category: z.string().optional(),
       state: z.string().optional(),
       authorId: z.string().uuid().optional(),
       libraryOnly: z.boolean().optional(),
+      search: z.string().trim().max(500).optional(),
     }).parse(input ?? {})
   )
   .handler(async ({ data, context }) => {
@@ -228,6 +230,13 @@ export const listFeed = createServerFn({ method: "GET" })
     if (data.state) q = q.eq("state", data.state);
     if (data.authorId) q = q.eq("author_id", data.authorId);
     if (data.libraryOnly) q = q.eq("submitted_to_library", true);
+    if (data.search) {
+      // Both author lookup and post search use the caller's client, preserving RLS.
+      const { data: authors, error: authorError } = await supabase
+        .from("profiles").select("id").ilike("full_name", echoSearchPattern(data.search));
+      if (authorError) throw new Error(authorError.message);
+      q = q.or(echoSearchFilter(data.search, (authors ?? []).map((author) => author.id)));
+    }
     const { data: posts, error } = await q;
     if (error) throw new Error(error.message);
 
