@@ -31,12 +31,16 @@ const CHIPS = ["Who built it?", "What's the legend?", "When is the best time to 
 
 function pickVoice() {
   const voices = window.speechSynthesis.getVoices();
-  for (const loc of ["en-IN", "en-GB", "en-US"]) {
+  for (const name of ["Samantha", "Google US English", "Daniel", "Google UK English Female", "Google UK English Male"]) {
+    const n = voices.find((v) => v.name === name);
+    if (n) return n;
+  }
+  for (const loc of ["en-US", "en-GB"]) {
     const m = voices.filter((v) => v.lang.replace("_", "-").toLowerCase() === loc.toLowerCase());
     const best = m.find((v) => /google|natural|neural|enhanced|premium/i.test(v.name)) ?? m[0];
     if (best) return best;
   }
-  return voices.find((v) => v.lang.toLowerCase().startsWith("en"));
+  return voices.find((v) => v.lang.toLowerCase().startsWith("en") && !v.lang.toLowerCase().includes("in"));
 }
 // Tiny silent WAV used to unlock the audio element on a tap (phones block untapped playback)
 const SILENT_WAV = (() => {
@@ -206,7 +210,7 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
     if (!s || gen !== genRef.current) return done();
     const v = pickVoice();
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = v?.lang ?? LOCALES.en; if (v) u.voice = v; u.rate = rateRef.current;
+    u.lang = v?.lang ?? "en-US"; if (v) u.voice = v; u.rate = rateRef.current;
     u.onend = () => done(); u.onerror = () => done();
     s.speak(u);
   });

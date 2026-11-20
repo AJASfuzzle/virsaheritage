@@ -82,7 +82,7 @@ export const virsaCamTts = createServerFn({ method: "POST" })
       body: JSON.stringify({
         model: "google/gemini-3.1-flash-tts-preview",
         stream_format: "audio",
-        contents: [{ role: "user", parts: [{ text: data.language === "English" ? `Read this in clear, warm Indian English, like a friendly heritage tour guide: ${data.text}` : `Read this aloud naturally in ${data.language}, warmly, like a friendly heritage tour guide: ${data.text}` }] }],
+        contents: [{ role: "user", parts: [{ text: data.language === "English" ? `Read this in a clear, neutral, standard American English accent at a natural pace, like a professional assistant voice: ${data.text}` : `Read this aloud naturally in ${data.language}, warmly, like a friendly heritage tour guide: ${data.text}` }] }],
         generationConfig: { responseModalities: ["AUDIO"], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Kore" } } } },
       }),
     });

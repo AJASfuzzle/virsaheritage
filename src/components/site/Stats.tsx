@@ -2,8 +2,8 @@ import { motion, useInView, useMotionValue, useTransform, animate } from "framer
 import { useEffect, useRef } from "react";
 
 const stats = [
-  { value: 500, suffix: "+", label: "Memories Preserved" },
-  { value: 63, suffix: "", label: "Languages Documented" },
+  { value: 2000, suffix: "+", label: "Memories Preserved" },
+  { value: 63, suffix: "+", label: "Languages Documented" },
   { value: 390, suffix: "+", label: "Stories Archived" },
   { value: 28, suffix: "/28", label: "States & UTs Covered" },
   { value: 100, suffix: "+", label: "Community Contributions" },
