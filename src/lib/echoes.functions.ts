@@ -65,7 +65,7 @@ export const getProfile = createServerFn({ method: "GET" })
       .maybeSingle();
     if (error) throw new Error(error.message);
 
-    const { count: postsCount } = await (await import("@/integrations/supabase/client.server")).supabaseAdmin
+    const { count: postsCount } = await supabase
       .from("echo_posts")
       .select("id", { count: "exact", head: true })
       .eq("author_id", data.userId);
@@ -219,8 +219,7 @@ export const listFeed = createServerFn({ method: "GET" })
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    // Shared feed: caller is authenticated; read via server with fixed filters.
-    let q = (await import("@/integrations/supabase/client.server")).supabaseAdmin
+    let q = supabase
       .from("echo_posts")
       .select("*")
       .order("created_at", { ascending: false })
@@ -259,7 +258,7 @@ export const getPost = createServerFn({ method: "GET" })
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const { data: post, error } = await (await import("@/integrations/supabase/client.server")).supabaseAdmin.from("echo_posts").select("*").eq("id", data.postId).maybeSingle();
+    const { data: post, error } = await supabase.from("echo_posts").select("*").eq("id", data.postId).maybeSingle();
     if (error) throw new Error(error.message);
     if (!post) return null;
     const [authors, liked, saved] = await Promise.all([
@@ -336,7 +335,7 @@ export const listSaved = createServerFn({ method: "GET" })
       .limit(50);
     const ids = (saves ?? []).map((s) => s.post_id);
     if (!ids.length) return [];
-    const { data: posts } = await (await import("@/integrations/supabase/client.server")).supabaseAdmin.from("echo_posts").select("*").in("id", ids);
+    const { data: posts } = await supabase.from("echo_posts").select("*").in("id", ids);
     const withAuthors = await attachAuthors(supabase as unknown as Sb, posts ?? []);
     const enriched = await Promise.all(
       withAuthors.map(async (p: any) => ({
@@ -360,7 +359,7 @@ export const listComments = createServerFn({ method: "GET" })
   )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
-    const { data: comments, error } = await (await import("@/integrations/supabase/client.server")).supabaseAdmin
+    const { data: comments, error } = await supabase
       .from("echo_comments")
       .select("*")
       .eq("post_id", data.postId)
