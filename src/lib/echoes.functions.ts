@@ -29,7 +29,10 @@ async function signMedia(sb: Sb, media: unknown): Promise<Array<{ url: string; t
   if (items.length === 0) return [];
   const paths = items.map((m: any) => m.path).filter(Boolean);
   if (paths.length === 0) return [];
-  const { data } = await sb.storage.from(BUCKET).createSignedUrls(paths, SIGNED_URL_TTL);
+  // Media paths come from post rows the caller may read; sign with admin since storage reads are owner-only.
+  void sb;
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data } = await supabaseAdmin.storage.from(BUCKET).createSignedUrls(paths, SIGNED_URL_TTL);
   return items.map((m: any) => {
     const signed = data?.find((d) => d.path === m.path);
     return { url: signed?.signedUrl ?? "", type: m.type, path: m.path };
@@ -79,13 +82,15 @@ export const getProfile = createServerFn({ method: "GET" })
 
     let bannerUrl: string | null = null;
     if (profile?.banner_url) {
-      const { data: signed } = await supabase.storage.from(BUCKET).createSignedUrl(profile.banner_url, SIGNED_URL_TTL);
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const { data: signed } = await supabaseAdmin.storage.from(BUCKET).createSignedUrl(profile.banner_url, SIGNED_URL_TTL);
       bannerUrl = signed?.signedUrl ?? null;
     }
     let avatarUrl: string | null = profile?.avatar_url ?? null;
     // If avatar_url is a storage path (not a full URL), sign it
     if (avatarUrl && !avatarUrl.startsWith("http")) {
-      const { data: signed } = await supabase.storage.from(BUCKET).createSignedUrl(avatarUrl, SIGNED_URL_TTL);
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const { data: signed } = await supabaseAdmin.storage.from(BUCKET).createSignedUrl(avatarUrl, SIGNED_URL_TTL);
       avatarUrl = signed?.signedUrl ?? null;
     }
 
@@ -399,7 +404,9 @@ export const listLibraryEchoes = createServerFn({ method: "GET" })
     z.object({ limit: z.number().int().min(1).max(30).default(12) }).parse(input ?? {})
   )
   .handler(async ({ data }) => {
-    const sb = publicClient();
+    // Only library-submitted posts and limited author fields are exposed here.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const sb = supabaseAdmin as unknown as Sb;
     const { data: posts, error } = await sb
       .from("echo_posts")
       .select("id, title, caption, media, category, state, created_at, author_id, likes_count")
