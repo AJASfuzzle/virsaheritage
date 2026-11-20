@@ -11,4 +11,5 @@
 
 # Echoes search
 - [x] Add debounced URL search above categories and clickable author names without changing access rules.
-- [ ] Run search tests and verify Aarav Anand's real posts, category combinations, clear, and shared links in the signed-in preview.
+- [x] Run four search-rule tests; verify signed-in URL persistence, empty state, category control, clear, and full-width mobile search.
+- [ ] Verify Aarav Anand's real results and author-click flow: blocked by existing author-only post visibility; switching to Aarav's account was declined. Privacy remains unchanged.
