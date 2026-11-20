@@ -190,7 +190,7 @@ function CamApp({ userId, deviceId }: { userId: string; deviceId: string }) {
   const [flash, setFlash] = useState(false);
   const waitRef = useRef<{ since: string; timer?: ReturnType<typeof setTimeout>; poll?: ReturnType<typeof setInterval> } | null>(null);
   const [liveOn, setLiveOn] = useState(false);
-  const online = !!status?.last_seen && now - new Date(status.last_seen).getTime() < 10_000;
+  const online = !!status?.last_seen && now - new Date(status.last_seen).getTime() < 30_000;
 
   // Speech: generated audio clips through ONE persistent <audio>, played in order; speechSynthesis only if a clip fails
   const tts = useServerFn(virsaCamTts);
