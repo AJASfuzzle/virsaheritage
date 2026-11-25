@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import shriya from "@/assets/team/shriya-sawhney.jpeg.asset.json";
 import ahaan from "@/assets/team/ahaan-chopra.jpeg.asset.json";
 import aarav from "@/assets/team/aarav-anand.jpeg.asset.json";
-import jai from "@/assets/team/jai-goel.jpeg.asset.json";
+import jai from "@/assets/team/jai-goel-updated.png.asset.json";
 
 // TODO: replace with the team's contact email address.
 const CONTACT_EMAIL = "TODO-add-team-email@example.com";
