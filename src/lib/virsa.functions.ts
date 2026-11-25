@@ -15,7 +15,9 @@ export const listTrailSites = createServerFn({ method: "GET" })
       process.env.SUPABASE_PUBLISHABLE_KEY!,
       { auth: { storage: undefined, persistSession: false, autoRefreshToken: false } }
     );
-    const { data: rows, error } = await supabasePublic
+    void supabasePublic;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: rows, error } = await supabaseAdmin
       .from("heritage_sites")
       .select("id, trail_slug, stop_index, name, place, lat, lng, radius_m, coin_reward")
       .eq("trail_slug", data.trailSlug)
