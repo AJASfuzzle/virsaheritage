@@ -4,12 +4,18 @@ import { toast } from "sonner";
 import { Loader2, ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { Button } from "@/components/ui/button";
+import { validatePasswordChange } from "@/lib/auth-access";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
     meta: [
       { title: "Settings - VIRSA Heritage" },
       { name: "description", content: "Manage your VIRSA account, profile and preferences." },
+      { property: "og:title", content: "Account settings | VIRSA Heritage" },
+      { property: "og:description", content: "Manage your VIRSA profile and securely change your password." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: SettingsPage,
@@ -19,15 +25,19 @@ function SettingsPage() {
   const { user } = useAuth();
   const [fullName, setFullName] = useState((user?.user_metadata?.full_name as string | undefined) ?? "");
   const [password, setPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [confirmation, setConfirmation] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [savingProfile, setSavingProfile] = useState(false);
   const [savingPwd, setSavingPwd] = useState(false);
 
   async function saveProfile(e: React.FormEvent) {
     e.preventDefault();
+    if (!user) return;
     setSavingProfile(true);
     const { error } = await supabase.auth.updateUser({ data: { full_name: fullName } });
     if (!error) {
-      await supabase.from("profiles").update({ full_name: fullName, updated_at: new Date().toISOString() }).eq("id", user!.id);
+      await supabase.from("profiles").update({ full_name: fullName, updated_at: new Date().toISOString() }).eq("id", user.id);
       toast.success("Profile updated");
     } else toast.error(error.message);
     setSavingProfile(false);
@@ -35,18 +45,20 @@ function SettingsPage() {
 
   async function savePassword(e: React.FormEvent) {
     e.preventDefault();
-    if (password.length < 8) {
-      toast.error("Password must be at least 8 characters");
-      return;
-    }
+    const invalid = validatePasswordChange(password, confirmation);
+    if (invalid) { setPasswordError(invalid); return; }
+    if (!currentPassword) { setPasswordError("Enter your current password"); return; }
+    setPasswordError("");
     setSavingPwd(true);
-    const { error } = await supabase.auth.updateUser({ password });
-    if (error) toast.error(error.message);
-    else {
+    try {
+      const { error } = await supabase.auth.updateUser({ password, current_password: currentPassword });
+      if (error) throw error;
       toast.success("Password updated");
       setPassword("");
-    }
-    setSavingPwd(false);
+      setCurrentPassword("");
+      setConfirmation("");
+    } catch (err) { setPasswordError(err instanceof Error ? err.message : "Unable to update your password. Please try again."); }
+    finally { setSavingPwd(false); }
   }
 
   return (
@@ -75,12 +87,19 @@ function SettingsPage() {
           <section className="rounded-3xl glass p-6">
             <h2 className="font-display text-xl">Password</h2>
             <form onSubmit={savePassword} className="mt-5 space-y-4">
-              <Field label="New password">
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className={inputClass} minLength={8} placeholder="At least 8 characters" />
+              <Field label="Current password">
+                <input type="password" autoComplete="current-password" required value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} className={inputClass} />
               </Field>
-              <button disabled={savingPwd} className="btn-glossy inline-flex items-center gap-2 rounded-full gradient-ember px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-60">
+              <Field label="New password">
+                <input type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} className={inputClass} minLength={8} maxLength={72} placeholder="At least 8 characters" />
+              </Field>
+              <Field label="Confirm new password">
+                <input type="password" autoComplete="new-password" required value={confirmation} onChange={e => setConfirmation(e.target.value)} className={inputClass} />
+              </Field>
+              {passwordError && <p role="alert" className="text-sm text-destructive">{passwordError}</p>}
+              <Button type="submit" disabled={savingPwd} className="btn-glossy inline-flex items-center gap-2 rounded-full gradient-ember px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-60">
                 {savingPwd && <Loader2 className="h-4 w-4 animate-spin" />} Update password
-              </button>
+              </Button>
             </form>
           </section>
 

@@ -19,6 +19,7 @@ import { Route as EchoesRouteImport } from './routes/echoes'
 import { Route as KhazaneRouteImport } from './routes/khazane'
 import { Route as KitabRouteImport } from './routes/kitab'
 import { Route as LibraryRouteImport } from './routes/library'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as TrailsRouteImport } from './routes/trails'
 import { Route as VirsaCamRouteImport } from './routes/virsa-cam'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -85,6 +86,11 @@ const KitabRoute = KitabRouteImport.update({
 const LibraryRoute = LibraryRouteImport.update({
   id: '/library',
   path: '/library',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TrailsRoute = TrailsRouteImport.update({
@@ -193,6 +199,7 @@ export interface FileRoutesByFullPath {
   '/khazane': typeof KhazaneRoute
   '/kitab': typeof KitabRoute
   '/library': typeof LibraryRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/trails': typeof TrailsRouteWithChildren
   '/virsa-cam': typeof VirsaCamRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -221,6 +228,7 @@ export interface FileRoutesByTo {
   '/khazane': typeof KhazaneRoute
   '/kitab': typeof KitabRoute
   '/library': typeof LibraryRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/virsa-cam': typeof VirsaCamRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/settings': typeof AuthenticatedSettingsRoute
@@ -251,6 +259,7 @@ export interface FileRoutesById {
   '/khazane': typeof KhazaneRoute
   '/kitab': typeof KitabRoute
   '/library': typeof LibraryRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/trails': typeof TrailsRouteWithChildren
   '/virsa-cam': typeof VirsaCamRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
@@ -282,6 +291,7 @@ export interface FileRouteTypes {
     | '/khazane'
     | '/kitab'
     | '/library'
+    | '/reset-password'
     | '/trails'
     | '/virsa-cam'
     | '/dashboard'
@@ -310,6 +320,7 @@ export interface FileRouteTypes {
     | '/khazane'
     | '/kitab'
     | '/library'
+    | '/reset-password'
     | '/virsa-cam'
     | '/dashboard'
     | '/settings'
@@ -339,6 +350,7 @@ export interface FileRouteTypes {
     | '/khazane'
     | '/kitab'
     | '/library'
+    | '/reset-password'
     | '/trails'
     | '/virsa-cam'
     | '/_authenticated/dashboard'
@@ -370,6 +382,7 @@ export interface RootRouteChildren {
   KhazaneRoute: typeof KhazaneRoute
   KitabRoute: typeof KitabRoute
   LibraryRoute: typeof LibraryRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   TrailsRoute: typeof TrailsRouteWithChildren
   VirsaCamRoute: typeof VirsaCamRoute
   ApiVirsaCamAskRoute: typeof ApiVirsaCamAskRoute
@@ -446,6 +459,13 @@ declare module '@tanstack/react-router' {
       path: '/library'
       fullPath: '/library'
       preLoaderRoute: typeof LibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/trails': {
@@ -643,6 +663,7 @@ const rootRouteChildren: RootRouteChildren = {
   KhazaneRoute: KhazaneRoute,
   KitabRoute: KitabRoute,
   LibraryRoute: LibraryRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   TrailsRoute: TrailsRouteWithChildren,
   VirsaCamRoute: VirsaCamRoute,
   ApiVirsaCamAskRoute: ApiVirsaCamAskRoute,

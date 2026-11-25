@@ -7,6 +7,8 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useAuth } from "@/hooks/use-auth";
+import { Button } from "@/components/ui/button";
+import { safeAuthRedirect, signupNeedsConfirmation } from "@/lib/auth-access";
 
 const searchSchema = z.object({
   mode: z.enum(["signin", "signup"]).optional(),
@@ -52,44 +54,60 @@ function passwordStrength(p: string): { score: number; label: string } {
 function AuthPage() {
   const search = useSearch({ from: "/auth" });
   const navigate = useNavigate();
-  const { user, loading } = useAuth();
+  const { user, loading, isPasswordRecovery } = useAuth();
   const [mode, setMode] = useState<"signin" | "signup">(search.mode ?? "signin");
   const [showPwd, setShowPwd] = useState(false);
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({ fullName: "", email: "", password: "" });
+  const [forgotPassword, setForgotPassword] = useState(false);
+  const [notice, setNotice] = useState("");
+  const [formError, setFormError] = useState("");
 
   const strength = passwordStrength(form.password);
-  const redirectTo = search.redirect && search.redirect.startsWith("/") && !search.redirect.startsWith("//") ? search.redirect : "/dashboard";
+  const redirectTo = safeAuthRedirect(search.redirect);
 
   useEffect(() => {
-    if (!loading && user) {
+    if (!loading && user && !isPasswordRecovery) {
       navigate({ to: redirectTo, replace: true });
     }
-  }, [loading, user, redirectTo, navigate]);
+  }, [loading, user, isPasswordRecovery, redirectTo, navigate]);
 
   async function handleEmail(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
+    setFormError("");
+    setNotice("");
     try {
+      if (forgotPassword) {
+        const email = signInSchema.shape.email.parse(form.email);
+        const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` });
+        if (error) throw error;
+        setNotice("If an account exists for this email, you’ll receive a password reset link. Check your inbox and spam folder.");
+        return;
+      }
       if (mode === "signup") {
         const parsed = signUpSchema.safeParse(form);
         if (!parsed.success) {
           toast.error(parsed.error.issues[0]?.message ?? "Invalid input");
           return;
         }
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email: parsed.data.email,
           password: parsed.data.password,
           options: {
-            emailRedirectTo: `${window.location.origin}${redirectTo}`,
+            emailRedirectTo: `${window.location.origin}/auth?redirect=${encodeURIComponent(redirectTo)}`,
             data: { full_name: parsed.data.fullName },
           },
         });
         if (error) {
-          toast.error(error.message);
+          throw error;
+        }
+        if (signupNeedsConfirmation(data.session)) {
+          setNotice("Check your email to confirm your account before signing in. Check your spam folder too.");
+          setForm(previous => ({ ...previous, password: "" }));
           return;
         }
-        toast.success("Welcome to VIRSA. Check your inbox to confirm.");
+        toast.success("Welcome to VIRSA.");
         navigate({ to: redirectTo });
       } else {
         const parsed = signInSchema.safeParse({ email: form.email, password: form.password });
@@ -102,12 +120,13 @@ function AuthPage() {
           password: parsed.data.password,
         });
         if (error) {
-          toast.error(error.message);
-          return;
+          throw error;
         }
         toast.success("Welcome back.");
         navigate({ to: redirectTo });
       }
+    } catch (err) {
+      setFormError(err instanceof z.ZodError ? err.issues[0]?.message ?? "Invalid input" : err instanceof Error ? err.message : "Unable to sign in. Please try again.");
     } finally {
       setBusy(false);
     }
@@ -178,7 +197,7 @@ function AuthPage() {
           <div className="rounded-3xl glass grain p-7 sm:p-8 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.6)]">
             <div className="flex items-center justify-between">
               <h2 className="font-display text-2xl">
-                {mode === "signin" ? "Welcome back" : "Create your account"}
+                {forgotPassword ? "Forgot your password?" : mode === "signin" ? "Welcome back" : "Create your account"}
               </h2>
             </div>
             <p className="mt-1.5 text-sm text-muted-foreground">
@@ -191,14 +210,16 @@ function AuthPage() {
             <div className="mt-5 grid grid-cols-2 rounded-full bg-white/[0.04] p-1 ring-1 ring-white/10 text-sm">
               <button
                 type="button"
-                onClick={() => setMode("signin")}
+                disabled={busy}
+                onClick={() => { setMode("signin"); setForgotPassword(false); setNotice(""); setFormError(""); }}
                 className={`rounded-full px-3 py-1.5 transition ${mode === "signin" ? "bg-white/10 text-foreground" : "text-foreground/60 hover:text-foreground"}`}
               >
                 Sign in
               </button>
               <button
                 type="button"
-                onClick={() => setMode("signup")}
+                disabled={busy}
+                onClick={() => { setMode("signup"); setForgotPassword(false); setNotice(""); setFormError(""); }}
                 className={`rounded-full px-3 py-1.5 transition ${mode === "signup" ? "bg-white/10 text-foreground" : "text-foreground/60 hover:text-foreground"}`}
               >
                 Create account
@@ -221,7 +242,7 @@ function AuthPage() {
             </div>
 
             <form onSubmit={handleEmail} className="space-y-3.5">
-              {mode === "signup" && (
+              {!forgotPassword && mode === "signup" && (
                 <Field label="Full name">
                   <input
                     autoComplete="name"
@@ -247,7 +268,7 @@ function AuthPage() {
                   />
                 </div>
               </Field>
-              <Field label="Password">
+              {!forgotPassword && <Field label="Password">
                 <div className="relative">
                   <input
                     type={showPwd ? "text" : "password"}
@@ -283,7 +304,10 @@ function AuthPage() {
                     <div className="mt-1 text-[11px] text-muted-foreground">{strength.label}</div>
                   </div>
                 )}
-              </Field>
+              </Field>}
+
+              {notice && <p role="status" className="text-sm text-primary">{notice}</p>}
+              {formError && <p role="alert" className="text-sm text-destructive">{formError}</p>}
 
               <button
                 type="submit"
@@ -291,24 +315,22 @@ function AuthPage() {
                 className="btn-glossy mt-2 inline-flex w-full items-center justify-center gap-2 rounded-2xl gradient-ember px-4 py-3 text-sm font-semibold text-primary-foreground shadow-[0_18px_50px_-18px_oklch(0.72_0.18_55/0.8)] disabled:opacity-60"
               >
                 {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-                {mode === "signin" ? "Sign in" : "Create account"}
+                {forgotPassword ? "Send reset link" : mode === "signin" ? "Sign in" : "Create account"}
               </button>
 
               {mode === "signin" && (
-                <p className="text-center text-xs text-muted-foreground pt-1">
-                  Trouble signing in? Reach out and we'll help.
-                </p>
+                <div className="text-center"><Button type="button" variant="link" disabled={busy} className="text-xs" onClick={() => { setForgotPassword(v => !v); setNotice(""); setFormError(""); }}>{forgotPassword ? "Back to sign in" : "Forgot password?"}</Button></div>
               )}
             </form>
 
             <p className="mt-6 text-center text-xs text-muted-foreground">
               {mode === "signin" ? (
                 <>Don't have an account?{" "}
-                  <button onClick={() => setMode("signup")} className="text-primary hover:underline">Create one</button>
+                  <Button variant="link" disabled={busy} onClick={() => { setMode("signup"); setForgotPassword(false); setNotice(""); setFormError(""); }} className="h-auto p-0 text-xs">Create one</Button>
                 </>
               ) : (
                 <>Already with VIRSA?{" "}
-                  <button onClick={() => setMode("signin")} className="text-primary hover:underline">Sign in</button>
+                  <Button variant="link" disabled={busy} onClick={() => { setMode("signin"); setForgotPassword(false); setNotice(""); setFormError(""); }} className="h-auto p-0 text-xs">Sign in</Button>
                 </>
               )}
             </p>

@@ -18,3 +18,8 @@
 - [x] Public published feed, server search, author pages and private draft rules.
 - [x] Separate publishing, editable owner profile, owner dashboard and sign-in return links.
 - [x] Verify Aarav results signed out/in, combined filters, author page, mobile layout, publishing return/newest placement, private draft saving, editing/publishing and deletion; temporary test echoes removed.
+
+# Login and password access
+- [ ] Check hosted email settings, sign-in, signup confirmation and sign-out.
+- [ ] Restore password recovery and correct account password changes.
+- [ ] Run auth regression tests and verify access using a temporary account.
