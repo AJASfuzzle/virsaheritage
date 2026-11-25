@@ -132,9 +132,6 @@ function AboutPage() {
             </FadeUp>
           ))}
         </div>
-        <FadeUp className="mx-auto mt-8 max-w-md rounded-2xl border border-border bg-card/60 px-6 py-4 text-center text-sm">
-          Mentor: Mrs. Malvika Sawhney, Delhi Public School, R.K. Puram
-        </FadeUp>
       </section>
 
       {/* 4. Recognition */}
