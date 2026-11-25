@@ -705,6 +705,22 @@ export type Database = {
         Args: { _force?: boolean; _lat: number; _lng: number; _site_id: string }
         Returns: Json
       }
+      echo_follow_counts: {
+        Args: { _uid: string }
+        Returns: {
+          followers: number
+          following: number
+        }[]
+      }
+      echo_member_cards: {
+        Args: { _ids: string[] }
+        Returns: {
+          avatar_url: string
+          full_name: string
+          id: string
+          username: string
+        }[]
+      }
       echo_public_authors: {
         Args: never
         Returns: {

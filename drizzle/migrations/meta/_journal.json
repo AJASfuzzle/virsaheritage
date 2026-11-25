@@ -64,6 +64,13 @@
       "when": 1795162800259,
       "tag": "0008_profiles_insert_own",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1795592828412,
+      "tag": "0009_scope_profiles_and_follows_reads",
+      "breakpoints": true
     }
   ]
 }

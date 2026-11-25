@@ -3,7 +3,7 @@ import { z } from "zod";
 import { createClient } from "@supabase/supabase-js";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { Database } from "@/integrations/supabase/types";
-import { echoCategories, echoSearchFilter, echoSearchPattern } from "@/lib/echoes-search";
+import { echoCategories, echoSearchFilter } from "@/lib/echoes-search";
 
 const BUCKET = "echoes-media";
 const SIGNED_URL_TTL = 60 * 60; // 1 hour
@@ -50,10 +50,7 @@ async function signMedia(sb: Sb, media: unknown): Promise<Array<{ url: string; t
 async function attachAuthors(sb: Sb, posts: any[]) {
   const ids = Array.from(new Set(posts.map((p) => p.author_id)));
   if (ids.length === 0) return [];
-  const { data: profiles } = await sb
-    .from("profiles")
-    .select("id, full_name, avatar_url, username")
-    .in("id", ids);
+  const { data: profiles } = await (sb as any).rpc("echo_member_cards", { _ids: ids });
   const map = new Map((profiles ?? []).map((p: any) => [p.id, p]));
   return posts.map((p) => ({ ...p, author: map.get(p.author_id) ?? null }));
 }
@@ -66,27 +63,27 @@ export const getProfile = createServerFn({ method: "GET" })
   )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
-    const { data: profile, error } = await supabase
+    const { data: ownProfile, error } = await supabase
       .from("profiles")
       .select("*")
       .eq("id", data.userId)
       .maybeSingle();
     if (error) throw new Error(error.message);
+    // Other members' full profiles are private; fall back to their public card.
+    let profile: any = ownProfile;
+    if (!profile) {
+      const { data: cards } = await (supabase as any).rpc("echo_member_cards", { _ids: [data.userId] });
+      profile = cards?.[0] ?? null;
+    }
 
     const { count: postsCount } = await supabase
       .from("echo_posts")
       .select("id", { count: "exact", head: true })
       .eq("author_id", data.userId);
 
-    const { count: followers } = await supabase
-      .from("echo_follows")
-      .select("follower_id", { count: "exact", head: true })
-      .eq("following_id", data.userId);
-
-    const { count: following } = await supabase
-      .from("echo_follows")
-      .select("following_id", { count: "exact", head: true })
-      .eq("follower_id", data.userId);
+    const { data: counts } = await (supabase as any).rpc("echo_follow_counts", { _uid: data.userId });
+    const followers = Number(counts?.[0]?.followers ?? 0);
+    const following = Number(counts?.[0]?.following ?? 0);
 
     let bannerUrl: string | null = null;
     if (profile?.banner_url) {
@@ -242,10 +239,11 @@ export const listFeed = createServerFn({ method: "GET" })
     if (data.libraryOnly) q = q.eq("submitted_to_library", true);
     if (data.search) {
       // Both author lookup and post search use the caller's client, preserving RLS.
-      const { data: authors, error: authorError } = await supabase
-        .from("profiles").select("id").ilike("full_name", echoSearchPattern(data.search));
+      const { data: authors, error: authorError } = await (supabase as any).rpc("echo_public_authors");
       if (authorError) throw new Error(authorError.message);
-      q = q.or(echoSearchFilter(data.search, (authors ?? []).map((author) => author.id)));
+      const needle = data.search.toLowerCase();
+      const matched = ((authors ?? []) as any[]).filter((a) => (a.full_name ?? "").toLowerCase().includes(needle));
+      q = q.or(echoSearchFilter(data.search, matched.map((author) => author.id)));
     }
     const { data: posts, error } = await q;
     if (error) throw new Error(error.message);
@@ -386,7 +384,7 @@ export const listComments = createServerFn({ method: "GET" })
     if (error) throw new Error(error.message);
     const ids = Array.from(new Set((comments ?? []).map((c) => c.author_id)));
     const { data: profiles } = ids.length
-      ? await supabase.from("profiles").select("id, full_name, avatar_url, username").in("id", ids)
+      ? await (supabase as any).rpc("echo_member_cards", { _ids: ids })
       : { data: [] as any[] };
     const map = new Map((profiles ?? []).map((p: any) => [p.id, p]));
     return (comments ?? []).map((c: any) => ({ ...c, author: map.get(c.author_id) ?? null }));
