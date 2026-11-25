@@ -60,7 +60,7 @@ function ResetPasswordPage() {
     <div className="mx-auto max-w-md glass rounded-3xl p-7 sm:p-8">
       <h1 className="font-display text-3xl">Reset your password</h1>
       {!ready && (loading || checking) && !linkError ? <p className="mt-5 flex items-center gap-2 text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> Checking your reset link…</p> : ready ?
-        <form onSubmit={resetPassword} className="mt-6 space-y-4">
+        <form method="post" onSubmit={resetPassword} className="mt-6 space-y-4">
           <label className="block text-sm">New password<input type="password" autoComplete="new-password" required minLength={8} maxLength={72} value={password} onChange={e => setPassword(e.target.value)} className="mt-2 w-full rounded-xl border border-input bg-background/50 px-3 py-2.5" /></label>
           <label className="block text-sm">Confirm new password<input type="password" autoComplete="new-password" required value={confirmation} onChange={e => setConfirmation(e.target.value)} className="mt-2 w-full rounded-xl border border-input bg-background/50 px-3 py-2.5" /></label>
           {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
