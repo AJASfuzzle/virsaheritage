@@ -14,6 +14,9 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:title", content: "VIRSA - India's Living Memory & Heritage Atlas" },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://virsa.com.co/__l5e/assets-v1/c5da08f2-997c-473a-9d6a-35259983ce9d/virsa-share.jpg" },
+      { name: "twitter:image", content: "https://virsa.com.co/__l5e/assets-v1/c5da08f2-997c-473a-9d6a-35259983ce9d/virsa-share.jpg" },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:card", content: "summary_large_image" },
       {
         property: "og:description",

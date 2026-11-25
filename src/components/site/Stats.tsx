@@ -14,11 +14,13 @@ const stats = [
 function Counter({ to, suffix }: { to: number; suffix: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
-  const mv = useMotionValue(0);
+  // Start on the real value so search engines and link previews never see zeros.
+  const mv = useMotionValue(to);
   const display = useTransform(mv, (v) => Math.round(v).toLocaleString("en-IN"));
 
   useEffect(() => {
     if (inView) {
+      mv.set(0);
       const controls = animate(mv, to, { duration: 1.8, ease: [0.16, 1, 0.3, 1] });
       return controls.stop;
     }

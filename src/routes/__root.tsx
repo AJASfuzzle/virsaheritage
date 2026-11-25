@@ -93,8 +93,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:title", content: "VIRSA - India's Living Memory & Heritage Atlas" },
       { property: "og:description", content: "An AI-powered atlas preserving India's languages, stories, recipes and traditions." },
       { name: "twitter:description", content: "An AI-powered atlas preserving India's languages, stories, recipes and traditions." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4bd2a005-62ea-41c5-b01b-8ebf0580a4c0/id-preview-030604c4--541dee69-abf8-4a6a-afe9-eb055f6adb79.lovable.app-1781792779457.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4bd2a005-62ea-41c5-b01b-8ebf0580a4c0/id-preview-030604c4--541dee69-abf8-4a6a-afe9-eb055f6adb79.lovable.app-1781792779457.png" },
       { name: "twitter:card", content: "summary_large_image" },
       { property: "og:type", content: "website" },
     ],
@@ -103,6 +101,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
     ],
     scripts: [
       { children: themeBootstrapScript },
