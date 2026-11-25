@@ -18,6 +18,7 @@ const links = [
   { to: "/khazane", label: "Khazane" },
   { to: "/echoes", label: "Echoes" },
   { to: "/virsa-cam", label: "VIRSA Cam" },
+  { to: "/about", label: "About Us" },
 ] as const;
 
 export function Navbar() {
