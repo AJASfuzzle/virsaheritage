@@ -22,16 +22,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
+    let lastUserId: string | null = null;
     // Hydrate then subscribe - listener must be set up FIRST per Supabase docs
     const { data: sub } = supabase.auth.onAuthStateChange((event, newSession) => {
+      const prevId = lastUserId;
+      lastUserId = newSession?.user?.id ?? null;
       setSession(newSession);
+      if (event === "INITIAL_SESSION") setLoading(false);
       if (event === "PASSWORD_RECOVERY") {
         setIsPasswordRecovery(true);
         setLoading(false);
         void router.navigate({ to: "/reset-password", replace: true });
         return;
       }
-      if (event === "SIGNED_IN" || event === "USER_UPDATED") {
+      // Supabase re-emits SIGNED_IN on tab focus; only refetch when the user actually changed.
+      if ((event === "SIGNED_IN" && prevId !== lastUserId) || event === "USER_UPDATED") {
         router.invalidate();
         queryClient.invalidateQueries();
       }
@@ -41,12 +46,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     });
 
-    supabase.auth.getUser().then(async ({ data }) => {
-      if (data.user) {
-        const { data: current } = await supabase.auth.getSession();
-        setSession(current.session);
+    // Fast local hydration so pages don't wait on the network…
+    supabase.auth.getSession().then(({ data }) => {
+      lastUserId = data.session?.user?.id ?? null;
+      setSession(data.session);
+      setLoading(false);
+      // …then verify the stored session with the auth server in the background.
+      if (data.session) {
+        supabase.auth.getUser().then(({ data: u, error }) => {
+          if (error || !u.user) { lastUserId = null; setSession(null); }
+        }).catch(() => {});
       }
-    }).catch(() => setSession(null)).finally(() => setLoading(false));
+    }).catch(() => setLoading(false));
 
     return () => sub.subscription.unsubscribe();
   }, [queryClient, router]);

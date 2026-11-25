@@ -62,6 +62,8 @@ function AuthPage() {
   const [forgotPassword, setForgotPassword] = useState(false);
   const [notice, setNotice] = useState("");
   const [formError, setFormError] = useState("");
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
 
   const strength = passwordStrength(form.password);
   const redirectTo = safeAuthRedirect(search.redirect);
@@ -241,7 +243,7 @@ function AuthPage() {
               <span className="h-px flex-1 bg-white/10" /> or by email <span className="h-px flex-1 bg-white/10" />
             </div>
 
-            <form onSubmit={handleEmail} className="space-y-3.5">
+            <form method="post" onSubmit={handleEmail} className="space-y-3.5">
               {!forgotPassword && mode === "signup" && (
                 <Field label="Full name">
                   <input
@@ -311,7 +313,7 @@ function AuthPage() {
 
               <button
                 type="submit"
-                disabled={busy}
+                disabled={busy || !hydrated}
                 className="btn-glossy mt-2 inline-flex w-full items-center justify-center gap-2 rounded-2xl gradient-ember px-4 py-3 text-sm font-semibold text-primary-foreground shadow-[0_18px_50px_-18px_oklch(0.72_0.18_55/0.8)] disabled:opacity-60"
               >
                 {busy && <Loader2 className="h-4 w-4 animate-spin" />}
