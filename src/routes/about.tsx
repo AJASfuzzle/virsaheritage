@@ -36,7 +36,7 @@ const WAYS = [
 ] as const;
 
 const TITLE = "About VIRSA | India's Living Memory";
-const DESC = "VIRSA is a non-profit, AI-powered cultural atlas of India's heritage, built by four students from Delhi.";
+const DESC = "VIRSA is an AI-powered cultural atlas of India's heritage, built by four students from Delhi.";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -90,7 +90,7 @@ function AboutPage() {
           <p className="text-xs font-medium uppercase tracking-[0.32em] text-primary">Made by four teenagers</p>
           <h1 className="mt-4 font-display text-4xl sm:text-6xl text-balance">India's memory deserves to be remembered.</h1>
           <p className="mt-5 text-lg text-muted-foreground">
-            VIRSA is a non-profit, AI-powered cultural atlas to preserve, explore and hear India's heritage across geography and time. We are four students from Delhi, and we built it ourselves.
+            VIRSA is an AI-powered cultural atlas to preserve, explore and hear India's heritage across geography and time. We are four students from Delhi, and we built it ourselves.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button asChild size="lg"><Link to="/atlas">Explore the Atlas</Link></Button>
